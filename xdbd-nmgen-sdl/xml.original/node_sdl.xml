@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="node">
+	<SDL_notification>
+		<includes>
+			<unit name="r_mgcc_mux.h"/>
+			<unit name="r_h248mng.h"/>
+			<unit name="r_mgm.h"/>
+		</includes>
+		<struct_variables>
+			<struct name="FaxModTone" type="GU_T_FAXMODTONERELAY"/>
+  		</struct_variables>
+		<events>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="sorm_alarm_info"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_sormalarminfo (G2P_FINDPID(mgcc_mux));</code_text>
+					<code_text>}</code_text>					
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="h248text_encodtype"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_h248_textencodingtype (G2P_FINDPID(h248mng), $h248text_encodtype.new);</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="h248_version"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_h248_version (G2P_FINDPID(h248mng), $h248_version.new);</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="faxmod_tone_relay"/>
+						<field name="faxmod_tone_txplt"/>
+						<field name="faxmod_tone_rxplt"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>FaxModTone->fd_f_mode = $faxmod_tone_relay.new;</code_text>
+					<code_text>FaxModTone->fd_f_txplt = $faxmod_tone_txplt.new;</code_text>
+					<code_text>FaxModTone->fd_f_rxplt = $faxmod_tone_rxplt.new;</code_text>
+					<code_text>SDL_OUTPUT_trg_faxmodtonerelay (G2P_FINDPID(mgm), (GU_T_FAXMODTONERELAY *) FaxModTone);</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="proxy_rtcp"/>
+					</conditions>
+					<code_text>if ($proxy_rtcp.new == 0) {</code_text>
+					<code_text>SDL_OUTPUT_trg_proxyrtcp (G2P_FINDPID(mgm), SDL_FALSE); }</code_text>
+					<code_text>if ($proxy_rtcp.new == 1) {</code_text>
+					<code_text>SDL_OUTPUT_trg_proxyrtcp (G2P_FINDPID(mgm), SDL_TRUE); }</code_text>
+				</change_mask>
+			</update>
+		</events>
+	</SDL_notification>
+</notification>

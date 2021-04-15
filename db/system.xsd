@@ -1,0 +1,192 @@
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="system_root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="disk_usage" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="file_system_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="file_system_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="disk_size"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="free_space_low" default="10" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="free_space_low_min" default="1" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="free_space_low_max" default="50" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="free_space_crit" default="5" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="free_space_mincrit" default="1" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="free_space_maxcrit" default="20" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="free_space_current"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			<xs:element name="error_priority" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="errpri_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="errcod"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="errpri"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="obj_mask"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="80"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			<xs:element name="test_error" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="errcod"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="errpri"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="errtype"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="measure"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="measure_act"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="prob_cause"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="measure_lib"  minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="20"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="measure_func"  minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="20"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="XPKdisk_usage">
+			<xs:selector xpath=".//disk_usage"/>
+			<xs:field xpath="nodeid"/>
+			<xs:field xpath="file_system_id"/>
+			</xs:key>
+		<xs:key name="XPKerror_priority">
+			<xs:selector xpath=".//error_priority"/>
+			<xs:field xpath="nodeid"/>
+			<xs:field xpath="errpri_id"/>
+			</xs:key>
+		<xs:key name="XPKtest_error">
+			<xs:selector xpath=".//test_error"/>
+			<xs:field xpath="nodeid"/>
+			<xs:field xpath="errcod"/>
+			</xs:key>
+		<xs:unique name="XAK1disk_usage">
+			<xs:selector xpath=".//disk_usage"/>
+			<xs:field xpath="nodeid"/>
+			<xs:field xpath="file_system_name"/>
+			</xs:unique>
+		
+		
+		<xs:keyref name="XIF1error_priority"  refer="XPKtest_error">
+			<xs:selector xpath=".//error_priority"/>
+			<xs:field xpath="nodeid"/>
+			<xs:field xpath="errcod"/>
+			</xs:keyref>
+		
+	</xs:element>
+</xs:schema>

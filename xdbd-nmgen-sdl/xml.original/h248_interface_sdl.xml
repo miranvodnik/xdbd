@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="h248_interface">
+	<SDL_notification>
+		<includes>
+			<unit name="r_h248mng.h"/>
+			<unit name="r_mgcc_mux.h"/>
+		</includes>
+		<events>
+			<insert>
+				<code_text>if ($h248_side.new == gu_T_H248_SIDE_l_rg) {</code_text>
+				<code_text>SDL_OUTPUT_trg_h248_interfacesigtrcchanged (G2P_FINDPID(h248mng), (GU_T_SYSINTERFACEID) $sys_intf_id.new, (GU_T_SIGTRACEREQ) $sigtrace_req.new);</code_text>
+				<code_text>SDL_OUTPUT_trg_h248_gw_startednew (G2P_FINDPID(mgcc_mux), (GU_T_SYSINTERFACEID) $sys_intf_id.new, (GU_T_INTFFUNC) $intf_func.new);</code_text>
+				<code_text>}</code_text>
+			</insert>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="sigtrace_req"/>
+					</conditions>
+					<code_text>if ($h248_side.new == gu_T_H248_SIDE_l_rg) {</code_text>
+					<code_text>SDL_OUTPUT_trg_h248_interfacesigtrcchanged (G2P_FINDPID(h248mng), (GU_T_SYSINTERFACEID) $sys_intf_id.new, (GU_T_SIGTRACEREQ) $sigtrace_req.new); }</code_text>
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="sys_intf_id"/>
+						<field name="h248_domain_name"/>
+						<field name="h248_side"/>
+						<field name="h248_intf_prf_id"/>
+						<field name="h248_intf_options"/>
+						<field name="h248_ns_prf_id"/>
+						<field name="h248_intf_id"/>
+						<field name="intf_func"/>
+					</conditions>
+					<code_text>if ($h248_side.new == gu_T_H248_SIDE_l_rg) {</code_text>
+					<code_text>SDL_OUTPUT_trg_h248_interfacedatachanged (G2P_FINDPID(h248mng), (GU_T_SYSINTERFACEID) $sys_intf_id.new); }</code_text>
+				</change_mask>
+			</update>
+			<delete>
+				<code_text>if ($h248_side.old == gu_T_H248_SIDE_l_rg) {</code_text>
+				<code_text>$sigtrace_req.old = 0;</code_text>
+				<code_text>SDL_OUTPUT_trg_h248_interfacesigtrcchanged (G2P_FINDPID(h248mng), (GU_T_SYSINTERFACEID) $sys_intf_id.old, (GU_T_SIGTRACEREQ) $sigtrace_req.old);</code_text>
+				<code_text>SDL_OUTPUT_trg_h248_gw_deleted (G2P_FINDPID(mgcc_mux), (GU_T_SYSINTERFACEID) $sys_intf_id.old, (GU_T_INTFFUNC) $intf_func.old);</code_text>
+				<code_text>}</code_text>
+			</delete>
+		</events>
+	</SDL_notification>
+</notification>

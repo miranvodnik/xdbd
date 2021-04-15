@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="h248_intf_profile">
+	<SDL_notification>
+		<includes>
+			<unit name="r_h248mng.h"/>
+		</includes>
+		<events>
+			<update>
+				<change_mask>
+					<conditions>
+						<all_fields/>
+					</conditions>
+					<code_text>SDL_OUTPUT_trg_h248_interfaceprofiledatachanged (G2P_FINDPID(h248mng), (SDL_NATURAL)$h248_intf_prf_id.new);</code_text>
+				</change_mask>
+			</update>
+		</events>
+	</SDL_notification>
+</notification>

@@ -1,0 +1,68 @@
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="dynamic_root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="h248_trace" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="sys_intf_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="sigtrace_req"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			<xs:element name="vxml_trace" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="vxml_module"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="vxml_tracemask" default="0" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="vxml_debugmask" default="0" minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="XPKh248_trace">
+			<xs:selector xpath=".//h248_trace"/>
+			<xs:field xpath="nodeid"/>
+			<xs:field xpath="sys_intf_id"/>
+			</xs:key>
+		<xs:key name="XPKvxml_trace">
+			<xs:selector xpath=".//vxml_trace"/>
+			<xs:field xpath="nodeid"/>
+			<xs:field xpath="vxml_module"/>
+			</xs:key>
+		
+		
+		</xs:element>
+</xs:schema>

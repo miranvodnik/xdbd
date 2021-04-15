@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ngn/!svn/ver/42961/MS_APPL/private/WRL7_Solid/mcu/rte/system/xdbd/xdbd-mpx
+END
+RunningContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/ngn/!svn/ver/42961/MS_APPL/private/WRL7_Solid/mcu/rte/system/xdbd/xdbd-mpx/RunningContext.cpp
+END
+Runnable.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ngn/!svn/ver/42961/MS_APPL/private/WRL7_Solid/mcu/rte/system/xdbd/xdbd-mpx/Runnable.cpp
+END
+RunningContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ngn/!svn/ver/42961/MS_APPL/private/WRL7_Solid/mcu/rte/system/xdbd/xdbd-mpx/RunningContext.h
+END
+Runnable.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ngn/!svn/ver/42961/MS_APPL/private/WRL7_Solid/mcu/rte/system/xdbd/xdbd-mpx/Runnable.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ngn/!svn/ver/42961/MS_APPL/private/WRL7_Solid/mcu/rte/system/xdbd/xdbd-mpx/Makefile
+END

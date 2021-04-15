@@ -1,0 +1,54 @@
+#/*#######################################################################*/
+#/*#                                                                     #*/
+#/*#                                                                     #*/
+#/*#            Copyright (c) 2014 Iskra Tel                             #*/
+#/*#                                                                     #*/
+#/*#                  Support Software System                            #*/
+#/*#                                                                     #*/
+#/*#                                                                     #*/
+#/*# Name        : ftpmpx.mk                                             #*/
+#/*#                                                                     #*/
+#/*# Description : FTP client library                                    #*/
+#/*#                                                                     #*/
+#/*# Code        : XXXX - XXXXXXX                                        #*/
+#/*#                                                                     #*/
+#/*# Date        : Nov 2014                                              #*/
+#/*#                                                                     #*/
+#/*# Author      : Miran Vodnik ITWEN1                                   #*/
+#/*#                                                                     #*/
+#/*# Compilation : ftpmpx.mk - project makefile                          #*/
+#/*#                                                                     #*/
+#/*# Revisions   :                                                       #*/
+#/*#                                                                     #*/
+#/*#######################################################################*/
+
+#/***************************************************************/
+#/*          UNIX - SCCS  VERSION DESCRIPTION                   */
+#/***************************************************************/
+#/*static char  unixid_XXXX[] = "%W%	%D%	ftpmpx.mk";*/
+
+-include $(RTE_DIR)/params.cfg
+
+# -Werror             = report any warning as error
+COPTS = -fPIC -Wall -c -Werror
+IDIR =
+CPPFLAGS = $(DEF_FLAGS) $(COPTS) $(IDIR)
+LDIR =
+LOPTS = -shared
+LIBS =
+
+OBJS = Runnable.o RunningContext.o
+
+library: libftpmpx.so
+
+-include .deps/*.d
+
+libftpmpx.so: $(OBJS)
+	$(CXX) $(LOPTS) $(LDIR) $(LIBS) $(OBJS) -o $@
+	-@cd $(PRODUCT_DIR)/mcu/target/lib; rm -rf $@
+	-@cp $@ $(PRODUCT_DIR)/mcu/target/lib
+
+$(OBJS):
+
+clean:
+	-@rm -rf libftpmpx.so $(OBJS)

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="vxml_config">
+	<SDL_notification>
+		<includes>
+			<unit name="r_vxmlmm.h"/>
+		</includes>
+		<events>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="vxml_active"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>if (($vxml_active.old == 0) &amp;&amp; ($vxml_active.new > 0)) {</code_text>
+					<code_text>SDL_OUTPUT_trg_vxml_start (G2P_FINDPID(vxmlmm));</code_text>
+					<code_text>}</code_text>
+					<code_text>if (($vxml_active.old > 0) &amp;&amp; ($vxml_active.new == 0)) {</code_text>
+					<code_text>SDL_OUTPUT_trg_vxml_stop (G2P_FINDPID(vxmlmm));</code_text>
+					<code_text>}</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="vxml_folder"/>
+						<field name="fetch_timeout"/>
+						<field name="input_mode"/>
+						<field name="interdigit_timeout"/>
+						<field name="safe_caching"/>
+						<field name="term_dtmf_code"/>
+						<field name="term_timeout"/>
+						<field name="noinput_timeout"/>
+						<field name="js_memory_size"/>
+						<field name="dmg_block_size"/>
+						<field name="dmg_block_count"/>
+						<field name="dmg_proxy_addr"/>
+						<field name="dmg_proxy_port"/>
+						<field name="dmg_thread_count"/>
+						<field name="rec_final_silence"/>
+						<field name="rec_max_time"/>
+						<field name="trans_conn_timeout"/>
+						<field name="trans_call_maxtime"/>
+						<field name="bargein"/>
+						<field name="best_effort_level"/>
+						<field name="vxml_proxy_type"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_vxml_configdata (G2P_FINDPID(vxmlmm));</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="lite_level_lc_nr"/>
+						<field name="simple_level_lc_nr"/>
+						<field name="medium_level_lc_nr"/>
+						<field name="advanc_level_lc_nr"/>
+						<field name="full_level_lc_nr"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_vxml_licencedata (G2P_FINDPID(vxmlmm));</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+				<change_mask>
+					<conditions>
+						<field name="vxml_file_transfer"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_vxml_filetransfer (G2P_FINDPID(vxmlmm));</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+			</update>
+		</events>
+	</SDL_notification>
+</notification>

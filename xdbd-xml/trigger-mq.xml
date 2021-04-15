@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xdbd_trigger_root
+ xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+ xsi:noNamespaceSchemaLocation='xdbd_trigger.xsd'>
+ <xdbd_trigger>
+  <id>1</id>
+  <name>trigger_basic_filter</name>
+  <library>libmqtrigger.so</library>
+  <load>nmFunc_basic_filter_load</load>
+  <fire>nmFunc_basic_filter_fire</fire>
+  <unload>nmFunc_basic_filter_unload</unload>
+  <table>basic_filter</table>
+  <function>14</function>
+ </xdbd_trigger>
+ <xdbd_trigger>
+  <id>4</id>
+  <name>trigger_filter</name>
+  <library>libmqtrigger.so</library>
+  <load>nmFunc_filter_load</load>
+  <fire>nmFunc_filter_fire</fire>
+  <unload>nmFunc_filter_unload</unload>
+  <table>filter</table>
+  <function>14</function>
+ </xdbd_trigger>
+</xdbd_trigger_root>

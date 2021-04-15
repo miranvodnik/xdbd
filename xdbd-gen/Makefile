@@ -1,0 +1,24 @@
+
+-include ../makefile.defs
+
+CPPOPTS = -g -fPIC -c -Wall $(UNIX_FLAGS)
+IDIR = -I.
+CPPFLAGS = $(DEF_FLAGS) $(CPPOPTS) $(IDIR)
+LOPTS = -shared
+LIBS :=
+LDIR =
+
+OBJS += \
+./xdbd-gen.o \
+
+all: xdbd-gen
+
+xdbd-gen: $(OBJS)
+	$(CXX) $(OBJS) $(LDIR) $(LIBS) -o $@
+	cp $@ ../bin
+
+$(OBJS):
+
+clean:
+	-@rm -f xdbd-gen $(OBJS)
+	

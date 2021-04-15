@@ -1,0 +1,52 @@
+
+-include ../makefile.defs
+
+CPPOPTS = -g -fPIC -c -Wall $(UNIX_FLAGS)
+IDIR = -I. \
+	-I$(PRODUCT_DIR)/xdbd-include \
+	-I$(PRODUCT_DIR)/xdbd-sql-parser \
+	-I$(PRODUCT_DIR)/xdbd-msg \
+	-I$(PRODUCT_DIR)/xdbd-job \
+	-I$(PRODUCT_DIR)/xdbd-mpx \
+	-I/usr/include/libxml2
+CPPFLAGS = $(DEF_FLAGS) $(CPPOPTS) $(IDIR)
+LOPTS = -shared
+LIBS := -lrt -lxdbdsqlparser -lxdbdmsg -lxdbdmpx -lxdbdodbc -lxdbdapi -luuid -lpthread `xml2-config --libs`
+LDIR = -L$(PRODUCT_DIR)/lib
+
+OBJS += \
+	./XdbdController.o \
+	./XdbdLocalClient.o \
+	./XdbdMqClient.o \
+	./XdbdNetworkClient.o \
+	./XdbdWorker.o \
+	./XdbdWorkingClient.o \
+	./XdbdAdminJob.o \
+	./XdbdAnyJob.o \
+	./XdbdCommon.o \
+	./XdbdShmSegment.o \
+	./XdbdSqlConnectJob.o \
+	./XdbdSqlDisconnectJob.o \
+	./XdbdSqlCreateStatementJob.o \
+	./XdbdSqlDeleteStatementJob.o \
+	./XdbdSqlDeleteJob.o \
+	./XdbdSqlInsertJob.o \
+	./XdbdSqlJob.o \
+	./XdbdSqlPrepareJob.o \
+	./XdbdSqlExecuteJob.o \
+	./XdbdSqlExecuteDirectJob.o \
+	./XdbdSqlSelectJob.o \
+	./XdbdSqlUpdateJob.o \
+	./xdbd-main.o 
+
+all: xdbd
+
+xdbd: $(OBJS)
+	$(CXX) $(OBJS) $(LDIR) $(LIBS) -o $@
+	cp $@ ../bin
+
+$(OBJS):
+
+clean:
+	-@rm -f xdbd $(OBJS)
+	

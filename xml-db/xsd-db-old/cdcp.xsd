@@ -1,0 +1,661 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="cdcp.tables_root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="tsf_queue" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_queue_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="queue_prio"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_queue"/>
+						<xs:field xpath="tsf_queue_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_data_group" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_data_group_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="cum_data_desc"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_data_group"/>
+						<xs:field xpath="tsf_data_group_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_data" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_data_group_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="src_file_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="64"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="src_dir_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="256"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dst_dir_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="256"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="name_schema"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="256"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="ne_side"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_dyn_lib_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_mediation_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_queue_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_settings_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_dst_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_data"/>
+						<xs:field xpath="tsf_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_destination" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_dst_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="ftp_hostname"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="ftp_user"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="password"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dst_dir_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="tmp_dir_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_destination"/>
+						<xs:field xpath="tsf_dst_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_mediation" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_mediation_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="mediation_desc"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_dyn_lib_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_mediation"/>
+						<xs:field xpath="tsf_mediation_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_data_arg" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_arg_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_arg_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="64"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_arg_value"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="256"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_data_arg"/>
+						<xs:field xpath="tsf_arg_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_dst_arg" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_arg_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_dst_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_arg_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="64"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_arg_value"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="256"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_dst_arg"/>
+						<xs:field xpath="tsf_arg_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_dyn_library" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_dyn_lib_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_desc"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg1"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg2"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg3"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg4"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg5"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg6"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg7"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg8"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg9"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg10"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg11"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg12"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg13"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg14"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="dll_arg15"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_dyn_library"/>
+						<xs:field xpath="tsf_dyn_lib_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_settings" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_settings_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="ftp_settings"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_settings"/>
+						<xs:field xpath="tsf_settings_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_tt_group" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_tt_group_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tt_desc"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_tt_group"/>
+						<xs:field xpath="tsf_tt_group_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_time_table" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_tt_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_tt_group_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tt_type"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tt_period"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="b_date"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="b_time"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="e_date"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="e_time"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="t_constraints"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="d_constraints"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+							<xs:element name="m_constraints"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+                  <xs:restriction base = "xs:string">
+                    <xs:minLength value="0"/>
+                    <xs:maxLength value="128"/>
+                  </xs:restriction>
+                </xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_time_table"/>
+						<xs:field xpath="tsf_tt_id"/>
+					</xs:key>
+				</xs:element>
+				<xs:element name="tsf_connection" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nodeid"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_connection_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_data_group_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_tt_group_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tsf_activity"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.tables">
+						<xs:selector xpath=".//tsf_connection"/>
+						<xs:field xpath="tsf_connection_id"/>
+					</xs:key>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,11 @@
+root@vodniklap1:~/Eclipse/workspace/xdbd-xml.stable# ssh root@172.18.138.88 'export PATH=$PATH:/opt/si2000/neroot/ms_applmcu_std-1.2.0-0/bin/;export LD_LIBRARY_PATH=/opt/si2000/neroot/ms_applmcu_std-1.2.0-0/lib;xdbd-test -p 1 "SELECT nodeid, toneid, tone_ctg, cn_treat, periods, tsrctype, tsrcid FROM tone WHERE toneid=15"'
+Password: 
+2000, 15, 1, 0, 255, 0, 0, 
+OK
+root@vodniklap1:~/Eclipse/workspace/xdbd-xml.stable# ssh root@172.18.138.88 'export PATH=$PATH:/opt/si2000/neroot/ms_applmcu_std-1.2.0-0/bin/;export LD_LIBRARY_PATH=/opt/si2000/neroot/ms_applmcu_std-1.2.0-0/lib;xdbd-test -p 1 "UPDATE tone SET tone_ctg=5 WHERE toneid=15"'Password: 
+OK
+root@vodniklap1:~/Eclipse/workspace/xdbd-xml.stable# ssh root@172.18.138.88 'export PATH=$PATH:/opt/si2000/neroot/ms_applmcu_std-1.2.0-0/bin/;export LD_LIBRARY_PATH=/opt/si2000/neroot/ms_applmcu_std-1.2.0-0/lib;xdbd-test -p 1 "SELECT nodeid, toneid, tone_ctg, cn_treat, periods, tsrctype, tsrcid FROM tone WHERE toneid=15"'
+Password: 
+2000, 15, 5, 0, 255, 0, 0, 
+OK
+

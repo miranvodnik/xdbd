@@ -1,0 +1,551 @@
+/*#######################################################################*/
+/*#                                                                     #*/
+/*#            Copyright (c) 2003 IskraTEL                              #*/
+/*#                                                                     #*/
+/*# Name        : Runnable.h                                            #*/
+/*#                                                                     #*/
+/*# Description : Object running in its own thread                      #*/
+/*#                                                                     #*/
+/*# Code        : BJFW - XAB0898                                        #*/
+/*#                                                                     #*/
+/*# Date        : Dec 2005                                              #*/
+/*#                                                                     #*/
+/*# Author      : Miran Vodnik                                          #*/
+/*#                                                                     #*/
+/*# Translation : FtpDBDll.mk                                           #*/
+/*#                                                                     #*/
+/*# Remarks     :                                                       #*/
+/*#                                                                     #*/
+/*#######################################################################*/
+
+#if !defined(RUNNABLE_H_INCLUDED) // RUNNABLE_H__05D4A0F5_FB8D_11D6_9334_0004ACBD6B3A__INCLUDED_
+#define RUNNABLE_H_INCLUDED
+
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/syscall.h>
+#include <pthread.h>
+#include <signal.h>
+#include <stdio.h>
+#include <errno.h>
+
+/****************************************************************/
+/*          UNIX - SCCS  VERSION DESCRIPTION                   	*/
+/****************************************************************/
+/*static char  unixid_BJFW[] = "%W%	%D%	Runnable.h";*/
+
+/****************************************************************/
+/* Class:       CRunnable                                       */
+/* Description: Interface CRunnable defines and partially       */
+/*              implements class, which is capable to run and   */
+/*              control its own program thread. Every derived   */
+/*              class must implement at least function Run() of */
+/*              this interface. This function must implement the*/
+/*              running logic of program thread. Other virtual  */
+/*              functions should not be implemented by derived  */
+/*              class, thus doing nothing                       */
+/* Members:     m_handle - handle of program thread associated  */
+/*                 with an instance of this class. This handle  */
+/*                 is returned by pthread_create() and should   */
+/*                 be used in any function dealing with thread  */
+/*                 handles. This variable is private. Its value */
+/*                 can be accessed with function getHabdle() and*/
+/*                 cannot be changed                            */
+/*              m_mutex - semaphore provided to enable          */
+/*                 synchronous access to an instance            */
+/*              m_errorCode - thread exit code                  */
+/****************************************************************/
+
+class CRunnable
+{
+public:
+	/****************************************************************/
+	/* Function:    CRunnable ()                                    */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      /                                               */
+	/* Description: instance initialization - clears members        */
+	/****************************************************************/
+	CRunnable (void)
+	{
+		pthread_mutexattr_t attr;
+
+		pthread_mutexattr_init (&attr);
+		pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
+		pthread_mutex_init (&m_mutex, &attr);
+		m_threadId = 0;
+		m_handle = (pthread_t) 0;
+		m_exitCode = -1;
+	}
+
+	/****************************************************************/
+	/* Function:    ~CRunnable ()                                   */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      /                                               */
+	/* Description: destructor cancles program thread associated    */
+	/*              with this instance, terminating it unexpectedly */
+	/*              if it is stil running. It is higly recommended  */
+	/*              that we give a chanse to associated thread to   */
+	/*              terminate normally before delete this instance  */
+	/****************************************************************/
+	virtual ~CRunnable (void)
+	{
+		pthread_mutex_destroy (&m_mutex);
+	}
+
+	/****************************************************************/
+	/* Function:    Start ()                                        */
+	/* In:          flags - flags whic are used (as is) in          */
+	/*                 pthread_create(). Default value of this      */
+	/*                 parameter is 0                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      S_OK - program thread has been created          */
+	/*              other - thread creation error, or error returned*/
+	/*                 by InitInstance ()                           */
+	/* Description: function tries to create and start program      */
+	/*              thread associated with this instance. Before    */
+	/*              creating new thread it calls InitInstance()     */
+	/*              giving to this object instance a chance to do   */
+	/*              an initialization step just prior to thread     */
+	/*              start. If InitInstance() returns error code     */
+	/*              (everything but S_OK) program thread is not     */
+	/*              created. Object instance should be deleted      */
+	/*              immediately in this case. It should be noted    */
+	/*              that InitInstance is executed in the context of */
+	/*              calling thread and not in the context of the    */
+	/*              newly created thread. If there are any entities */
+	/*              concerning new thread which are 'context        */
+	/*              sensitive' it may be better to perform          */
+	/*              initialization step in the context of newely    */
+	/*              created thread from the function Run()          */
+	/****************************************************************/
+	int Start (int flags = 0)
+	{
+		int hRes;
+
+		switch (hRes = Lock ())
+		{
+		case 0:
+			if (m_handle != (pthread_t) 0)
+			{
+				Unlock ();
+				return 0;
+			}
+			break;
+		default:
+			perror ("");
+			return hRes;
+		}
+		if ((hRes = InitInstance ()) != 0)
+		{
+			Unlock ();
+			return hRes;
+		}
+		pthread_attr_t attr;
+		pthread_attr_init (&attr);
+		pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_JOINABLE);
+		hRes = pthread_create (&m_handle, &attr, _Run, (void*) this);
+		Unlock ();
+		return hRes;
+	}
+
+	/****************************************************************/
+	/* Function:    WaitForCompletion ()                            */
+	/* In:          timeOut - time to wait the associated thread to */
+	/*                 terminate. Default value is infinite, thus   */
+	/*                 until program thread terminates              */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      exit code of associated thread                  */
+	/*              0 - if program thread has not terminated        */
+	/* Description: function waits until associated program thread  */
+	/*              terminates or until timeout expires, whichever  */
+	/*              comes first                                     */
+	/****************************************************************/
+	int WaitForCompletion (int timeOut = -1)
+	{
+		int hRes;
+
+		switch (hRes = Lock ())
+		{
+		case 0:
+			if (m_handle == (pthread_t) 0)
+			{
+				Unlock ();
+				return 0;
+			}
+			break;
+		default:
+			return hRes;
+		}
+		Unlock ();
+		if ((hRes = pthread_join (m_handle, NULL)) != 0)
+			return hRes;
+		return m_exitCode;
+	}
+
+	/****************************************************************/
+	/* Function:    Suspend ()                                      */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      S_OK - thread is suspended                      */
+	/*              other - thread cannot be suspended              */
+	/* Description: function tries to suspend program thread        */
+	/*              associated with this object                     */
+	/****************************************************************/
+	int Suspend (void)
+	{
+		int hRes;
+
+		switch (hRes = Lock ())
+		{
+		case 0:
+			if (m_handle == (pthread_t) 0)
+			{
+				Unlock ();
+				return -1;
+			}
+			break;
+		default:
+			return hRes;
+		}
+		hRes = pthread_kill (m_handle, SIGSTOP);
+		Unlock ();
+		return hRes;
+	}
+
+	/****************************************************************/
+	/* Function:    Resume ()                                       */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      S_OK - thread execution is resumed              */
+	/*              other - thread cannot be resumed                */
+	/* Description: function tries to resume execution of program   */
+	/*              thread associated with this object              */
+	/****************************************************************/
+	int Resume (void)
+	{
+		int hRes;
+
+		switch (hRes = Lock ())
+		{
+		case 0:
+			if (m_handle == (pthread_t) 0)
+			{
+				Unlock ();
+				return -1;
+			}
+			break;
+		default:
+			return hRes;
+		}
+		hRes = pthread_kill (m_handle, SIGCONT);
+		Unlock ();
+		return hRes;
+	}
+
+	/****************************************************************/
+	/* Function:    Terminate ()                                    */
+	/* In:          timeOut - time to wait before terminate thread  */
+	/*                 default value is to terminate infinitelly    */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      exit code of program thread                     */
+	/* Description: function terminates execution of program thread */
+	/*              associated with this object instance            */
+	/****************************************************************/
+
+	int Terminate (int timeOut = -1)
+	{
+		int hRes;
+
+		switch (hRes = Lock ())
+		{
+		case 0:
+			if (m_handle == (pthread_t) 0)
+			{
+				Unlock ();
+				return 0;
+			}
+			break;
+		default:
+			return hRes;
+		}
+		Unlock ();
+		if (((hRes = pthread_cancel (m_handle)) != 0) && ((hRes = pthread_join (m_handle, NULL)) != 0))
+			return m_exitCode;
+		return hRes;
+	}
+
+	/****************************************************************/
+	/* Function:    Abort ()                                        */
+	/* In:          code - thread exit code forced by the calling   */
+	/*                 thread                                       */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      code - forced exit code                         */
+	/*              other - unsuccessfull termination               */
+	/* Description: function terminates execution of program thread */
+	/*              associated with this object instance            */
+	/*              immediatelly. If it is terminated it returns    */
+	/*              forced code, otherwise it returns error code    */
+	/****************************************************************/
+
+	int Abort (int code)
+	{
+		int hRes;
+
+		return ((hRes = Terminate ()) != 0) ? hRes : (m_exitCode = code);
+	}
+
+	/****************************************************************/
+	/* Function:    Run ()                                          */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      return code of function Run() implemented by    */
+	/*              derived class                                   */
+	/* Description: this function is the only function of this      */
+	/*              interface which must be implemented by derived  */
+	/*              class. This function implements the running     */
+	/*              logic of associated program thread although this*/
+	/*              is not the base function of associated thread   */
+	/*              The actual base function of associated thread is*/
+	/*              _Run(). But nevertheless, function Run() must be*/
+	/*              implemented as if it is the base function of    */
+	/*              associated thread. Normally it executes an      */
+	/*              infinite loop, executing some job, but allways  */
+	/*              prepared to terminate immediatelly after any    */
+	/*              iteration or even in the middle of the job,     */
+	/*              especially when executing lengthy jobs          */
+	/****************************************************************/
+
+	virtual int Run (void) = 0;
+
+	/****************************************************************/
+	/* Function:    InitInstance ()                                 */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      S_OK - successfull initialisation. Associated   */
+	/*                 program thread will be executed              */
+	/*              other - initialisation fault. Associated thread */
+	/*                 will not be created and thus not executed    */
+	/* Description: Default implementation of this function does    */
+	/*              nothing and returns S_OK, thus telling to the   */
+	/*              calling environment that associated program     */
+	/*              can be created and executed. If it is           */
+	/*              implemented by derived class we must remember   */
+	/*              these facts:                                    */
+	/*              - this function is supposed to initialize some  */
+	/*                source entitites used by associated thread    */
+	/*              - return code of this function is used to       */
+	/*                determine if associated thread will be created*/
+	/*                at all. Returnin S_OK signals to the calling  */
+	/*                environment to procede with thread creation   */
+	/*                and execution. Other return values signal to  */
+	/*                calling environment that the normal thread    */
+	/*                creation sequence must be terminated with     */
+	/*                error code returned by this function          */
+	/*              - function is not running in the context of     */
+	/*                associated thread (which does not even exist  */
+	/*                at that moment). Initialization which depends */
+	/*                on the context of the associated thread should*/
+	/*                be performed from Run() or some function      */
+	/*                called from Run()                             */
+	/****************************************************************/
+
+	virtual int InitInstance (void)
+	{
+		return 0;
+	}
+
+	/****************************************************************/
+	/* Function:    ExitInstance ()                                 */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      Default implementation of this function returns */
+	/*              return code of Run(). If it is implemented by   */
+	/*              derived class it can return anything            */
+	/* Description: This function is provided to finish the         */
+	/*              execution of associated thread. It is called    */
+	/*              immediatelly after Run() terminates in the      */
+	/*              context of associated thread. Default           */
+	/*              implementation does nothing. This function gives*/
+	/*              to program the last chance to perform some      */
+	/*              actions which should be done before associated  */
+	/*              thread terminates                               */
+	/****************************************************************/
+
+	virtual int ExitInstance (void)
+	{
+		return m_exitCode;
+	}
+
+private:
+
+	/****************************************************************/
+	/* Function:    _Run ()                                         */
+	/* In:          data - void pointer to self; 4th parameter to   */
+	/*                 pthread_create() is void*                    */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      return code of Run()                            */
+	/* Description: Function is global because it is 3rd parameter  */
+	/*              of pthread_create() and private so that it can  */
+	/*              be executed only by member functions of this    */
+	/*              class (Start() function). This function is      */
+	/*              actual main function of associated thread. Its  */
+	/*              only purpose is to start Run() and              */
+	/*              ExitInstance() and to finish associated thread  */
+	/*              with appropriate exit code; the code returned by*/
+	/*              function Run()                                  */
+	/****************************************************************/
+
+	static void* _Run (void* data)
+	{
+		return	(((CRunnable *) data))->_Run();
+	}
+
+	void* _Run ()
+	{
+		int eCode;
+		CRunnable *base = (CRunnable *) this;
+		pthread_cleanup_push (base->_Cleanup, base);
+#if	_DEBUG
+			cout << "thread " << (unsigned long) base->getTid () << " started" << endl;
+#endif
+			m_threadId = syscall (SYS_gettid);
+			eCode = base->m_exitCode = base->Run ();
+#if	_DEBUG
+			cout << "thread " << (unsigned long) base->getTid () << " stopped" << endl;
+#endif
+			base->ExitInstance ();
+			pthread_cleanup_pop(0);
+		pthread_exit ((eCode == 0) ? ((void*)0) : ((void*)1));
+		return (eCode == 0) ? ((void*)0) : ((void*)1);
+	}
+
+	/****************************************************************/
+	/* Function:    _Cleenup ()                                     */
+	/* In:          data - void pointer to self                     */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      /                                               */
+	/* Description: Function is global as requested by              */
+	/*              pthread_cleanup() and private to disable        */
+	/*              invocation of this function. It is executed     */
+	/*              automatically when associated thread terminates */
+	/*              normally or unexpectedly                        */
+	/****************************************************************/
+
+	static void _Cleanup (void* data)
+	{
+		CRunnable *base = (CRunnable *) data;
+		base->Cleanup ();
+	}
+
+	/****************************************************************/
+	/* Function:    Cleenup ()                                      */
+	/* In:          data - void pointer to self                     */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      /                                               */
+	/* Description: Nonglobal version of _Cleanup() provided to     */
+	/*              access instance members                         */
+	/****************************************************************/
+
+	void Cleanup (void)
+	{
+//		m_handle = (pthread_t) 0;
+	}
+public:
+	/****************************************************************/
+	/* Function:    getHandle ()                                    */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      handle of associated thread                     */
+	/*              NULL - associated thread does not exist         */
+	/* Description: function returns handle of associated thread    */
+	/****************************************************************/
+
+	inline	pid_t	getTid (void) { return m_threadId; }
+	inline	pthread_t getHandle (void) { return m_handle; }
+
+	/****************************************************************/
+	/* Function:    getExitCode ()                                  */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      return code of associated thread                */
+	/*              -1 - thread has not yet terminated              */
+	/* Description: Function returns exit code of Run() or -1 if    */
+	/*              this function is still running                  */
+	/****************************************************************/
+
+	int getExitCode (void)
+	{
+		return m_exitCode;
+	}
+
+	/****************************************************************/
+	/* Function:    Lock ()                                         */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      0 - associated thread is locked                 */
+	/*              < 0 - error                                     */
+	/* Description: Function 'locks' associated thread              */
+	/****************************************************************/
+
+	inline int Lock ()
+	{
+		int ret;
+		while ((ret = pthread_mutex_lock (&m_mutex)) != 0)
+		{
+			if (errno != EINTR)
+				break;
+		}
+		return ret;
+	}
+
+	/****************************************************************/
+	/* Function:    Unlock ()                                       */
+	/* In:          /                                               */
+	/* Out:         /                                               */
+	/* In/Out:      /                                               */
+	/* Return:      0 - associated thread is unlocked               */
+	/*              < 0 - error                                     */
+	/* Description: Function 'unlocks' associated thread            */
+	/****************************************************************/
+
+	inline int Unlock ()
+	{
+		int ret;
+		while ((ret = pthread_mutex_unlock (&m_mutex)) != 0)
+		{
+			if (errno != EINTR)
+				break;
+		}
+		return ret;
+	}
+
+private:
+	pid_t	m_threadId;	// thread id
+	pthread_t m_handle; // handle of associated thread created
+	// with pthread_create()
+	pthread_mutex_t m_mutex; // thread mutex: indicates thread
+	// running state
+	int m_exitCode; // associated thread exit code returned
+	// by Run()
+};
+
+#endif // !defined(RUNNABLE_H_INCLUDED)

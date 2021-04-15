@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdcp.tables_root xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='cdcp.xsd'>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>1</tsf_connection_id>
+		<tsf_data_group_id>1</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>1</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>2</tsf_connection_id>
+		<tsf_data_group_id>2</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>1</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>3</tsf_connection_id>
+		<tsf_data_group_id>3</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>0</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>4</tsf_connection_id>
+		<tsf_data_group_id>4</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>1</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>5</tsf_connection_id>
+		<tsf_data_group_id>5</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>0</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>6</tsf_connection_id>
+		<tsf_data_group_id>7</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>1</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>7</tsf_connection_id>
+		<tsf_data_group_id>8</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>1</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>8</tsf_connection_id>
+		<tsf_data_group_id>9</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>1</tsf_activity>
+	</tsf_connection>
+	<tsf_connection>
+		<nodeid>70987</nodeid>
+		<tsf_connection_id>9</tsf_connection_id>
+		<tsf_data_group_id>10</tsf_data_group_id>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tsf_activity>0</tsf_activity>
+	</tsf_connection>
+
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>1</tsf_id>
+		<src_file_name>ama.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/transfer</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).ama</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>1</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>1</tsf_data_group_id>
+		<tsf_dst_id>1</tsf_dst_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>2</tsf_id>
+		<src_file_name>performance.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/files/performance/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/files/performance/cdr</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(HOUR)$(MIN)$(INDEX,2)</name_schema>
+		<ne_side>512</ne_side>
+		<tsf_dyn_lib_id>2</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>2</tsf_data_group_id>
+		<tsf_dst_id>2</tsf_dst_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>3</tsf_id>
+		<src_file_name>mob.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/files/mob/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/files/mob/cdr</dst_dir_name>
+		<name_schema>$(NODE)_$(DATE)$(TIME)_mob_$(INDEX,3).$(SUFFIX)</name_schema>
+		<ne_side>768</ne_side>
+		<tsf_dyn_lib_id>3</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>3</tsf_data_group_id>
+		<tsf_dst_id>3</tsf_dst_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>4</tsf_id>
+		<src_file_name>centrex.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/centrex</dst_dir_name>
+		<name_schema>$(NODE)cdr.$(INDEX,3)</name_schema>
+		<ne_side>256</ne_side>
+		<tsf_dyn_lib_id>4</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>4</tsf_data_group_id>
+		<tsf_dst_id>3</tsf_dst_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>5</tsf_id>
+		<src_file_name>v5ama.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/v5transfer</dst_dir_name>
+		<name_schema>$(NODE)cdr.$(INDEX,3)</name_schema>
+		<ne_side>512</ne_side>
+		<tsf_dyn_lib_id>5</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>5</tsf_data_group_id>
+		<tsf_dst_id>3</tsf_dst_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>6</tsf_id>
+		<src_file_name>archive</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/archive</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/archive</dst_dir_name>
+		<name_schema>archive</name_schema>
+		<ne_side>1536</ne_side>
+		<tsf_data_group_id>6</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>7</tsf_id>
+		<src_file_name>iacama.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/iacama</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).si3000iacama</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>10</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>7</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>8</tsf_id>
+		<src_file_name>onlinecdrbkp.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/onlinecdrbkp</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).cdr</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>11</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>8</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>9</tsf_id>
+		<src_file_name>onlineacctbkp.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/onlineacctbkp</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).acc</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>12</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>9</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>10</tsf_id>
+		<src_file_name>source1371140958387.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/XML Kiev</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).xml</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>13</tsf_dyn_lib_id>
+		<tsf_mediation_id>3</tsf_mediation_id>
+		<tsf_data_group_id>1</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>11</tsf_id>
+		<src_file_name>source1424695820880.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/EWSD</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).ama</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>14</tsf_dyn_lib_id>
+		<tsf_mediation_id>2</tsf_mediation_id>
+		<tsf_data_group_id>1</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>12</tsf_id>
+		<src_file_name>source1462436197638.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/BILLING</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).ama</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>15</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>1</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>13</tsf_id>
+		<src_file_name>source1462440301752.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/NON-BILLING</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).iacama</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>16</tsf_dyn_lib_id>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<tsf_data_group_id>7</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>14</tsf_id>
+		<src_file_name>source1544788499639.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/IACAMATest</dst_dir_name>
+		<name_schema>$(NODE)$(DATE)$(TIME)$(INDEX,2).xml</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>17</tsf_dyn_lib_id>
+		<tsf_mediation_id>3</tsf_mediation_id>
+		<tsf_data_group_id>7</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>15</tsf_id>
+		<src_file_name>source1560526154376.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/centrex_xml_new</dst_dir_name>
+		<name_schema>$(NODE)$(INDEX,3).xml</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>18</tsf_dyn_lib_id>
+		<tsf_mediation_id>3</tsf_mediation_id>
+		<tsf_data_group_id>4</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>16</tsf_id>
+		<src_file_name>source1560533045024.cdr</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/charging/working</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/charging/centrex_xml_1</dst_dir_name>
+		<name_schema>$(NODE)$(INDEX,3).xml</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>19</tsf_dyn_lib_id>
+		<tsf_mediation_id>3</tsf_mediation_id>
+		<tsf_data_group_id>4</tsf_data_group_id>
+	</tsf_data>
+	<tsf_data>
+		<nodeid>70987</nodeid>
+		<tsf_id>17</tsf_id>
+		<src_file_name>history.xml</src_file_name>
+		<src_dir_name>/opt/si2000/neroot/files/performance/history/</src_dir_name>
+		<dst_dir_name>/opt/si2000/neroot/files/performance/xml</dst_dir_name>
+		<name_schema>$(NAME)$(INDEX,3).xml</name_schema>
+		<ne_side>0</ne_side>
+		<tsf_dyn_lib_id>20</tsf_dyn_lib_id>
+		<tsf_data_group_id>1</tsf_data_group_id>
+		<tsf_dst_id>1</tsf_dst_id>
+	</tsf_data>
+
+
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>1</tsf_data_group_id>
+		<cum_data_desc>Main Billing CDR</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>2</tsf_data_group_id>
+		<cum_data_desc>Performance CDR</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>3</tsf_data_group_id>
+		<cum_data_desc>Observation CDR</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>4</tsf_data_group_id>
+		<cum_data_desc>Centrex CDR</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>5</tsf_data_group_id>
+		<cum_data_desc>V5 CDR</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>6</tsf_data_group_id>
+		<cum_data_desc>archive</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>7</tsf_data_group_id>
+		<cum_data_desc>IACAMA CDR</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>8</tsf_data_group_id>
+		<cum_data_desc>Bkp for Online CDR</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>9</tsf_data_group_id>
+		<cum_data_desc>Bkp for Online Acct</cum_data_desc>
+	</tsf_data_group>
+	<tsf_data_group>
+		<nodeid>70987</nodeid>
+		<tsf_data_group_id>10</tsf_data_group_id>
+		<cum_data_desc>BGID Centrex CDR</cum_data_desc>
+	</tsf_data_group>
+
+
+
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>1</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>AMA adapter</dll_desc>
+		<dll_arg1>AMA</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>2</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>Performance adapter</dll_desc>
+		<dll_arg1>STAT</dll_arg1>
+		<dll_arg2>group = performanceusers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>3</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>MOB adapter</dll_desc>
+		<dll_arg1>MOB</dll_arg1>
+		<dll_arg2>group = mobusers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>4</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>Centrex adapter</dll_desc>
+		<dll_arg1>CENTREX</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>5</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>ALL adapter</dll_desc>
+		<dll_arg1>ALL</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>6</tsf_dyn_lib_id>
+		<dll_name>libcdrmediation.so</dll_name>
+		<dll_desc>CDR mediation</dll_desc>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>7</tsf_dyn_lib_id>
+		<dll_name>libewsdmediation.so</dll_name>
+		<dll_desc>EWSD mediation</dll_desc>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>8</tsf_dyn_lib_id>
+		<dll_name>libxmlmediation.so</dll_name>
+		<dll_desc>XML mediation</dll_desc>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>9</tsf_dyn_lib_id>
+		<dll_name>libunlmediation.so</dll_name>
+		<dll_desc>UNL mediation</dll_desc>
+		<dll_arg1>config = unt.txt</dll_arg1>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>10</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>IACAMA adapter</dll_desc>
+		<dll_arg1>IACAMA</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>11</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>OnlineCDRBkp adapter</dll_desc>
+		<dll_arg1>OnlineCDRBkp</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>12</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>OnlineAcctBkp adapter</dll_desc>
+		<dll_arg1>OnlineAcctBkp</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>13</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>adapter</dll_desc>
+		<dll_arg1>AMA</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+		<dll_arg6>checkcount = true</dll_arg6>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>14</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>adapter</dll_desc>
+		<dll_arg1>AMA</dll_arg1>
+		<dll_arg2>group = users</dll_arg2>
+		<dll_arg3>owner = ama</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+		<dll_arg6>checkcount = true</dll_arg6>
+		<dll_arg7>shortxml = false</dll_arg7>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>15</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>adapter</dll_desc>
+		<dll_arg1>AMA</dll_arg1>
+		<dll_arg2>file = SIPOrigCFxSIPTermRoam.flt</dll_arg2>
+		<dll_arg3>filter = libchargefilter.so</dll_arg3>
+		<dll_arg4>group = users</dll_arg4>
+		<dll_arg5>owner = neadmin</dll_arg5>
+		<dll_arg6>dperm = 770</dll_arg6>
+		<dll_arg7>fperm = 770</dll_arg7>
+		<dll_arg8>shortxml = false</dll_arg8>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>16</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>adapter</dll_desc>
+		<dll_arg1>IACAMA</dll_arg1>
+		<dll_arg2>group = users</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+		<dll_arg6>shortxml = false</dll_arg6>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>17</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>adapter</dll_desc>
+		<dll_arg1>IACAMA</dll_arg1>
+		<dll_arg2>group = performanceusers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>18</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>adapter</dll_desc>
+		<dll_arg1>CENTREX</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+		<dll_arg6>nullsize = false</dll_arg6>
+		<dll_arg6>shortxml = false</dll_arg6>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>19</tsf_dyn_lib_id>
+		<dll_name>libcharge.so</dll_name>
+		<dll_desc>adapter</dll_desc>
+		<dll_arg1>CENTREX</dll_arg1>
+		<dll_arg2>group = amausers</dll_arg2>
+		<dll_arg3>owner = neadmin</dll_arg3>
+		<dll_arg4>dperm = 770</dll_arg4>
+		<dll_arg5>fperm = 770</dll_arg5>
+		<dll_arg7>shortxml = false</dll_arg7>
+	</tsf_dyn_library>
+	<tsf_dyn_library>
+		<nodeid>70987</nodeid>
+		<tsf_dyn_lib_id>20</tsf_dyn_lib_id>
+		<dll_name>libstatadapter.so</dll_name>
+		<dll_desc>stat adapter</dll_desc>
+		<dll_arg1>group = amausers</dll_arg1>
+		<dll_arg2>owner = neadmin</dll_arg2>
+		<dll_arg3>dperm = 770</dll_arg3>
+		<dll_arg4>fperm = 770</dll_arg4>
+		<dll_arg5>shortxml = false</dll_arg5>
+	</tsf_dyn_library>
+
+	<tsf_mediation>
+		<nodeid>70987</nodeid>
+		<tsf_mediation_id>1</tsf_mediation_id>
+		<mediation_desc>CDR mediation</mediation_desc>
+		<tsf_dyn_lib_id>6</tsf_dyn_lib_id>
+	</tsf_mediation>
+	<tsf_mediation>
+		<nodeid>70987</nodeid>
+		<tsf_mediation_id>2</tsf_mediation_id>
+		<mediation_desc>EWSD mediation</mediation_desc>
+		<tsf_dyn_lib_id>7</tsf_dyn_lib_id>
+	</tsf_mediation>
+	<tsf_mediation>
+		<nodeid>70987</nodeid>
+		<tsf_mediation_id>3</tsf_mediation_id>
+		<mediation_desc>XML mediation</mediation_desc>
+		<tsf_dyn_lib_id>8</tsf_dyn_lib_id>
+	</tsf_mediation>
+	<tsf_mediation>
+		<nodeid>70987</nodeid>
+		<tsf_mediation_id>4</tsf_mediation_id>
+		<mediation_desc>UNL mediation</mediation_desc>
+		<tsf_dyn_lib_id>9</tsf_dyn_lib_id>
+	</tsf_mediation>
+
+
+	<tsf_settings>
+		<nodeid>70987</nodeid>
+		<tsf_settings_id>1</tsf_settings_id>
+		<ftp_settings>96</ftp_settings>
+	</tsf_settings>
+
+	<tsf_time_table>
+		<nodeid>70987</nodeid>
+		<tsf_tt_id>1</tsf_tt_id>
+		<tt_type>1</tt_type>
+		<tt_period>1</tt_period>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+	</tsf_time_table>
+	<tsf_time_table>
+		<nodeid>70987</nodeid>
+		<tsf_tt_id>2</tsf_tt_id>
+		<tt_type>0</tt_type>
+		<tt_period>1</tt_period>
+		<tsf_tt_group_id>2</tsf_tt_group_id>
+	</tsf_time_table>
+	<tsf_time_table>
+		<nodeid>70987</nodeid>
+		<tsf_tt_id>3</tsf_tt_id>
+		<tt_type>1</tt_type>
+		<tt_period>1</tt_period>
+		<tsf_tt_group_id>1001</tsf_tt_group_id>
+	</tsf_time_table>
+
+	<tsf_tt_group>
+		<nodeid>70987</nodeid>
+		<tsf_tt_group_id>1</tsf_tt_group_id>
+		<tt_desc>Periodic (15min)</tt_desc>
+	</tsf_tt_group>
+	<tsf_tt_group>
+		<nodeid>70987</nodeid>
+		<tsf_tt_group_id>2</tsf_tt_group_id>
+		<tt_desc>Immediate</tt_desc>
+	</tsf_tt_group>
+	<tsf_tt_group>
+		<nodeid>70987</nodeid>
+		<tsf_tt_group_id>1001</tsf_tt_group_id>
+		<tt_desc>Periodic (1min)</tt_desc>
+	</tsf_tt_group>
+
+	<tsf_destination>
+		<nodeid>70988</nodeid>
+		<tsf_dst_id>1</tsf_dst_id>
+		<ftp_hostname>sftp:172.18.33.235</ftp_hostname>
+		<ftp_user>root</ftp_user>
+		<password>iskratel</password>
+		<dst_dir_name>ssh-tests</dst_dir_name>
+		<tmp_dir_name>working</tmp_dir_name>
+	</tsf_destination>
+
+	<tsf_destination>
+		<nodeid>70987</nodeid>
+		<tsf_dst_id>2</tsf_dst_id>
+		<ftp_hostname>sftp:lnxsrv07</ftp_hostname>
+		<ftp_user>rvod</ftp_user>
+		<password>iskratel</password>
+		<dst_dir_name>ssh-tests</dst_dir_name>
+		<tmp_dir_name>working-1</tmp_dir_name>
+	</tsf_destination>
+
+	<tsf_destination>
+		<nodeid>70987</nodeid>
+		<tsf_dst_id>3</tsf_dst_id>
+		<ftp_hostname>ftp.iskratel.si</ftp_hostname>
+		<ftp_user>iskratel</ftp_user>
+		<password>trans567fer</password>
+		<dst_dir_name>ssh-tests</dst_dir_name>
+		<tmp_dir_name>working</tmp_dir_name>
+	</tsf_destination>
+
+	<tsf_destination>
+		<nodeid>70987</nodeid>
+		<tsf_dst_id>4</tsf_dst_id>
+		<ftp_hostname>ftp.iskratel.si</ftp_hostname>
+		<ftp_user>iskratel</ftp_user>
+		<password>trans567fer</password>
+		<dst_dir_name>ssh-tests</dst_dir_name>
+		<tmp_dir_name>working</tmp_dir_name>
+	</tsf_destination>
+
+</cdcp.tables_root>

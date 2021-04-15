@@ -1,0 +1,45 @@
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="system.schemas_root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="system.schemas" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="schema_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="schema_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:string">
+										<xs:minLength value="0"/>
+										<xs:maxLength value="128"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="catalog_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:int"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="remarks"  minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base = "xs:string">
+										<xs:minLength value="0"/>
+										<xs:maxLength value="128"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="XPKsystem.schemas">
+						<xs:selector xpath=".//system.schemas"/>
+						<xs:field xpath="schema_id"/>
+					</xs:key>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

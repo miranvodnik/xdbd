@@ -1,0 +1,5 @@
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-pfunc-gen/xdbd-pfunc-gen/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-pfunc-gen/xdbd-pfunc-gen/bin/Debug/xdbd-pfunc-gen.exe.mdb
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-pfunc-gen/xdbd-pfunc-gen/bin/Debug/xdbd-pfunc-gen.exe
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-pfunc-gen/xdbd-pfunc-gen/obj/x86/Debug/xdbd-pfunc-gen.exe
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-pfunc-gen/xdbd-pfunc-gen/obj/x86/Debug/xdbd-pfunc-gen.exe.mdb

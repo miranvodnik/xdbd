@@ -1,0 +1,359 @@
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+ is default namespace
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+using namespace std;
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace xml_db_daemon;
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+using namespace std;
+using namespace genxdbddata;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+using namespace xml_db_daemon;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+				cerr << "cannot set namespace for '" << xsdfname << "'" << endl;
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace xml_db_daemon;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace xml_db_daemon;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+ xmlXPathRegisterNs () failed"), xmlFname);
+		xdbdErrReport (SC_XDBD, SC_ERR, err_info ("cannot register xml namespace for '%s/%s', xmlXPathRegisterNs () failed"), xmlPath, xmlFname);
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace xml_db_daemon;
+using namespace std;
+using namespace xml_db_daemon;
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace xml_db_daemon;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace xml_db_daemon;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon {
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+using namespace xml_db_daemon;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */
+using namespace std;
+namespace xml_db_daemon
+} /* namespace xml_db_daemon */

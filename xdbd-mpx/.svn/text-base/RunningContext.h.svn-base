@@ -1,0 +1,469 @@
+/*#######################################################################*/
+/*#                                                                     #*/
+/*#             Copyright (c) 2009 IskraTEL                             #*/
+/*#                                                                     #*/
+/*# Name        : RunningContext.h                                      #*/
+/*#                                                                     #*/
+/*# Description	: running context declarations                          #*/
+/*#                                                                     #*/
+/*# Code        : QQFA - XAK9280                                        #*/
+/*#                                                                     #*/
+/*# Date        : Mar 2009                                              #*/
+/*#                                                                     #*/
+/*# Author      : Miran Vodnik                                          #*/
+/*#                                                                     #*/
+/*# Translation : FtpDBDll.mk                                           #*/
+/*#                                                                     #*/
+/*# Remarks     :                                                       #*/
+/*#                                                                     #*/
+/*#######################################################################*/
+
+#ifndef _CRUNNINGCONTEXT_H
+#define	_CRUNNINGCONTEXT_H
+
+/****************************************************************/
+/*          UNIX - SCCS  VERSION DESCRIPTION                    */
+/****************************************************************/
+/*static char  unixid_QQFA[] = "%W%	%D%	RunningContext.h";*/
+
+/****************************************************************/
+/*      Header files                                            */
+/****************************************************************/
+
+#include <sys/types.h>	// select() API declarations
+#include <sys/stat.h>	// select() API declarations
+#include <sys/epoll.h>		// epoll() API declarations
+#include <sys/select.h>	// select() API declarations
+#include <time.h>	// time declarations
+#include <signal.h>	// signal handling
+#include <uuid/uuid.h>	// UUIDs (for unique MQ names)
+#include <mqueue.h>	// RT message queues
+#include <errno.h>	// error codes
+#include <stdio.h>	// standard I/O functions
+#include <string.h>	//
+#include "Runnable.h"
+
+#include <map>		// STL keyed sets
+#include <set>		// STL self keyed sets
+#include <vector>	// STL vectors
+#include <functional>	// function objects used by algorithms
+#include <algorithm>	// algorithms for predicate functions
+#include <iostream>	// stdio I/O operations
+using namespace std;
+// std:: is default namespace
+
+typedef void* ctx_appdt_t;
+typedef void* ctx_fddes_t;
+typedef void* ctx_timer_t;
+typedef void* ctx_sig_t;
+
+#define	SEC_TO_NSEC	(1000 * 1000 * 1000)
+
+#if (CONFIGURATION == Debug)
+#define	_STR2(line) #line
+#define	_STR(line) _STR2(line)
+#define	ctx_info __FILE__ ":" _STR(__LINE__)
+#else
+#define	ctx_info 0
+#endif
+
+#define	ctx_starter(x,y) \
+inline	static	void	x (CRunningContext *ctx, ctx_appdt_t appdata) \
+{ \
+	((y*)appdata)->x (ctx); \
+} \
+void	x (CRunningContext *ctx);
+
+#define	ctx_finisher(x,y) \
+inline	static	void	x (CRunningContext *ctx, ctx_appdt_t appdata) \
+{ \
+	((y*)appdata)->x (ctx); \
+} \
+void	x (CRunningContext *ctx);
+
+#define	ctx_timehook(x,y) \
+inline	static	void	x (CRunningContext *ctx, struct timespec oldTime, struct timespec newTime, long long timeDiff, ctx_appdt_t appdata) \
+{ \
+	((y*)appdata)->x (ctx, oldTime, newTime, timeDiff); \
+} \
+void	x (CRunningContext *ctx, struct timespec oldTime, struct timespec newTime, long long timeDiff);
+
+#define	timer_handler(x,y) \
+inline	static	void	x (CRunningContext *ctx, ctx_timer_t handler, struct timespec t, ctx_appdt_t appdata) \
+{ \
+	((y*) appdata)->x (ctx, handler, t); \
+} \
+void	x (CRunningContext *ctx, ctx_timer_t handler, struct timespec t);
+
+#define	fd_handler(x,y) \
+inline	static	void	x (CRunningContext *ctx, uint flags, ctx_fddes_t handler, int fd, ctx_appdt_t appdata) \
+{ \
+	((y*)appdata)->x (ctx, flags, handler, fd); \
+} \
+void	x (CRunningContext *ctx, uint flags, ctx_fddes_t handler, int fd);
+
+#define	sig_handler(x,y) \
+inline	static	void	x (CRunningContext *ctx, ctx_sig_t handler, siginfo_t* info, ctx_appdt_t appdata) \
+{ \
+	((y*)appdata)->x (ctx, handler, info); \
+} \
+void	x (CRunningContext *ctx, ctx_fddes_t handler, siginfo_t* info);
+
+typedef	struct
+{
+	long	m_type;
+	char	m_msg[0];
+}	ctx_msg;
+
+typedef	enum
+{
+	CtxMsgMin,
+	CtxMsgSigInfo,
+	CtxMsgMax
+}	tcx_mtype;
+
+typedef	struct	_SigInfoMsg
+{
+	long	m_type;
+	int	m_signo;
+	ctx_sig_t	m_signal;
+	siginfo_t	m_siginfo;
+	struct	_SigInfoMsg*	m_next;
+}	SigInfoMsg;
+
+class CRunningContext
+{
+public:
+
+	// 'initial state' function prototype
+	typedef void (*initfunc) (CRunningContext *ctx, ctx_appdt_t appdata);
+	typedef void (*exitfunc) (CRunningContext *ctx, ctx_appdt_t appdata);
+	typedef void (*timehookfunc) (CRunningContext *ctx, struct timespec oldTime, struct timespec newTime, long long timeDiff,
+		ctx_appdt_t appdata);
+	// file descriptor callback function prototype
+	typedef void (*cbfunc) (CRunningContext *ctx, unsigned int flags, ctx_fddes_t handler, int n, ctx_appdt_t appdata);
+	// timer callback function prototype
+	typedef void (*tmrfunc) (CRunningContext *ctx, ctx_timer_t handler, struct timespec t, ctx_appdt_t appdata);
+	// signal callback function prototype
+	typedef void (*sigfunc) (CRunningContext *ctx, ctx_sig_t handler, siginfo_t *info, ctx_appdt_t appdata);
+
+	typedef set < CRunningContext* >	ctxset;
+
+private:
+	// class associated with file descriptors used in select()
+	class CDescriptor
+	{
+	public:
+		CDescriptor (uint flags, int fd, cbfunc f, ctx_appdt_t appdata, const char* info = 0) :
+			m_flags (flags), m_fd (fd), m_f (f), m_data (appdata), m_active (true), m_deleted (false), m_info (info)
+		{
+		}
+		inline void flags (uint flags)
+		{
+			m_flags = flags;
+		}
+		inline uint flags (void)
+		{
+			return m_flags;
+		}
+		inline int fd (void)
+		{
+			return m_fd;
+		}
+		inline cbfunc f (void)
+		{
+			return m_f;
+		}
+		inline void f (cbfunc p_f)
+		{
+			m_f = p_f;
+		}
+		inline ctx_appdt_t data (void)
+		{
+			return m_data;
+		}
+		inline void data (ctx_appdt_t p_data)
+		{
+			m_data = p_data;
+		}
+		inline const char* info (void)
+		{
+			return m_info;
+		}
+		inline bool active (void)
+		{
+			return m_active;
+		}
+		inline void active (bool p_active)
+		{
+			m_active = p_active;
+		}
+		inline bool deleted (void)
+		{
+			return m_deleted;
+		}
+		inline void deleted (bool p_deleted)
+		{
+			m_deleted = p_deleted;
+		}
+	private:
+		uint m_flags; // epoll flags
+		int m_fd; // file descriptor number
+		cbfunc m_f; // associated callback
+		ctx_appdt_t m_data; // application data associated with callback
+		bool m_active; // active descriptor ?
+		bool m_deleted; // deleted descriptor ?
+		const char* m_info;
+	};
+	// set of file descriptors
+	typedef multimap < int, CDescriptor* > cbset;
+	// list of prepared file descriptors
+	typedef vector < CDescriptor* > cblist;
+
+	// class associated with timer
+	class CTimer
+	{
+	public:
+		CTimer (struct timespec t, tmrfunc f, ctx_appdt_t appdata, const char* info = 0) :
+			m_t (t), m_f (f), m_data (appdata), m_active (true), m_info (info)
+		{
+		}
+		inline struct timespec t (void)
+		{
+			return m_t;
+		}
+		inline tmrfunc f (void)
+		{
+			return m_f;
+		}
+		inline ctx_appdt_t data (void)
+		{
+			return m_data;
+		}
+		inline const char* info (void)
+		{
+			return m_info;
+		}
+		inline bool active (void)
+		{
+			return m_active;
+		}
+		inline void active (bool p_active)
+		{
+			m_active = p_active;
+		}
+		void compensate (bool advance, struct timespec diff)
+		{
+			if (advance)
+			{
+				if ((m_t.tv_nsec += diff.tv_nsec) >= SEC_TO_NSEC)
+				{
+					m_t.tv_nsec -= SEC_TO_NSEC;
+					m_t.tv_sec += 1;
+				}
+				m_t.tv_sec += diff.tv_sec;
+			}
+			else
+			{
+				if ((m_t.tv_nsec += diff.tv_nsec) < 0)
+				{
+					m_t.tv_nsec += SEC_TO_NSEC;
+					m_t.tv_sec -= 1;
+				}
+				m_t.tv_sec -= diff.tv_sec;
+			}
+		}
+	private:
+		struct timespec m_t; // expiration time
+		tmrfunc m_f; // timer callback function
+		ctx_appdt_t m_data; // application data associated with callback
+		bool m_active; // active timer ?
+		// bool m_deleted;	// timer need not to be deleted because
+		// it is deleted by framework when it expires
+		const char* m_info;
+	};
+	// less() operator for time stamps used to define total order on set of CTimer* objects
+	typedef struct timecmp: public less < struct timespec >
+	{
+		bool operator () (const struct timespec& x, const struct timespec& y) const
+		{
+			return ((x.tv_sec < y.tv_sec) || ((x.tv_sec == y.tv_sec) && (x.tv_nsec < y.tv_nsec)));
+		}
+	} timecmp;
+	// set of timers
+	typedef multimap < struct timespec, CTimer*, timecmp > tmrset;
+	// list of prepared timers
+	typedef vector < CTimer* > tmrlist;
+
+	class CSignalContext
+	{
+	public:
+		CSignalContext (CRunningContext* ctx, int signo, sigfunc f, ctx_appdt_t appdata) :
+			m_ctx (ctx), m_signo(signo), m_f (f), m_data (appdata)
+		{
+			m_next = 0;
+			memset (&m_sigAction, 0, sizeof (struct sigaction));
+			memset (&m_oldAction, 0, sizeof (struct sigaction));
+		}
+		inline CSignalContext* next ()
+		{
+			return	m_next;
+		}
+		inline	CSignalContext* link (CSignalContext* sig)
+		{
+			m_next = sig;
+			return	this;
+		}
+		inline CRunningContext* ctx ()
+		{
+			return	m_ctx;
+		}
+		inline int signo ()
+		{
+			return	m_signo;
+		}
+		inline sigfunc f (void)
+		{
+			return m_f;
+		}
+		inline ctx_appdt_t data (void)
+		{
+			return m_data;
+		}
+		inline struct sigaction* sigAction ()
+		{
+			return	&m_sigAction;
+		}
+		inline struct sigaction* oldAction ()
+		{
+			return	&m_oldAction;
+		}
+		static void removeFromList (CSignalContext** list, CSignalContext* sig)
+		{
+			for (; (*list != 0) && (*list != sig); list = &((*list)->m_next));
+			if (*list != 0)
+				*list = (*list)->m_next;
+			delete	sig;
+		}
+	private:
+		CSignalContext*	m_next;	// next signal description in list
+		CRunningContext*	m_ctx;
+		int	m_signo;
+		sigfunc m_f; // signal handler function - callback
+		ctx_appdt_t m_data; // application data associated with callback
+		struct	sigaction	m_sigAction;	// sigaction handler
+		struct	sigaction	m_oldAction;	// sigaction handler
+	};
+
+	private:
+	CRunningContext (bool initialize);
+	public:
+	CRunningContext (initfunc f, exitfunc g, timehookfunc h, ctx_appdt_t appdata, const char* name = 0);
+	virtual ~CRunningContext ();
+private:
+	void CheckTimeValidity ();
+	void HandleDescriptors (int count);
+	void ActivateDescriptors (void);
+	struct timespec* HandleTimers (void);
+	void CompensateTimers (long long timeDiff);
+
+#if defined(CTX_MQ)
+	fd_handler (ReadMessageQueue, CRunningContext)
+#else
+	fd_handler (ReadPipe, CRunningContext)
+#endif
+	void	WritePipe (void* msg, size_t size);
+
+public:
+	int MainLoop (void);
+	inline void Quit () { m_quit = true; }
+
+	ctx_fddes_t RegisterDescriptor (uint flags, int fd, cbfunc f, ctx_appdt_t appdata, const char* info = 0);
+	inline void ChangeDescriptorHandler (ctx_fddes_t des, cbfunc f)
+	{
+		if (des) ((CDescriptor*) des)->f (f);
+	}
+	inline void ChangeDescriptorAppData (ctx_fddes_t des, ctx_appdt_t appdata)
+	{
+		if (des) ((CDescriptor*) des)->data (appdata);
+	}
+	void EnableDescriptor (ctx_fddes_t hdlr, uint flags);
+	void DisableDescriptor (ctx_fddes_t hdlr, uint flags);
+	void RemoveDescriptor (ctx_fddes_t hdlr);
+	void ReplyDescriptor (ctx_fddes_t hdlr, unsigned int flags, int fd);
+
+	ctx_timer_t RegisterTimer (struct timespec timer, tmrfunc f, ctx_appdt_t appdata, const char* info = 0);
+	inline void EnableTimer (ctx_timer_t tmr)
+	{
+		if (tmr) ((CTimer*) tmr)->active (true);
+	}
+	inline void DisableTimer (ctx_timer_t tmr)
+	{
+		if (tmr) ((CTimer*) tmr)->active (false);
+	}
+	inline struct timespec realTime (void)
+	{
+		return m_realTime;
+	}
+	inline pthread_t threadId ()
+	{
+		return m_threadId;
+	}
+
+	ctx_sig_t RegisterSignal (int sig, sigfunc f, ctx_appdt_t appdata);
+	void RemoveSignal (ctx_sig_t hdlr);
+	static void HandleSignal (int sig, siginfo_t *info, void *data);
+	static void HandleAllSignals ();
+
+private:
+	static inline void sigLock () { pthread_mutex_lock(&g_lock); }
+	static inline void sigUnlock () { pthread_mutex_unlock(&g_lock); }
+
+public:
+	void stat (const char* msg);
+	int round ()
+	{
+		return m_round;
+	}
+
+private:
+	pthread_t	m_threadId;
+	int	m_epollSetId;	// ID of epoll set
+	epoll_event	m_epollSet [1024];
+#if defined(CTX_MQ)
+	mqd_t	m_queue;
+	char	m_queueName[40];
+	ctx_fddes_t	m_queueHandler;
+#else
+	int	m_pipe[2];
+	ctx_fddes_t	m_pipeHandler;
+#endif
+
+	initfunc	m_initfunc;	// 'initial state' function
+	exitfunc	m_exitfunc;	// 'final state' function
+	timehookfunc	m_timehookfunc;	// 'time hook' function
+	ctx_appdt_t	m_appldata;	// application (context specific) data
+
+	struct timespec	m_timer;	// select() timer
+	struct timespec	m_realTime;	// real-clock current time
+	struct timespec	m_cpuTime;	// CPU time for this process
+
+	int	m_nfds;	// nr. of selected descriptors
+	cblist	m_cblist;	// I/O callbacks prepared for next iteration
+	cbset	m_cbset;	// current I/O callbacks
+
+	tmrlist	m_tmrlist;	// timer callbacks prepared for next iteration
+	tmrset	m_tmrset;	// timer callbacks
+
+	static	pthread_mutex_t	g_lock;
+	static	sigset_t	g_sigset;
+	static	CSignalContext*	g_sigActions[_NSIG];	// signal action table
+	static	SigInfoMsg*	g_sigMessages;
+	static	ctxset	g_ctxset;
+	static	CRunningContext*	g_initializer;
+
+	int	m_round;
+	bool	m_quit;
+};
+
+#endif	/* _CRUNNINGCONTEXT_H */

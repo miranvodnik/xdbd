@@ -1,0 +1,58 @@
+# . /etc/init.d/it_functions
+# it_set_it_profile
+
+exec >> xdbdmgr.log 2>&1
+# exec >> /dev/null 2>&1
+
+export	XDBD_LOGLEVEL=error
+
+export	XDBD_XSD_DATABASE_PATH=$PRODUCT_DIR/xml-db/xsd-db-old
+export	XDBD_XML_DATABASE_PATH=$PRODUCT_DIR/xml-db/xml-db-old
+export	XDBD_DAT_DATABASE_PATH=$PRODUCT_DIR/xml-db/xdb-db-old
+export	XDBD_IGNORE_NODEID=true
+export	XDBD_INDEX_ALL=true
+export	XDBD_SIGS_SIZE=20
+
+export NODEID=2000
+export XDBD_SOLID_CONNECTION_STRING=localhost
+export XDBD_SOLID_DB_USERNAME=root
+export XDBD_SOLID_DB_PASSWORD=iskratel
+export XDBD_SOLID_DB_CATALOG=catalog
+
+# statistical module settings
+export XDBD_PRESERVE_STAT_HISTORY=false
+export XDBD_GENERATE_STAT_XML=true
+export XDBD_STAT_CNTR_INFO="/home/miran/eclipse-workspace/xdbd-xml.stable/HistoryStatisticsCounters-1.txt"
+
+export PATH=$PATH:${PRODUCT_DIR}/bin:.
+
+DESC="XML DB DAEMON"
+NAME=XDBDMGR
+DAEMON_EXE=xdbd
+
+echo $PATH
+echo $PRODUCT_DIR
+echo $LD_LIBRARY_PATH
+
+case "$1" in
+	start)
+		echo -n `date` "Starting $DESC: "
+		ulimit -c unlimited
+		$DAEMON_EXE admin $*
+		echo "started"
+		cd /
+		;;
+	stop)
+		echo -n `date` "Stopping $DESC: "
+		$DAEMON_EXE admin $*
+		echo "stopped"
+		cd /
+		;;
+	*)
+		N=/etc/init.d/$NAME
+		echo "Usage: $N {start|stop}" >&2
+		exit 1
+	;;
+esac
+
+exit 0

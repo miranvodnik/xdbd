@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="stat_adapter">
+	<SDL_notification>
+		<includes>
+			<unit name="StatisticalAdapterThread.h"/>
+		</includes>
+		<events>
+			<insert>
+				<code_text>StatisticalAdapterThread::InsertAdapter($adapter_id.new);</code_text>
+			</insert>
+			<update>
+				<change_mask>
+					<conditions>
+						<all_fields/>
+					</conditions>
+					<code_text>StatisticalAdapterThread::UpdateAdapter($adapter_id.new, $stat_dir_name.new, $dest_dir_name.new, $owner_name.new, $group_name.new, $dir_permissions.new, $file_permissions.new);</code_text>
+				</change_mask>
+			</update>
+			<delete>
+				<code_text>StatisticalAdapterThread::DeleteAdapter($adapter_id.old);</code_text>
+			</delete>
+		</events>
+	</SDL_notification>
+</notification>

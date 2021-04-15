@@ -1,0 +1,63 @@
+#/*#######################################################################*/
+#/*#                                                                     #*/
+#/*#                                                                     #*/
+#/*#            Copyright (c) 2014 Iskra Tel                             #*/
+#/*#                                                                     #*/
+#/*#                  Support Software System                            #*/
+#/*#                                                                     #*/
+#/*#                                                                     #*/
+#/*# Name        : xdbdmpx.mk                                            #*/
+#/*#                                                                     #*/
+#/*# Description : FTP client library                                    #*/
+#/*#                                                                     #*/
+#/*# Code        : XXXX - XXXXXXX                                        #*/
+#/*#                                                                     #*/
+#/*# Date        : Nov 2014                                              #*/
+#/*#                                                                     #*/
+#/*# Author      : Miran Vodnik ITWEN1                                   #*/
+#/*#                                                                     #*/
+#/*# Compilation : xdbdmpx.mk - project makefile                         #*/
+#/*#                                                                     #*/
+#/*# Revisions   :                                                       #*/
+#/*#                                                                     #*/
+#/*#######################################################################*/
+
+#/***************************************************************/
+#/*          UNIX - SCCS  VERSION DESCRIPTION                   */
+#/***************************************************************/
+#/*static char  unixid_XXXX[] = "%W%	%D%	xdbdmpx.mk";*/
+
+-include ../makefile.defs
+
+# -Werror             = report any warning as error
+COPTS = -fPIC -Wall -c -Werror
+IDIR = \
+	-I$(PRODUCT_DIR)/xdbd-include \
+
+CPPFLAGS = $(DEF_FLAGS) $(COPTS) $(IDIR)
+LDIR = \
+	-L$(PRODUCT_DIR)/lib \
+
+LOPTS = -shared
+LIBS = -lxdbdmsg
+
+OBJS = \
+	Runnable.o \
+	RunningContext.o \
+	XdbdBaseJob.o \
+	XdbdMessageQueue.o \
+	XdbdWorkingThread.o \
+
+library: libxdbdmpx.so
+
+-include .deps/*.d
+
+libxdbdmpx.so: $(OBJS)
+	$(CXX) $(LOPTS) $(LDIR) $(LIBS) $(OBJS) -o $@
+	-@cp $@ ../lib
+
+$(OBJS):
+
+clean:
+	-@rm -rf libxdbdmpx.so $(OBJS)
+

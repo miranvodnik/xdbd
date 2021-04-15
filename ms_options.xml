@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<ms_options_root
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='ms_options.xsd'>
+
+    <ext_media_options>
+	<nodeid>2000</nodeid>
+	<fax_rate_maneg>1</fax_rate_maneg>
+	<fax_max_bit_rate>14400</fax_max_bit_rate>
+	<fax_udp_ec>1</fax_udp_ec>
+	<fax_fill_bit_rem>0</fax_fill_bit_rem>
+	<fax_trans_jbig>0</fax_trans_jbig>
+	<fax_trans_mmr>0</fax_trans_mmr>
+	<fax_version>0</fax_version>
+	<fax_max_buffer>800</fax_max_buffer>
+	<fax_max_datagram>189</fax_max_datagram>
+	<dtmf_fr_spread>2</dtmf_fr_spread>
+	<dtmf_dtct_time>30</dtmf_dtct_time>
+	<rx_alc>0</rx_alc>
+	<silence_supp_tresh>0</silence_supp_tresh>
+	<faxmod_tone_relay>0</faxmod_tone_relay>
+	<faxmod_tone_txplt>101</faxmod_tone_txplt>
+	<faxmod_tone_rxplt>101</faxmod_tone_rxplt>
+    </ext_media_options>
+
+    <media_opt_by_func>
+	<nodeid>2000</nodeid>
+	<media_opt_func_id>0</media_opt_func_id>
+	<media_opt_func_name>Media Server</media_opt_func_name>
+	<vad_threshold>-24</vad_threshold>
+	<time_dtct_silence>500</time_dtct_silence>
+	<time_dtct_talk>0</time_dtct_talk>
+	<media_opt_reserve1>0</media_opt_reserve1>
+	<media_opt_reserve2>0</media_opt_reserve2>
+	<media_opt_reserve3>0</media_opt_reserve3>
+    </media_opt_by_func>
+    <media_opt_by_func>
+	<nodeid>2000</nodeid>
+	<media_opt_func_id>1</media_opt_func_id>
+	<media_opt_func_name>Proxy Media Server</media_opt_func_name>
+	<vad_threshold>-30</vad_threshold>
+	<time_dtct_silence>200</time_dtct_silence>
+	<time_dtct_talk>0</time_dtct_talk>
+	<media_opt_reserve1>0</media_opt_reserve1>
+	<media_opt_reserve2>0</media_opt_reserve2>
+	<media_opt_reserve3>0</media_opt_reserve3>
+    </media_opt_by_func>
+
+    <node>
+	<nodeid>2000</nodeid>
+	<statistics_period>15</statistics_period>
+	<h248text_encodtype>1</h248text_encodtype>
+	<h248_version>1</h248_version>
+	<sorm_alarm_info>1</sorm_alarm_info>
+    </node>
+
+</ms_options_root>

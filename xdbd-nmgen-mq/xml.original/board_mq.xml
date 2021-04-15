@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="board">
+	<MQ_notification>
+		<includes>
+			<unit name="nmStructureDefinition.h"/>
+		</includes>
+		<struct_variables>
+			<struct name="pBoard" type="mng_msg_board_glb_setup" subtype="msg_board_glb_setup"/>
+		</struct_variables>
+		<events>
+			<insert>
+				<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+				<code_text>if (new_PARENT_BOARDNR_null &lt; 0)</code_text>
+				<code_text>$parent_boardnr.new = 0;</code_text>
+				<code_text>clip_string ($req_board_id.new);</code_text>
+				<code_text>if (new_ACT_BOARD_ID_null &lt; 0)</code_text>
+				<code_text>strcpy($act_board_id.new, "");</code_text>
+				<code_text>else</code_text>
+				<code_text>clip_string($act_board_id.new);</code_text>
+				<code_text>if (new_BOARD_SERIALNR_null &lt; 0)</code_text>
+				<code_text>strcpy($board_serialnr.new, "");</code_text>
+				<code_text>else</code_text>
+				<code_text>clip_string($board_serialnr.new);</code_text>
+				<code_text>if (new_BOARD_DSC_null &lt; 0)</code_text>
+				<code_text>strcpy($board_dsc.new, "");</code_text>
+				<code_text>else</code_text>
+				<code_text>clip_string($board_dsc.new);</code_text>
+				<code_text>if (new_BOARD_PROFILE_TYPE_null &lt; 0)</code_text>
+				<code_text>$board_profile_type.new = 0;</code_text>
+				<code_text>if (new_BOARD_PROFILE_ID_null &lt; 0)</code_text>
+				<code_text>$board_profile_id.new = 0;</code_text>
+				<code_text>nmGetBoardGlbSetUp (pBoard, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, $boardnr.new,</code_text>
+				<code_text>$parent_boardnr.new, 0, $board_pos.new, 0, $board_type.new, 0, $board_equip.new, 0,</code_text>
+				<code_text>$board_oosi.new, $req_board_id.new, $act_board_id.new, $board_serialnr.new, $board_dsc.new,</code_text>
+				<code_text>$board_profile_type.new, $board_profile_id.new, $s_node.new, $geosys_unit_id.new);</code_text>
+				<msgsnd ipc_id="SHMKEY_NMNG_BOARD" data="pBoard"/>
+				<code_text>}</code_text>
+			</insert>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="board_type"/>
+						<field name="board_equip"/>
+						<field name="board_oosi"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>if (new_PARENT_BOARDNR_null &lt; 0)</code_text>
+					<code_text>$parent_boardnr.new = 0;</code_text>
+					<code_text>clip_string ($req_board_id.new);</code_text>
+					<code_text>if (new_ACT_BOARD_ID_null &lt; 0)</code_text>
+					<code_text>strcpy($act_board_id.new, "");</code_text>
+					<code_text>else</code_text>
+					<code_text>clip_string($act_board_id.new);</code_text>
+					<code_text>if (new_BOARD_SERIALNR_null &lt; 0)</code_text>
+					<code_text>strcpy($board_serialnr.new, "");</code_text>
+					<code_text>else</code_text>
+					<code_text>clip_string($board_serialnr.new);</code_text>
+					<code_text>if (new_BOARD_DSC_null &lt; 0)</code_text>
+					<code_text>strcpy($board_dsc.new, "");</code_text>
+					<code_text>else</code_text>
+					<code_text>clip_string($board_dsc.new);</code_text>
+					<code_text>if (new_BOARD_PROFILE_TYPE_null &lt; 0)</code_text>
+					<code_text>$board_profile_type.new = 0;</code_text>
+					<code_text>if (new_BOARD_PROFILE_ID_null &lt; 0)</code_text>
+					<code_text>$board_profile_id.new = 0;</code_text>
+					<code_text>nmGetBoardGlbSetUp (pBoard, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, $boardnr.new,</code_text>
+					<code_text>$parent_boardnr.new, $board_pos.old, $board_pos.new, $board_type.old, $board_type.new,</code_text>
+					<code_text>$board_equip.old, $board_equip.new, $board_oosi.old, $board_oosi.new,</code_text>
+					<code_text>$req_board_id.new, $act_board_id.new, $board_serialnr.new, $board_dsc.new,</code_text>
+					<code_text>$board_profile_type.new, $board_profile_id.new, $s_node.new, $geosys_unit_id.new);</code_text>
+					<msgsnd ipc_id="SHMKEY_NMNG_BOARD" data="pBoard"/>
+					<code_text>}</code_text>
+				</change_mask>
+			</update>
+			<delete>
+				<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+				<code_text>if (old_PARENT_BOARDNR_null &lt; 0)</code_text>
+				<code_text>$parent_boardnr.old = 0;</code_text>
+				<code_text>clip_string ($req_board_id.old);</code_text>
+				<code_text>if (old_ACT_BOARD_ID_null &lt; 0)</code_text>
+				<code_text>strcpy($act_board_id.old, "");</code_text>
+				<code_text>else</code_text>
+				<code_text>clip_string($act_board_id.old);</code_text>
+				<code_text>if (old_BOARD_SERIALNR_null &lt; 0)</code_text>
+				<code_text>strcpy($board_serialnr.old, "");</code_text>
+				<code_text>else</code_text>
+				<code_text>clip_string($board_serialnr.old);</code_text>
+				<code_text>if (old_BOARD_DSC_null &lt; 0)</code_text>
+				<code_text>strcpy($board_dsc.old, "");</code_text>
+				<code_text>else</code_text>
+				<code_text>clip_string($board_dsc.old);</code_text>
+				<code_text>if (old_BOARD_PROFILE_TYPE_null &lt; 0)</code_text>
+				<code_text>$board_profile_type.old = 0;</code_text>
+				<code_text>if (old_BOARD_PROFILE_ID_null &lt; 0)</code_text>
+				<code_text>$board_profile_id.old = 0;</code_text>
+				<code_text>nmGetBoardGlbSetUp (pBoard, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, $boardnr.old,</code_text>
+				<code_text>$parent_boardnr.old, $board_pos.old, $board_pos.old, $board_type.old, $board_type.old,</code_text>
+				<code_text>$board_equip.old, $board_equip.old, $board_oosi.old, $board_oosi.old,</code_text>
+				<code_text>$req_board_id.old, $act_board_id.old, $board_serialnr.old, $board_dsc.old,</code_text>
+				<code_text>$board_profile_type.old, $board_profile_id.old, $s_node.old, $geosys_unit_id.old);</code_text>
+				<msgsnd ipc_id="SHMKEY_NMNG_BOARD" data="pBoard"/>
+				<code_text>}</code_text>
+			</delete>
+		</events>
+	</MQ_notification>
+</notification>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="port">
+ <MQ_notification>
+	<includes>
+		<unit name="nmStructureDefinition.h"/>
+	</includes>
+  <struct_variables>
+   <struct name="pdatanmng_msg_port" type="nmng_msg_port" subtype="port_data"/>
+   <struct name="pdatanmng_msg_net_data" type="nmng_msg_net_data" subtype="mng_net_data"/>
+  </struct_variables>
+  <events>
+   <update>
+    <change_mask>
+     <conditions>
+      <all_fields/>
+     </conditions>
+	<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+     <code_text>clip_string($port_sys_name.old);</code_text>
+     <code_text>clip_string($port_sys_name.new);</code_text>
+     <code_text>nmMgGetPort_data_nmng_msg_net_data (pdatanmng_msg_net_data, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, UserInfo,</code_text>
+     <code_text>$nodeid.old, $portnr.old, $port_id.old, $boardnr.old, $port_equip.old, $port_oosi.old, $sigtrace_req.old,</code_text>
+     <code_text>$port_mlb.old, $log_stat_group_id.old, $port_profile_type.old, $port_profile_id.old, $port_sys_name.old,</code_text>
+     <code_text>$nodeid.new, $portnr.new, $port_id.new, $boardnr.new, $port_equip.new, $port_oosi.new, $sigtrace_req.new,</code_text>
+     <code_text>$port_mlb.new, $log_stat_group_id.new, $port_profile_type.new, $port_profile_id.new, $port_sys_name.new);</code_text>
+	<code_text>}</code_text>
+    </change_mask>
+    <change_mask>
+     <conditions>
+      <field name="port_equip"/>
+     </conditions>
+	<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+     <code_text>nmGetpdatanmng_msg_port (pdatanmng_msg_port, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, UserInfo,</code_text>
+     <code_text>$nodeid.old, $portnr.old, $port_id.old, $boardnr.old, $port_equip.old, $port_oosi.old, $sigtrace_req.old,</code_text>
+     <code_text>$port_mlb.old, $log_stat_group_id.old, $port_profile_type.old, $port_profile_id.old, $port_sys_name.old,</code_text>
+     <code_text>$nodeid.new, $portnr.new, $port_id.new, $boardnr.new, $port_equip.new, $port_oosi.new, $sigtrace_req.new,</code_text>
+     <code_text>$port_mlb.new, $log_stat_group_id.new, $port_profile_type.new, $port_profile_id.new, $port_sys_name.new);</code_text>
+     <msgsnd ipc_id="SHMKEY_NMNG_RECONFIG" data="pdatanmng_msg_port"/>
+	<code_text>}</code_text>
+    </change_mask>
+   </update>
+  </events>
+ </MQ_notification>
+</notification>

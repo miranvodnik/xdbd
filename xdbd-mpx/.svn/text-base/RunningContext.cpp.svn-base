@@ -1,0 +1,933 @@
+/*#######################################################################*/
+/*#                                                                     #*/
+/*#             Copyright (c) 2009 IskraTEL                             #*/
+/*#                                                                     #*/
+/*# Name        : RunningContext.cpp                                    #*/
+/*#                                                                     #*/
+/*# Description	: running context implementation                        #*/
+/*#                                                                     #*/
+/*# Code        : QQFB - XAK9281                                        #*/
+/*#                                                                     #*/
+/*# Date        : Mar 2009                                              #*/
+/*#                                                                     #*/
+/*# Author      : Miran Vodnik                                          #*/
+/*#                                                                     #*/
+/*# Translation : FtpDBDll.mk                                           #*/
+/*#                                                                     #*/
+/*# Remarks     :                                                       #*/
+/*#                                                                     #*/
+/*#######################################################################*/
+
+/****************************************************************/
+/*          UNIX - SCCS  VERSION DESCRIPTION                    */
+/****************************************************************/
+/*static char  unixid_QQFB[] = "%W%	%D%	RunningContext.cpp";*/
+
+/****************************************************************/
+/*      Header files                                            */
+/****************************************************************/
+
+#include "RunningContext.h"	// running context declarations
+
+pthread_mutex_t	CRunningContext::g_lock;
+sigset_t	CRunningContext::g_sigset;
+CRunningContext::CSignalContext*	CRunningContext::g_sigActions[_NSIG];
+SigInfoMsg*	CRunningContext::g_sigMessages = 0;
+CRunningContext::ctxset	CRunningContext::g_ctxset;
+CRunningContext*	CRunningContext::g_initializer = new CRunningContext (true);
+
+CRunningContext::CRunningContext (bool initialize)
+{
+	if (!initialize)
+		return;
+
+	pthread_mutexattr_t attr;
+
+	pthread_mutexattr_init (&attr);
+	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init (&g_lock, &attr);
+	sigemptyset (&g_sigset);
+	memset (g_sigActions, 0, sizeof (g_sigActions));
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::CRunningContext ()             */
+/* In:          f - application function, which should          */
+/*                  initialize MainLoop                         */
+/*              appdata - application data - context parameter  */
+/*                  to function f                               */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function initializes running context object     */
+/****************************************************************/
+
+CRunningContext::CRunningContext (initfunc f, exitfunc g, timehookfunc h, ctx_appdt_t appdata, const char* name)
+{
+	m_threadId = pthread_self ();
+	m_initfunc = f;
+	m_exitfunc = g;
+	m_timehookfunc = h;
+	m_appldata = appdata;
+	m_nfds = -1;
+	m_round = 0;
+	m_quit = false;
+#if defined(CTX_MQ)
+	if (name != 0)
+	{
+		strncpy (m_queueName+1, name, 36);
+		*m_queueName = '/';
+		m_queue = mq_open (m_queueName, O_RDWR|O_CREAT, 0666, 0);
+	}
+	else	m_queue = -1;
+	m_queueHandler = 0;
+#else
+	if (pipe (m_pipe) != 0)
+	{
+		m_pipe[0] = m_pipe[1] = 0;
+	}
+	else	if (false)
+	{
+		u_int flags;
+		flags = fcntl (m_pipe[0], F_GETFL, 0);
+		fcntl (m_pipe[0], F_SETFL, flags | O_NONBLOCK);
+		flags = fcntl (m_pipe[1], F_GETFL, 0);
+		fcntl (m_pipe[1], F_SETFL, flags | O_NONBLOCK);
+	}
+	m_pipeHandler = 0;
+#endif
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::~CRunningContext ()            */
+/* In:          /                                               */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: running context destructor                      */
+/****************************************************************/
+
+CRunningContext::~CRunningContext ()
+{
+	{
+		cblist::iterator	i;
+		for (i = m_cblist.begin(); i != m_cblist.end(); ++i)
+			delete	*i;
+		m_cblist.clear();
+	}
+
+	{
+		cbset::iterator	i;
+		for (i = m_cbset.begin(); i != m_cbset.end(); ++i)
+			delete	i->second;
+		m_cbset.clear();
+	}
+
+	{
+		tmrlist::iterator	i;
+		for (i = m_tmrlist.begin(); i != m_tmrlist.end(); ++i)
+			delete	*i;
+		m_tmrlist.clear();
+	}
+
+	{
+		tmrset::iterator	i;
+		for (i = m_tmrset.begin(); i != m_tmrset.end(); ++i)
+			delete	i->second;
+		m_tmrset.clear();
+	}
+
+#if defined(CTX_MQ)
+	mq_unlink (m_queueName);
+#else
+	if (m_pipe[0] >= 0)
+		close (m_pipe[0]);
+	if (m_pipe[1] >= 0)
+		close (m_pipe[1]);
+	m_pipe[0] = m_pipe[1] = -1;
+	if (m_pipeHandler != 0)
+		RemoveDescriptor (m_pipeHandler);
+	m_pipeHandler = 0;
+#endif
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::MainLoop ()                    */
+/* In:          /                                               */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      0 - no more timers and file descriptors         */
+/*              -1 - select() function error                    */
+/* Description: running context main loop. It executes all      */
+/*              registered handlers for timers and file         */
+/*              descriptors associated with this running context*/
+/****************************************************************/
+
+int CRunningContext::MainLoop (void)
+{
+	int status = 0;
+
+	clock_gettime (CLOCK_MONOTONIC, &m_cpuTime);
+	clock_gettime (CLOCK_REALTIME, &m_realTime);
+
+#if defined(CTX_MQ)
+	if (m_queue > 0)
+		m_queueHandler = RegisterDescriptor(EPOLLIN, m_queue, ReadMessageQueue, this, ctx_info);
+#else
+	if (m_pipe[0] > 0)
+		m_pipeHandler = RegisterDescriptor(EPOLLIN, m_pipe[0], ReadPipe, this, ctx_info);
+#endif
+	if (m_initfunc != NULL)
+		m_initfunc (this, m_appldata);
+
+	if ((m_epollSetId = epoll_create (1024)) > 0)
+		while (true)
+		{
+			int n, epollTimer;
+			struct timespec *tp;
+
+			++m_round;
+
+			tp = HandleTimers ();
+			ActivateDescriptors ();
+
+			if (m_quit)
+			{
+				stat ("QUIT");
+				break;
+			}
+
+			if ((m_nfds <= 0) && (tp == NULL))
+			{
+				break;
+			}
+
+			if (tp == NULL)
+				epollTimer = -1;
+			else
+				epollTimer = (tp->tv_sec * 1000) + ((tp->tv_nsec / (SEC_TO_NSEC / 1000)));
+
+			pthread_sigmask (SIG_UNBLOCK, &g_sigset, 0);
+			if ((n = epoll_wait (m_epollSetId, m_epollSet, 1024, epollTimer)) < 0)
+			{
+				int	err = errno;
+				pthread_sigmask (SIG_BLOCK, &g_sigset, 0);
+				if (err == EINTR)
+				{
+					HandleAllSignals ();
+					CheckTimeValidity ();
+					continue;
+				}
+				char msg [32];
+				sprintf (msg, "epoll_wait (%d)", getpid ());
+				perror (msg);
+				stat (msg);
+				status = -1;
+				break;
+			}
+
+			pthread_sigmask (SIG_BLOCK, &g_sigset, 0);
+			CheckTimeValidity ();
+			HandleDescriptors (n);
+		}
+
+	if (m_exitfunc != NULL)
+		m_exitfunc (this, m_appldata);
+
+	return status;
+}
+
+#if defined(CTX_MQ)
+
+/****************************************************************/
+/* Function:    CRunningContext::ReadMessageQueue ()            */
+/* In:          ctx - running context                           */
+/*              flags - EPOLLIN or EPOLLOUT or combined         */
+/*              handler - registration handle                   */
+/*              fd - message queue descriptor                   */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function reads and handles internal message from*/
+/*              message queue                                   */
+/****************************************************************/
+
+void CRunningContext::ReadMessageQueue (CRunningContext *ctx, unsigned int flags, ctx_fddes_t handler, int fd)
+{
+	int	len;
+	char	msgBuff[8192];
+	unsigned int	prio = 0;
+	if ((len = mq_receive (m_queue, msgBuff, 8192, &prio)) > 0)
+	{
+		ctx_msg*	msg = (ctx_msg*) msgBuff;
+		switch (msg->m_type)
+		{
+		case	CtxMsgSigInfo:
+			break;
+		}
+	}
+}
+
+#else
+
+/****************************************************************/
+/* Function:    CRunningContext::ReadPipe ()                    */
+/* In:          ctx - running context                           */
+/*              flags - EPOLLIN or EPOLLOUT or combined         */
+/*              handler - registration handle                   */
+/*              fd - message queue descriptor                   */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function reads and handles internal message from*/
+/*              internal pipe                                   */
+/****************************************************************/
+
+void CRunningContext::ReadPipe (CRunningContext *ctx, unsigned int flags, ctx_fddes_t handler, int fd)
+{
+	char	msgBuff[1024];
+	ctx_msg*	msg = (ctx_msg*) msgBuff;
+
+	if (read (m_pipe[0], msg, 1024) < (ssize_t) sizeof (long))
+		return;
+
+	switch (msg->m_type)
+	{
+	case	CtxMsgSigInfo:
+		{
+			SigInfoMsg*	sigInfo = (SigInfoMsg*) msg;
+			CSignalContext*	sig = (CSignalContext*) sigInfo->m_signal;
+			sig->f() (sig->ctx(), sig, &sigInfo->m_siginfo, sig->data());
+		}
+		break;
+	}
+}
+
+#endif
+
+/****************************************************************/
+/* Function:    CRunningContext::WritePipe ()                   */
+/* In:          msg - message pointer                           */
+/*              size - message size                             */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function writes message to internal pipe        */
+/****************************************************************/
+
+void	CRunningContext::WritePipe (void* msg, size_t size)
+{
+	char*	ptr;
+	size_t	n;
+
+	for (ptr = (char*) msg; size > 0; ptr += n, size -= n)
+	{
+		if ((n = write (m_pipe[1], ptr, size)) <= 0)
+			break;
+	}
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::CheckTimeValidity ()           */
+/* In:          /                                               */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function checks if time has changed             */
+/*              significantly - more than one second. In this   */
+/*              case it compensates all timers and calls time   */
+/*              hook function registered by application         */
+/****************************************************************/
+
+void CRunningContext::CheckTimeValidity ()
+{
+	struct timespec cpuTimeStop;
+	struct timespec realTimeStop;
+	long long longCpuTime;
+	long long longCpuTimeStop;
+	long long longCpuTimeDiff;
+	long long longRealTime;
+	long long longRealTimeStop;
+	long long longRealTimeDiff;
+	long long diff;
+
+	clock_gettime (CLOCK_MONOTONIC, &cpuTimeStop);
+	clock_gettime (CLOCK_REALTIME, &realTimeStop);
+
+	longCpuTime = m_cpuTime.tv_sec;
+	longCpuTime *= SEC_TO_NSEC;
+	longCpuTime += m_cpuTime.tv_nsec;
+
+	longCpuTimeStop = cpuTimeStop.tv_sec;
+	longCpuTimeStop *= SEC_TO_NSEC;
+	longCpuTimeStop += cpuTimeStop.tv_nsec;
+
+	longCpuTimeDiff = longCpuTimeStop - longCpuTime;
+
+	longRealTime = m_realTime.tv_sec;
+	longRealTime *= SEC_TO_NSEC;
+	longRealTime += m_realTime.tv_nsec;
+
+	longRealTimeStop = realTimeStop.tv_sec;
+	longRealTimeStop *= SEC_TO_NSEC;
+	longRealTimeStop += realTimeStop.tv_nsec;
+
+	longRealTimeDiff = longRealTimeStop - longRealTime;
+
+	m_cpuTime = cpuTimeStop;
+	m_realTime = realTimeStop;
+
+	diff = longRealTimeDiff - longCpuTimeDiff;
+	if ((diff > SEC_TO_NSEC) || (diff < -SEC_TO_NSEC))
+	{
+		CompensateTimers (diff);
+		if (m_timehookfunc != NULL)
+		{
+			long long longOldTime = longRealTimeStop + diff;
+			struct timespec oldTime;
+
+			oldTime.tv_sec = longOldTime / SEC_TO_NSEC;
+			oldTime.tv_nsec = longOldTime % SEC_TO_NSEC;
+			m_timehookfunc (this, oldTime, realTimeStop, diff, m_appldata);
+		}
+	}
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::CompensateTimers ()            */
+/* In:          timeDiff - proposed compensation period         */
+/*                         expressed in nanoseconds             */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function compensates all timers running in the  */
+/*              context of this instance of CRunningContext     */
+/****************************************************************/
+
+void CRunningContext::CompensateTimers (long long timeDiff)
+{
+	bool advance = (timeDiff >= 0);
+	struct timespec td;
+
+	if (!advance)
+		timeDiff *= -1;
+	td.tv_sec = timeDiff / SEC_TO_NSEC;
+	td.tv_nsec = timeDiff % SEC_TO_NSEC;
+
+	tmrlist::iterator tli;
+	for (tli = m_tmrlist.begin (); tli != m_tmrlist.end (); ++tli)
+	{
+		CTimer* tmr = *tli;
+		tmr->compensate (advance, td);
+	}
+
+	tmrset::iterator tsi;
+	for (tsi = m_tmrset.begin (); tsi != m_tmrset.end (); ++tsi)
+	{
+		CTimer* tmr = tsi->second;
+		tmr->compensate (advance, td);
+		m_tmrlist.push_back (tmr);
+	}
+	m_tmrset.clear ();
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::HandleTimers ()                */
+/* In:          /                                               */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      NULL - no more registered timers                */
+/*              other - earliest timer timeout                  */
+/* Description: handle all timers which expired at this moment  */
+/*              and compute timeout value for the next earliest */
+/*              timer                                           */
+/****************************************************************/
+
+struct timespec* CRunningContext::HandleTimers (void)
+{
+	// execute all timers expired before current time stamp
+	if (!m_tmrset.empty ())
+	{
+		tmrset::iterator it, ub;
+		// timer expiration time stamp is bounded with upper bound of current time stamp
+		for (ub = m_tmrset.upper_bound (m_realTime), it = m_tmrset.begin (); it != ub; ++it)
+		{
+			CTimer *tmr = it->second;
+			if (tmr->active ())
+			{
+				tmr->active (false);
+				tmr->f () (this, tmr, tmr->t (), tmr->data ());
+			}
+		}
+		// expired timers are deleted
+		for (it = m_tmrset.begin (); it != ub; ++it)
+		{
+			CTimer *tmr = it->second;
+			delete tmr;
+			it->second = NULL;
+		}
+		m_tmrset.erase (m_tmrset.begin (), ub);
+	}
+
+	// register new timers
+	if (!m_tmrlist.empty ())
+	{
+		tmrlist::iterator li;
+		// copy registration list in execution set
+		for (li = m_tmrlist.begin (); li != m_tmrlist.end (); ++li)
+		{
+			CTimer *tmr = *li;
+			m_tmrset.insert (tmrset::value_type (tmr->t (), tmr));
+		}
+		m_tmrlist.clear ();
+	}
+
+	// compute next timer expiration delay
+	struct timespec *tp = NULL; // suppose we have no registered timers
+	tmrset::iterator it; // if there is any timer it is surely at the beginning
+	for (it = m_tmrset.begin (); (it != m_tmrset.end ()) && !(it->second->active ()); ++it)
+		;
+	if (it != m_tmrset.end ())
+	// there are registered timers
+	{
+		timecmp cmp;
+		if (cmp (m_realTime, it->first))
+		// we have to wait for next time-out
+		{
+			m_timer.tv_sec = it->first.tv_sec - m_realTime.tv_sec;
+			if ((m_timer.tv_nsec = it->first.tv_nsec - m_realTime.tv_nsec) < 0)
+			{
+				m_timer.tv_nsec += SEC_TO_NSEC;
+				m_timer.tv_sec -= 1;
+			}
+		}
+		// we have missed next time-out: execute it immediatelly
+		else
+			m_timer.tv_sec = m_timer.tv_nsec = 0;
+		tp = &m_timer;
+	}
+	return tp;
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::RegisterTimer ()               */
+/* In:          timer - timeout time stamp                      */
+/*              f - timeout handler                             */
+/*              appdata - application data registered together  */
+/*                  with f. This data is used as third parameter*/
+/*                  when f is called                            */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      void* - registration handler - used to reference*/
+/*                  timer associated with registered callback   */
+/*                  function                                    */
+/* Description: function registers timer: associates f and      */
+/*              appdata with registration handle                */
+/****************************************************************/
+
+ctx_timer_t CRunningContext::RegisterTimer (struct timespec timer, tmrfunc f, ctx_appdt_t appdata, const char* info)
+{
+	CTimer *tmr = new CTimer (timer, f, appdata, info);
+	m_tmrlist.push_back (tmr);
+	return (ctx_timer_t) tmr;
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::HandleDescriptors ()           */
+/* In:          count - number of concurrent file descriptors   */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function invokes all handlers associated with   */
+/*              file descriptors with pending I/O conditions    */
+/****************************************************************/
+
+void CRunningContext::HandleDescriptors (int count)
+{
+	for (int i = 0; i < count; ++i)
+	{
+		epoll_event* event = m_epollSet + i;
+		int fd = event->data.fd;
+
+		pair < cbset::iterator, cbset::iterator > er = m_cbset.equal_range (fd);
+		cbset::iterator it;
+		for (it = er.first; it != er.second; ++it)
+		{
+			CDescriptor *hdlr = it->second;
+			if ((hdlr->active ()) && (!hdlr->deleted ()))
+				hdlr->f () (this, event->events, hdlr, fd, hdlr->data ());
+		}
+	}
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::ReplyDescriptor ()             */
+/* In:          hdlr - handler to be replied                    */
+/*              flags - epoll flags                             */
+/*              fd - associated file descriptor                 */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function invokes all handlers associated with   */
+/*              file descriptors with pending I/O conditions    */
+/****************************************************************/
+
+void CRunningContext::ReplyDescriptor (ctx_fddes_t hdlr, unsigned int flags, int fd)
+{
+	if (hdlr == NULL)
+		return;
+	CDescriptor* d = (CDescriptor*) hdlr;
+	d->f () (this, flags, d, fd, d->data ());
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::RegisterDescriptor ()          */
+/* In:          dt - descriptor type (read, write, exception)   */
+/*              fd - file descriptor                            */
+/*              f - callback function                           */
+/*              appdata - application data address              */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      void* - registration descriptor address         */
+/* Description: function registeres callback function for given */
+/*              file descriptor                                 */
+/****************************************************************/
+
+ctx_fddes_t CRunningContext::RegisterDescriptor (uint flags, int fd, cbfunc f, ctx_appdt_t appdata, const char* info)
+{
+	if (fd < 0)
+		return	0;
+	CDescriptor *hdlr = new CDescriptor (flags, fd, f, appdata, info);
+	m_cblist.push_back (hdlr);
+	return hdlr;
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::ActivateDescriptors ()         */
+/* In:          /                                               */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: activates all callbacks registered in current   */
+/*              iteration of main loop                          */
+/****************************************************************/
+
+void CRunningContext::ActivateDescriptors (void)
+{
+	cblist::iterator it;
+	for (it = m_cblist.begin (); it != m_cblist.end (); ++it)
+	{
+		CDescriptor *hdlr = (CDescriptor*) *it;
+		int fd = hdlr->fd ();
+		pair < cbset::iterator, cbset::iterator > er = m_cbset.equal_range (fd);
+		cbset::iterator sit;
+		for (sit = er.first; (sit != er.second) && (hdlr != sit->second); ++sit);
+		if (hdlr->deleted ())
+		{
+			epoll_ctl (m_epollSetId, EPOLL_CTL_DEL, fd, 0);
+			if (sit != er.second)
+				m_cbset.erase (sit);
+			delete	hdlr;
+			continue;
+		}
+		if (sit == er.second)
+		{
+			epoll_event event;
+			event.events = hdlr->flags ();
+			event.data.fd = fd;
+			epoll_ctl (m_epollSetId, EPOLL_CTL_ADD, fd, &event);
+			m_cbset.insert (cbset::value_type (fd, hdlr));
+		}
+		else
+		{
+			epoll_event event;
+			event.events = hdlr->flags ();
+			event.data.fd = fd;
+			epoll_ctl (m_epollSetId, EPOLL_CTL_MOD, fd, &event);
+		}
+	}
+
+	m_cblist.clear ();
+	m_nfds = m_cbset.size ();
+#if defined(CTX_MQ)
+	if (m_queue > 0)
+		--m_nfds;
+#else
+	if (m_pipe[0] > 0)
+		--m_nfds;
+#endif
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::EnableDescriptor ()            */
+/* In:          h - handle of registered descriptor callback    */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: activates previously deactivated callback       */
+/****************************************************************/
+
+void CRunningContext::EnableDescriptor (ctx_fddes_t h, uint flags)
+{
+	if (h == NULL)
+		return;
+	CDescriptor* hdlr = (CDescriptor*) h;
+	if (hdlr->deleted ())
+		return;
+
+	uint hflags = hdlr->flags ();
+	hdlr->flags (hflags |= flags);
+
+	int fd = hdlr->fd ();
+	epoll_event event;
+	event.events = hflags;
+	event.data.fd = fd;
+	epoll_ctl (m_epollSetId, EPOLL_CTL_MOD, fd, &event);
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::DisableDescriptor ()           */
+/* In:          h - handle of registered descriptor callback    */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: deactivates previously activated callback       */
+/****************************************************************/
+
+void CRunningContext::DisableDescriptor (ctx_fddes_t h, uint flags)
+{
+	if (h == NULL)
+		return;
+	CDescriptor* hdlr = (CDescriptor*) h;
+	if (hdlr->deleted ())
+		return;
+
+	uint hflags = hdlr->flags ();
+	hdlr->flags (hflags &= ~flags);
+
+	int fd = hdlr->fd ();
+	epoll_event event;
+	event.events = hflags;
+	event.data.fd = fd;
+	epoll_ctl (m_epollSetId, EPOLL_CTL_MOD, fd, &event);
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::RemoveDescriptor ()            */
+/* In:          h - handle of registered descriptor callback    */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: removes registered callback                     */
+/****************************************************************/
+
+void CRunningContext::RemoveDescriptor (ctx_fddes_t h)
+{
+	if (h == NULL)
+		return;
+
+	CDescriptor* hdlr = (CDescriptor*) h;
+	if (hdlr->deleted ())
+		return;
+
+	hdlr->deleted (true);
+
+	int fd = hdlr->fd ();
+	pair < cbset::iterator, cbset::iterator > er = m_cbset.equal_range (fd);
+	cbset::iterator sit;
+	for (sit = er.first; (sit != er.second) && (hdlr != sit->second); ++sit);
+	if (sit != er.second)
+		m_cblist.push_back (hdlr);
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::RegisterSignal ()              */
+/* In:          sig - signal number                             */
+/*              f - signal handler                              */
+/*              appdata - application specific data             */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function registeres signal handler and          */
+/*              application specific data (context) for specific*/
+/*              signal specified by sig. More signal handlers   */
+/*              should be registered for specified signal       */
+/****************************************************************/
+
+ctx_sig_t CRunningContext::RegisterSignal (int sig, sigfunc f, ctx_appdt_t appdata)
+{
+	if ((sig <= 0) || (sig >= _NSIG))
+		return	0;
+
+	sigLock();
+
+	CSignalContext*	hdlr = new CSignalContext (this, sig, f, appdata);
+	struct	sigaction *sigAction = hdlr->sigAction();
+
+	sigAction->sa_handler = NULL;
+	sigAction->sa_sigaction = HandleSignal;
+	sigAction->sa_flags = SA_RESTART | SA_SIGINFO;
+	sigemptyset (&sigAction->sa_mask);
+	sigaddset (&sigAction->sa_mask, sig);
+	if (sigaction (sig, sigAction, NULL) == -1)
+	{
+		delete	hdlr;
+		sigUnlock();
+		return	0;
+	}
+
+	g_sigActions[sig] = hdlr->link (g_sigActions[sig]);
+	sigaddset (&g_sigset, sig);
+	sigUnlock();
+	return	hdlr;
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::RemoveSignal ()                */
+/* In:          hdlr - signal handler to be removed             */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function removes specified signal handler and   */
+/*              rearranges table of registered signals          */
+/****************************************************************/
+
+void CRunningContext::RemoveSignal (ctx_sig_t hdlr)
+{
+	int	signo = ((CSignalContext*)hdlr)->signo();
+	if ((signo <= 0) || (signo >= _NSIG))
+		return;
+
+	sigLock();
+	CSignalContext::removeFromList(&(g_sigActions[signo]), (CSignalContext*) hdlr);
+	sigUnlock();
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::HandleSignal ()                */
+/* In:          sig - signal number                             */
+/*              info - siginfo as reported by OS                */
+/*              data - additional data as reported by OS        */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: function is sigaction form of signal handler for*/
+/*              specified signal. Its only purpose is to        */
+/*              remember siginfo_t information reported by OS.  */
+/*              This job is performed in signal context and must*/
+/*              be as short as possible.                        */
+/****************************************************************/
+
+void CRunningContext::HandleSignal (int sig, siginfo_t *info, void *data)
+{
+	sigLock();
+
+	SigInfoMsg*	sigInfo = (SigInfoMsg*) malloc (sizeof (SigInfoMsg));
+	sigInfo->m_type = CtxMsgSigInfo;
+	sigInfo->m_signo = sig;
+	sigInfo->m_siginfo = *info;
+	sigInfo->m_next = g_sigMessages;
+	g_sigMessages = sigInfo;
+
+	sigUnlock ();
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::HandleAllSignals ()            */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: this function's purpose is to dispatch and      */
+/*              serialize signal actions collected so far by    */
+/*              signal handler HandleSignal. It is invoked as   */
+/*              soon as possible after HandleSignal has finished*/
+/*              it's job. siginfo_t chunks are delivered to all */
+/*              clients (CRunningContext objects) which had     */
+/*              registered signal handlers for associated       */
+/*              signals. Signals with lower numbers are         */
+/*              delivered first. Order of delivery for signal   */
+/*              handlers with same signal number is not         */
+/*              specified. Serialization of signal handlers     */
+/*              enables that they are invoked in series with    */
+/*              I/O an timer handling activities and thus there */
+/*              is no need to use synchronization mechanism     */
+/*              invoking these functions (I/O, timer and signal */
+/*              handlers)                                       */
+/****************************************************************/
+
+void CRunningContext::HandleAllSignals ()
+{
+	sigLock();
+
+	while (g_sigMessages != 0)
+	{
+		SigInfoMsg*	msg = g_sigMessages;
+
+#if	_DEBUG
+		siginfo_t*	info = &msg->m_siginfo;
+		cout << "SIGINFO (signo = " << info->si_signo << ", errno = " << info->si_errno << ", code = " << info->si_code;
+		if (info->si_code <= 0)
+		{
+			cout << ", pid = " << info->si_pid << ", uid = " << info->si_uid;
+		}
+		cout << ")" << endl;
+#endif
+		g_sigMessages = msg->m_next;
+
+		for (CSignalContext* hdlr = g_sigActions[msg->m_signo]; hdlr != 0; hdlr = hdlr->next())
+		{
+			CRunningContext*	ctx = hdlr->ctx();
+			msg->m_signal = hdlr;
+			ctx->WritePipe (msg, sizeof (SigInfoMsg));
+		}
+		free (msg);
+	}
+
+	sigUnlock ();
+}
+
+/****************************************************************/
+/* Function:    CRunningContext::stat ()                        */
+/* In:          msg - additional message                        */
+/* Out:         /                                               */
+/* In/Out:      /                                               */
+/* Return:      /                                               */
+/* Description: display statistics                              */
+/****************************************************************/
+
+void CRunningContext::stat (const char* msg)
+{
+	cbset::iterator it;
+	int cnt;
+
+	for (cnt = 0, it = m_cbset.begin (); it != m_cbset.end (); ++it)
+	{
+		CDescriptor* des = it->second;
+		const char*info = des->info();
+		if (des->active () && !des->deleted ())
+			++cnt;
+		cout << "FDES " << des->fd ()
+				<< ", FLAGS: " << des->flags ()
+				<< ", ACTIVE: " << des->active()
+				<< ", DELETED: " << des->deleted()
+				<< ", INFO: " << ((info != 0) ? info : "")
+				<< endl;
+	}
+	cout << msg << ": ICNT = " << cnt << endl;
+
+	tmrset::iterator ti;
+
+	for (cnt = 0, ti = m_tmrset.begin (); ti != m_tmrset.end (); ++ti)
+	{
+		CTimer *tmr = ti->second;
+		if (tmr->active ())
+		{
+			const char*	info = tmr->info();
+			if (info != 0)
+				cout << "TMR " << info << endl;
+			++cnt;
+		}
+	}
+	cout << msg << ": TCNT = " << cnt << endl;
+	cout << msg << ": NFDS = " << m_nfds << endl;
+}

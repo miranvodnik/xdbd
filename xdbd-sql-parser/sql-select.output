@@ -1,0 +1,1979 @@
+Grammar
+
+    0 $accept: sql_statement $end
+
+    1 sql_statement: sql_select_statement
+    2              | sql_update_statement
+    3              | sql_insert_statement
+    4              | sql_delete_statement
+    5              | sql_set_statement
+
+    6 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by SEMICOLON
+    7                     | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part SEMICOLON
+    8                     | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by
+    9                     | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part
+   10                     | SELECT sql_columns_part FROM sql_tables_part sql_order_by SEMICOLON
+   11                     | SELECT sql_columns_part FROM sql_tables_part SEMICOLON
+   12                     | SELECT sql_columns_part FROM sql_tables_part sql_order_by
+   13                     | SELECT sql_columns_part FROM sql_tables_part
+
+   14 sql_update_statement: UPDATE sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part SEMICOLON
+   15                     | UPDATE sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part
+   16                     | UPDATE sql_table_part SET sql_eq_expressions_part SEMICOLON
+   17                     | UPDATE sql_table_part SET sql_eq_expressions_part
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR
+   20                     | INSERT INTO sql_table_part VALUES LBR sql_values_part RBR SEMICOLON
+   21                     | INSERT INTO sql_table_part VALUES LBR sql_values_part RBR
+
+   22 sql_delete_statement: DELETE FROM sql_table_part WHERE sql_expression_part SEMICOLON
+   23                     | DELETE FROM sql_table_part WHERE sql_expression_part
+   24                     | DELETE FROM sql_table_part SEMICOLON
+   25                     | DELETE FROM sql_table_part
+
+   26 sql_set_statement: SET CATALOG sql_catalog
+
+   27 sql_catalog: NAME
+
+   28 sql_columns_part: %empty
+   29                 | sql_columns
+
+   30 sql_columns: sql_column sql_as_part
+   31            | sql_columns COMMA sql_column sql_as_part
+
+   32 sql_column: sql_column_name
+   33           | sql_table DOT sql_column_name
+   34           | sql_function_name LBR sql_column_name RBR
+   35           | sql_function_name LBR sql_table DOT sql_column_name RBR
+
+   36 sql_column_name: NAME
+   37                | ASTERISK
+   38                | NAME sql_ordering
+
+   39 sql_function_name: NAME
+
+   40 sql_ordering: ASC
+   41             | ASCENDING
+   42             | DESC
+   43             | DESCENDING
+
+   44 sql_as_part: %empty
+   45            | AS NAME
+
+   46 sql_tables_part: sql_tables
+
+   47 sql_tables: sql_table
+   48           | sql_tables COMMA sql_table
+
+   49 sql_table_part: sql_table
+
+   50 sql_table: NAME
+
+   51 sql_values_part: sql_values
+
+   52 sql_values: sql_constant
+   53           | sql_values COMMA sql_constant
+
+   54 sql_constant: NUMBER
+   55             | STRING
+   56             | TNULL
+   57             | QUESTION_MARK
+
+   58 sql_eq_expressions_part: %empty
+   59                        | sql_eq_expressions
+   60                        | LBR sql_eq_expressions RBR
+
+   61 sql_eq_expressions: sql_eq_expression
+   62                   | sql_eq_expressions sql_eq_expression
+   63                   | sql_eq_expressions COMMA sql_eq_expression
+
+   64 sql_primary_expression: sql_column
+   65                       | sql_constant
+
+   66 sql_eq_expression: sql_primary_expression EQ sql_primary_expression
+
+   67 sql_is_eq_expression: sql_primary_expression IS sql_primary_expression
+
+   68 sql_ne_expression: sql_primary_expression NE sql_primary_expression
+
+   69 sql_is_ne_expression: sql_primary_expression IS NOT sql_primary_expression
+
+   70 sql_lt_expression: sql_primary_expression LT sql_primary_expression
+
+   71 sql_le_expression: sql_primary_expression LE sql_primary_expression
+
+   72 sql_gt_expression: sql_primary_expression GT sql_primary_expression
+
+   73 sql_ge_expression: sql_primary_expression GE sql_primary_expression
+
+   74 sql_like_expression: sql_primary_expression LIKE sql_primary_expression
+
+   75 sql_comp_expression: sql_eq_expression
+   76                    | sql_ne_expression
+   77                    | sql_lt_expression
+   78                    | sql_le_expression
+   79                    | sql_gt_expression
+   80                    | sql_ge_expression
+   81                    | sql_like_expression
+   82                    | LBR sql_expression RBR
+   83                    | sql_is_eq_expression
+   84                    | sql_is_ne_expression
+
+   85 sql_and_expression: sql_comp_expression
+   86                   | sql_and_expression AND sql_comp_expression
+
+   87 sql_or_expression: sql_and_expression
+   88                  | sql_or_expression OR sql_and_expression
+
+   89 sql_expression_part: sql_expression
+
+   90 sql_expression: sql_or_expression
+
+   91 sql_order_by: ORDER BY sql_columns
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    SELECT (258) 6 7 8 9 10 11 12 13
+    UPDATE (259) 14 15 16 17
+    INSERT (260) 18 19 20 21
+    DELETE (261) 22 23 24 25
+    CATALOG (262) 26
+    FROM (263) 6 7 8 9 10 11 12 13 22 23 24 25
+    WHERE (264) 6 7 8 9 14 15 22 23
+    INTO (265) 18 19 20 21
+    TNULL (266) 56
+    SET (267) 14 15 16 17 26
+    VALUES (268) 18 19 20 21
+    ORDER (269) 91
+    BY (270) 91
+    ASC (271) 40
+    ASCENDING (272) 41
+    DESC (273) 42
+    DESCENDING (274) 43
+    AS (275) 45
+    SEMICOLON (276) 6 7 10 11 14 16 18 20 22 24
+    COMMA (277) 31 48 53 63
+    NAME (278) 27 36 38 39 45 50
+    DOT (279) 33 35
+    NUMBER (280) 54
+    STRING (281) 55
+    ASTERISK (282) 37
+    QUESTION_MARK (283) 57
+    EQ (284) 66
+    IS (285) 67 69
+    NE (286) 68
+    NOT (287) 69
+    LT (288) 70
+    LE (289) 71
+    GT (290) 72
+    GE (291) 73
+    LBR (292) 18 19 20 21 34 35 60 82
+    RBR (293) 18 19 20 21 34 35 60 82
+    AND (294) 86
+    OR (295) 88
+    LIKE (296) 74
+
+
+Nonterminals, with rules where they appear
+
+    $accept (42)
+        on left: 0
+    sql_statement <sql_part> (43)
+        on left: 1 2 3 4 5
+        on right: 0
+    sql_select_statement <sql_part> (44)
+        on left: 6 7 8 9 10 11 12 13
+        on right: 1
+    sql_update_statement <sql_part> (45)
+        on left: 14 15 16 17
+        on right: 2
+    sql_insert_statement <sql_part> (46)
+        on left: 18 19 20 21
+        on right: 3
+    sql_delete_statement <sql_part> (47)
+        on left: 22 23 24 25
+        on right: 4
+    sql_set_statement <sql_part> (48)
+        on left: 26
+        on right: 5
+    sql_catalog <sql_part> (49)
+        on left: 27
+        on right: 26
+    sql_columns_part <sql_part> (50)
+        on left: 28 29
+        on right: 6 7 8 9 10 11 12 13 18 19
+    sql_columns <sql_part> (51)
+        on left: 30 31
+        on right: 29 31 91
+    sql_column <sql_part> (52)
+        on left: 32 33 34 35
+        on right: 30 31 64
+    sql_column_name <sql_part> (53)
+        on left: 36 37 38
+        on right: 32 33 34 35
+    sql_function_name <sql_part> (54)
+        on left: 39
+        on right: 34 35
+    sql_ordering <sql_part> (55)
+        on left: 40 41 42 43
+        on right: 38
+    sql_as_part <sql_part> (56)
+        on left: 44 45
+        on right: 30 31
+    sql_tables_part <sql_part> (57)
+        on left: 46
+        on right: 6 7 8 9 10 11 12 13
+    sql_tables <sql_part> (58)
+        on left: 47 48
+        on right: 46 48
+    sql_table_part <sql_part> (59)
+        on left: 49
+        on right: 14 15 16 17 18 19 20 21 22 23 24 25
+    sql_table <sql_part> (60)
+        on left: 50
+        on right: 33 35 47 48 49
+    sql_values_part <sql_part> (61)
+        on left: 51
+        on right: 18 19 20 21
+    sql_values <sql_part> (62)
+        on left: 52 53
+        on right: 51 53
+    sql_constant <sql_part> (63)
+        on left: 54 55 56 57
+        on right: 52 53 65
+    sql_eq_expressions_part <sql_part> (64)
+        on left: 58 59 60
+        on right: 14 15 16 17
+    sql_eq_expressions <sql_part> (65)
+        on left: 61 62 63
+        on right: 59 60 62 63
+    sql_primary_expression <sql_part> (66)
+        on left: 64 65
+        on right: 66 67 68 69 70 71 72 73 74
+    sql_eq_expression <sql_part> (67)
+        on left: 66
+        on right: 61 62 63 75
+    sql_is_eq_expression <sql_part> (68)
+        on left: 67
+        on right: 83
+    sql_ne_expression <sql_part> (69)
+        on left: 68
+        on right: 76
+    sql_is_ne_expression <sql_part> (70)
+        on left: 69
+        on right: 84
+    sql_lt_expression <sql_part> (71)
+        on left: 70
+        on right: 77
+    sql_le_expression <sql_part> (72)
+        on left: 71
+        on right: 78
+    sql_gt_expression <sql_part> (73)
+        on left: 72
+        on right: 79
+    sql_ge_expression <sql_part> (74)
+        on left: 73
+        on right: 80
+    sql_like_expression <sql_part> (75)
+        on left: 74
+        on right: 81
+    sql_comp_expression <sql_part> (76)
+        on left: 75 76 77 78 79 80 81 82 83 84
+        on right: 85 86
+    sql_and_expression <sql_part> (77)
+        on left: 85 86
+        on right: 86 87 88
+    sql_or_expression <sql_part> (78)
+        on left: 87 88
+        on right: 88 90
+    sql_expression_part <sql_part> (79)
+        on left: 89
+        on right: 6 7 8 9 14 15 22 23
+    sql_expression <sql_part> (80)
+        on left: 90
+        on right: 82 89
+    sql_order_by <sql_part> (81)
+        on left: 91
+        on right: 6 8 10 12
+
+
+State 0
+
+    0 $accept: . sql_statement $end
+
+    SELECT  shift, and go to state 1
+    UPDATE  shift, and go to state 2
+    INSERT  shift, and go to state 3
+    DELETE  shift, and go to state 4
+    SET     shift, and go to state 5
+
+    sql_statement         go to state 6
+    sql_select_statement  go to state 7
+    sql_update_statement  go to state 8
+    sql_insert_statement  go to state 9
+    sql_delete_statement  go to state 10
+    sql_set_statement     go to state 11
+
+
+State 1
+
+    6 sql_select_statement: SELECT . sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by SEMICOLON
+    7                     | SELECT . sql_columns_part FROM sql_tables_part WHERE sql_expression_part SEMICOLON
+    8                     | SELECT . sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by
+    9                     | SELECT . sql_columns_part FROM sql_tables_part WHERE sql_expression_part
+   10                     | SELECT . sql_columns_part FROM sql_tables_part sql_order_by SEMICOLON
+   11                     | SELECT . sql_columns_part FROM sql_tables_part SEMICOLON
+   12                     | SELECT . sql_columns_part FROM sql_tables_part sql_order_by
+   13                     | SELECT . sql_columns_part FROM sql_tables_part
+
+    NAME      shift, and go to state 12
+    ASTERISK  shift, and go to state 13
+
+    $default  reduce using rule 28 (sql_columns_part)
+
+    sql_columns_part   go to state 14
+    sql_columns        go to state 15
+    sql_column         go to state 16
+    sql_column_name    go to state 17
+    sql_function_name  go to state 18
+    sql_table          go to state 19
+
+
+State 2
+
+   14 sql_update_statement: UPDATE . sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part SEMICOLON
+   15                     | UPDATE . sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part
+   16                     | UPDATE . sql_table_part SET sql_eq_expressions_part SEMICOLON
+   17                     | UPDATE . sql_table_part SET sql_eq_expressions_part
+
+    NAME  shift, and go to state 20
+
+    sql_table_part  go to state 21
+    sql_table       go to state 22
+
+
+State 3
+
+   18 sql_insert_statement: INSERT . INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT . INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR
+   20                     | INSERT . INTO sql_table_part VALUES LBR sql_values_part RBR SEMICOLON
+   21                     | INSERT . INTO sql_table_part VALUES LBR sql_values_part RBR
+
+    INTO  shift, and go to state 23
+
+
+State 4
+
+   22 sql_delete_statement: DELETE . FROM sql_table_part WHERE sql_expression_part SEMICOLON
+   23                     | DELETE . FROM sql_table_part WHERE sql_expression_part
+   24                     | DELETE . FROM sql_table_part SEMICOLON
+   25                     | DELETE . FROM sql_table_part
+
+    FROM  shift, and go to state 24
+
+
+State 5
+
+   26 sql_set_statement: SET . CATALOG sql_catalog
+
+    CATALOG  shift, and go to state 25
+
+
+State 6
+
+    0 $accept: sql_statement . $end
+
+    $end  shift, and go to state 26
+
+
+State 7
+
+    1 sql_statement: sql_select_statement .
+
+    $default  reduce using rule 1 (sql_statement)
+
+
+State 8
+
+    2 sql_statement: sql_update_statement .
+
+    $default  reduce using rule 2 (sql_statement)
+
+
+State 9
+
+    3 sql_statement: sql_insert_statement .
+
+    $default  reduce using rule 3 (sql_statement)
+
+
+State 10
+
+    4 sql_statement: sql_delete_statement .
+
+    $default  reduce using rule 4 (sql_statement)
+
+
+State 11
+
+    5 sql_statement: sql_set_statement .
+
+    $default  reduce using rule 5 (sql_statement)
+
+
+State 12
+
+   36 sql_column_name: NAME .
+   38                | NAME . sql_ordering
+   39 sql_function_name: NAME .
+   50 sql_table: NAME .
+
+    ASC         shift, and go to state 27
+    ASCENDING   shift, and go to state 28
+    DESC        shift, and go to state 29
+    DESCENDING  shift, and go to state 30
+
+    DOT       reduce using rule 50 (sql_table)
+    LBR       reduce using rule 39 (sql_function_name)
+    $default  reduce using rule 36 (sql_column_name)
+
+    sql_ordering  go to state 31
+
+
+State 13
+
+   37 sql_column_name: ASTERISK .
+
+    $default  reduce using rule 37 (sql_column_name)
+
+
+State 14
+
+    6 sql_select_statement: SELECT sql_columns_part . FROM sql_tables_part WHERE sql_expression_part sql_order_by SEMICOLON
+    7                     | SELECT sql_columns_part . FROM sql_tables_part WHERE sql_expression_part SEMICOLON
+    8                     | SELECT sql_columns_part . FROM sql_tables_part WHERE sql_expression_part sql_order_by
+    9                     | SELECT sql_columns_part . FROM sql_tables_part WHERE sql_expression_part
+   10                     | SELECT sql_columns_part . FROM sql_tables_part sql_order_by SEMICOLON
+   11                     | SELECT sql_columns_part . FROM sql_tables_part SEMICOLON
+   12                     | SELECT sql_columns_part . FROM sql_tables_part sql_order_by
+   13                     | SELECT sql_columns_part . FROM sql_tables_part
+
+    FROM  shift, and go to state 32
+
+
+State 15
+
+   29 sql_columns_part: sql_columns .
+   31 sql_columns: sql_columns . COMMA sql_column sql_as_part
+
+    COMMA  shift, and go to state 33
+
+    $default  reduce using rule 29 (sql_columns_part)
+
+
+State 16
+
+   30 sql_columns: sql_column . sql_as_part
+
+    AS  shift, and go to state 34
+
+    $default  reduce using rule 44 (sql_as_part)
+
+    sql_as_part  go to state 35
+
+
+State 17
+
+   32 sql_column: sql_column_name .
+
+    $default  reduce using rule 32 (sql_column)
+
+
+State 18
+
+   34 sql_column: sql_function_name . LBR sql_column_name RBR
+   35           | sql_function_name . LBR sql_table DOT sql_column_name RBR
+
+    LBR  shift, and go to state 36
+
+
+State 19
+
+   33 sql_column: sql_table . DOT sql_column_name
+
+    DOT  shift, and go to state 37
+
+
+State 20
+
+   50 sql_table: NAME .
+
+    $default  reduce using rule 50 (sql_table)
+
+
+State 21
+
+   14 sql_update_statement: UPDATE sql_table_part . SET sql_eq_expressions_part WHERE sql_expression_part SEMICOLON
+   15                     | UPDATE sql_table_part . SET sql_eq_expressions_part WHERE sql_expression_part
+   16                     | UPDATE sql_table_part . SET sql_eq_expressions_part SEMICOLON
+   17                     | UPDATE sql_table_part . SET sql_eq_expressions_part
+
+    SET  shift, and go to state 38
+
+
+State 22
+
+   49 sql_table_part: sql_table .
+
+    $default  reduce using rule 49 (sql_table_part)
+
+
+State 23
+
+   18 sql_insert_statement: INSERT INTO . sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO . sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR
+   20                     | INSERT INTO . sql_table_part VALUES LBR sql_values_part RBR SEMICOLON
+   21                     | INSERT INTO . sql_table_part VALUES LBR sql_values_part RBR
+
+    NAME  shift, and go to state 20
+
+    sql_table_part  go to state 39
+    sql_table       go to state 22
+
+
+State 24
+
+   22 sql_delete_statement: DELETE FROM . sql_table_part WHERE sql_expression_part SEMICOLON
+   23                     | DELETE FROM . sql_table_part WHERE sql_expression_part
+   24                     | DELETE FROM . sql_table_part SEMICOLON
+   25                     | DELETE FROM . sql_table_part
+
+    NAME  shift, and go to state 20
+
+    sql_table_part  go to state 40
+    sql_table       go to state 22
+
+
+State 25
+
+   26 sql_set_statement: SET CATALOG . sql_catalog
+
+    NAME  shift, and go to state 41
+
+    sql_catalog  go to state 42
+
+
+State 26
+
+    0 $accept: sql_statement $end .
+
+    $default  accept
+
+
+State 27
+
+   40 sql_ordering: ASC .
+
+    $default  reduce using rule 40 (sql_ordering)
+
+
+State 28
+
+   41 sql_ordering: ASCENDING .
+
+    $default  reduce using rule 41 (sql_ordering)
+
+
+State 29
+
+   42 sql_ordering: DESC .
+
+    $default  reduce using rule 42 (sql_ordering)
+
+
+State 30
+
+   43 sql_ordering: DESCENDING .
+
+    $default  reduce using rule 43 (sql_ordering)
+
+
+State 31
+
+   38 sql_column_name: NAME sql_ordering .
+
+    $default  reduce using rule 38 (sql_column_name)
+
+
+State 32
+
+    6 sql_select_statement: SELECT sql_columns_part FROM . sql_tables_part WHERE sql_expression_part sql_order_by SEMICOLON
+    7                     | SELECT sql_columns_part FROM . sql_tables_part WHERE sql_expression_part SEMICOLON
+    8                     | SELECT sql_columns_part FROM . sql_tables_part WHERE sql_expression_part sql_order_by
+    9                     | SELECT sql_columns_part FROM . sql_tables_part WHERE sql_expression_part
+   10                     | SELECT sql_columns_part FROM . sql_tables_part sql_order_by SEMICOLON
+   11                     | SELECT sql_columns_part FROM . sql_tables_part SEMICOLON
+   12                     | SELECT sql_columns_part FROM . sql_tables_part sql_order_by
+   13                     | SELECT sql_columns_part FROM . sql_tables_part
+
+    NAME  shift, and go to state 20
+
+    sql_tables_part  go to state 43
+    sql_tables       go to state 44
+    sql_table        go to state 45
+
+
+State 33
+
+   31 sql_columns: sql_columns COMMA . sql_column sql_as_part
+
+    NAME      shift, and go to state 12
+    ASTERISK  shift, and go to state 13
+
+    sql_column         go to state 46
+    sql_column_name    go to state 17
+    sql_function_name  go to state 18
+    sql_table          go to state 19
+
+
+State 34
+
+   45 sql_as_part: AS . NAME
+
+    NAME  shift, and go to state 47
+
+
+State 35
+
+   30 sql_columns: sql_column sql_as_part .
+
+    $default  reduce using rule 30 (sql_columns)
+
+
+State 36
+
+   34 sql_column: sql_function_name LBR . sql_column_name RBR
+   35           | sql_function_name LBR . sql_table DOT sql_column_name RBR
+
+    NAME      shift, and go to state 48
+    ASTERISK  shift, and go to state 13
+
+    sql_column_name  go to state 49
+    sql_table        go to state 50
+
+
+State 37
+
+   33 sql_column: sql_table DOT . sql_column_name
+
+    NAME      shift, and go to state 51
+    ASTERISK  shift, and go to state 13
+
+    sql_column_name  go to state 52
+
+
+State 38
+
+   14 sql_update_statement: UPDATE sql_table_part SET . sql_eq_expressions_part WHERE sql_expression_part SEMICOLON
+   15                     | UPDATE sql_table_part SET . sql_eq_expressions_part WHERE sql_expression_part
+   16                     | UPDATE sql_table_part SET . sql_eq_expressions_part SEMICOLON
+   17                     | UPDATE sql_table_part SET . sql_eq_expressions_part
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    LBR            shift, and go to state 57
+
+    $default  reduce using rule 58 (sql_eq_expressions_part)
+
+    sql_column               go to state 58
+    sql_column_name          go to state 17
+    sql_function_name        go to state 18
+    sql_table                go to state 19
+    sql_constant             go to state 59
+    sql_eq_expressions_part  go to state 60
+    sql_eq_expressions       go to state 61
+    sql_primary_expression   go to state 62
+    sql_eq_expression        go to state 63
+
+
+State 39
+
+   18 sql_insert_statement: INSERT INTO sql_table_part . LBR sql_columns_part RBR VALUES LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part . LBR sql_columns_part RBR VALUES LBR sql_values_part RBR
+   20                     | INSERT INTO sql_table_part . VALUES LBR sql_values_part RBR SEMICOLON
+   21                     | INSERT INTO sql_table_part . VALUES LBR sql_values_part RBR
+
+    VALUES  shift, and go to state 64
+    LBR     shift, and go to state 65
+
+
+State 40
+
+   22 sql_delete_statement: DELETE FROM sql_table_part . WHERE sql_expression_part SEMICOLON
+   23                     | DELETE FROM sql_table_part . WHERE sql_expression_part
+   24                     | DELETE FROM sql_table_part . SEMICOLON
+   25                     | DELETE FROM sql_table_part .
+
+    WHERE      shift, and go to state 66
+    SEMICOLON  shift, and go to state 67
+
+    $default  reduce using rule 25 (sql_delete_statement)
+
+
+State 41
+
+   27 sql_catalog: NAME .
+
+    $default  reduce using rule 27 (sql_catalog)
+
+
+State 42
+
+   26 sql_set_statement: SET CATALOG sql_catalog .
+
+    $default  reduce using rule 26 (sql_set_statement)
+
+
+State 43
+
+    6 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part . WHERE sql_expression_part sql_order_by SEMICOLON
+    7                     | SELECT sql_columns_part FROM sql_tables_part . WHERE sql_expression_part SEMICOLON
+    8                     | SELECT sql_columns_part FROM sql_tables_part . WHERE sql_expression_part sql_order_by
+    9                     | SELECT sql_columns_part FROM sql_tables_part . WHERE sql_expression_part
+   10                     | SELECT sql_columns_part FROM sql_tables_part . sql_order_by SEMICOLON
+   11                     | SELECT sql_columns_part FROM sql_tables_part . SEMICOLON
+   12                     | SELECT sql_columns_part FROM sql_tables_part . sql_order_by
+   13                     | SELECT sql_columns_part FROM sql_tables_part .
+
+    WHERE      shift, and go to state 68
+    ORDER      shift, and go to state 69
+    SEMICOLON  shift, and go to state 70
+
+    $default  reduce using rule 13 (sql_select_statement)
+
+    sql_order_by  go to state 71
+
+
+State 44
+
+   46 sql_tables_part: sql_tables .
+   48 sql_tables: sql_tables . COMMA sql_table
+
+    COMMA  shift, and go to state 72
+
+    $default  reduce using rule 46 (sql_tables_part)
+
+
+State 45
+
+   47 sql_tables: sql_table .
+
+    $default  reduce using rule 47 (sql_tables)
+
+
+State 46
+
+   31 sql_columns: sql_columns COMMA sql_column . sql_as_part
+
+    AS  shift, and go to state 34
+
+    $default  reduce using rule 44 (sql_as_part)
+
+    sql_as_part  go to state 73
+
+
+State 47
+
+   45 sql_as_part: AS NAME .
+
+    $default  reduce using rule 45 (sql_as_part)
+
+
+State 48
+
+   36 sql_column_name: NAME .
+   38                | NAME . sql_ordering
+   50 sql_table: NAME .
+
+    ASC         shift, and go to state 27
+    ASCENDING   shift, and go to state 28
+    DESC        shift, and go to state 29
+    DESCENDING  shift, and go to state 30
+
+    DOT       reduce using rule 50 (sql_table)
+    $default  reduce using rule 36 (sql_column_name)
+
+    sql_ordering  go to state 31
+
+
+State 49
+
+   34 sql_column: sql_function_name LBR sql_column_name . RBR
+
+    RBR  shift, and go to state 74
+
+
+State 50
+
+   35 sql_column: sql_function_name LBR sql_table . DOT sql_column_name RBR
+
+    DOT  shift, and go to state 75
+
+
+State 51
+
+   36 sql_column_name: NAME .
+   38                | NAME . sql_ordering
+
+    ASC         shift, and go to state 27
+    ASCENDING   shift, and go to state 28
+    DESC        shift, and go to state 29
+    DESCENDING  shift, and go to state 30
+
+    $default  reduce using rule 36 (sql_column_name)
+
+    sql_ordering  go to state 31
+
+
+State 52
+
+   33 sql_column: sql_table DOT sql_column_name .
+
+    $default  reduce using rule 33 (sql_column)
+
+
+State 53
+
+   56 sql_constant: TNULL .
+
+    $default  reduce using rule 56 (sql_constant)
+
+
+State 54
+
+   54 sql_constant: NUMBER .
+
+    $default  reduce using rule 54 (sql_constant)
+
+
+State 55
+
+   55 sql_constant: STRING .
+
+    $default  reduce using rule 55 (sql_constant)
+
+
+State 56
+
+   57 sql_constant: QUESTION_MARK .
+
+    $default  reduce using rule 57 (sql_constant)
+
+
+State 57
+
+   60 sql_eq_expressions_part: LBR . sql_eq_expressions RBR
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_eq_expressions      go to state 76
+    sql_primary_expression  go to state 62
+    sql_eq_expression       go to state 63
+
+
+State 58
+
+   64 sql_primary_expression: sql_column .
+
+    $default  reduce using rule 64 (sql_primary_expression)
+
+
+State 59
+
+   65 sql_primary_expression: sql_constant .
+
+    $default  reduce using rule 65 (sql_primary_expression)
+
+
+State 60
+
+   14 sql_update_statement: UPDATE sql_table_part SET sql_eq_expressions_part . WHERE sql_expression_part SEMICOLON
+   15                     | UPDATE sql_table_part SET sql_eq_expressions_part . WHERE sql_expression_part
+   16                     | UPDATE sql_table_part SET sql_eq_expressions_part . SEMICOLON
+   17                     | UPDATE sql_table_part SET sql_eq_expressions_part .
+
+    WHERE      shift, and go to state 77
+    SEMICOLON  shift, and go to state 78
+
+    $default  reduce using rule 17 (sql_update_statement)
+
+
+State 61
+
+   59 sql_eq_expressions_part: sql_eq_expressions .
+   62 sql_eq_expressions: sql_eq_expressions . sql_eq_expression
+   63                   | sql_eq_expressions . COMMA sql_eq_expression
+
+    TNULL          shift, and go to state 53
+    COMMA          shift, and go to state 79
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    $default  reduce using rule 59 (sql_eq_expressions_part)
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 62
+    sql_eq_expression       go to state 80
+
+
+State 62
+
+   66 sql_eq_expression: sql_primary_expression . EQ sql_primary_expression
+
+    EQ  shift, and go to state 81
+
+
+State 63
+
+   61 sql_eq_expressions: sql_eq_expression .
+
+    $default  reduce using rule 61 (sql_eq_expressions)
+
+
+State 64
+
+   20 sql_insert_statement: INSERT INTO sql_table_part VALUES . LBR sql_values_part RBR SEMICOLON
+   21                     | INSERT INTO sql_table_part VALUES . LBR sql_values_part RBR
+
+    LBR  shift, and go to state 82
+
+
+State 65
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR . sql_columns_part RBR VALUES LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR . sql_columns_part RBR VALUES LBR sql_values_part RBR
+
+    NAME      shift, and go to state 12
+    ASTERISK  shift, and go to state 13
+
+    $default  reduce using rule 28 (sql_columns_part)
+
+    sql_columns_part   go to state 83
+    sql_columns        go to state 15
+    sql_column         go to state 16
+    sql_column_name    go to state 17
+    sql_function_name  go to state 18
+    sql_table          go to state 19
+
+
+State 66
+
+   22 sql_delete_statement: DELETE FROM sql_table_part WHERE . sql_expression_part SEMICOLON
+   23                     | DELETE FROM sql_table_part WHERE . sql_expression_part
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    LBR            shift, and go to state 84
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 85
+    sql_eq_expression       go to state 86
+    sql_is_eq_expression    go to state 87
+    sql_ne_expression       go to state 88
+    sql_is_ne_expression    go to state 89
+    sql_lt_expression       go to state 90
+    sql_le_expression       go to state 91
+    sql_gt_expression       go to state 92
+    sql_ge_expression       go to state 93
+    sql_like_expression     go to state 94
+    sql_comp_expression     go to state 95
+    sql_and_expression      go to state 96
+    sql_or_expression       go to state 97
+    sql_expression_part     go to state 98
+    sql_expression          go to state 99
+
+
+State 67
+
+   24 sql_delete_statement: DELETE FROM sql_table_part SEMICOLON .
+
+    $default  reduce using rule 24 (sql_delete_statement)
+
+
+State 68
+
+    6 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part WHERE . sql_expression_part sql_order_by SEMICOLON
+    7                     | SELECT sql_columns_part FROM sql_tables_part WHERE . sql_expression_part SEMICOLON
+    8                     | SELECT sql_columns_part FROM sql_tables_part WHERE . sql_expression_part sql_order_by
+    9                     | SELECT sql_columns_part FROM sql_tables_part WHERE . sql_expression_part
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    LBR            shift, and go to state 84
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 85
+    sql_eq_expression       go to state 86
+    sql_is_eq_expression    go to state 87
+    sql_ne_expression       go to state 88
+    sql_is_ne_expression    go to state 89
+    sql_lt_expression       go to state 90
+    sql_le_expression       go to state 91
+    sql_gt_expression       go to state 92
+    sql_ge_expression       go to state 93
+    sql_like_expression     go to state 94
+    sql_comp_expression     go to state 95
+    sql_and_expression      go to state 96
+    sql_or_expression       go to state 97
+    sql_expression_part     go to state 100
+    sql_expression          go to state 99
+
+
+State 69
+
+   91 sql_order_by: ORDER . BY sql_columns
+
+    BY  shift, and go to state 101
+
+
+State 70
+
+   11 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part SEMICOLON .
+
+    $default  reduce using rule 11 (sql_select_statement)
+
+
+State 71
+
+   10 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part sql_order_by . SEMICOLON
+   12                     | SELECT sql_columns_part FROM sql_tables_part sql_order_by .
+
+    SEMICOLON  shift, and go to state 102
+
+    $default  reduce using rule 12 (sql_select_statement)
+
+
+State 72
+
+   48 sql_tables: sql_tables COMMA . sql_table
+
+    NAME  shift, and go to state 20
+
+    sql_table  go to state 103
+
+
+State 73
+
+   31 sql_columns: sql_columns COMMA sql_column sql_as_part .
+
+    $default  reduce using rule 31 (sql_columns)
+
+
+State 74
+
+   34 sql_column: sql_function_name LBR sql_column_name RBR .
+
+    $default  reduce using rule 34 (sql_column)
+
+
+State 75
+
+   35 sql_column: sql_function_name LBR sql_table DOT . sql_column_name RBR
+
+    NAME      shift, and go to state 51
+    ASTERISK  shift, and go to state 13
+
+    sql_column_name  go to state 104
+
+
+State 76
+
+   60 sql_eq_expressions_part: LBR sql_eq_expressions . RBR
+   62 sql_eq_expressions: sql_eq_expressions . sql_eq_expression
+   63                   | sql_eq_expressions . COMMA sql_eq_expression
+
+    TNULL          shift, and go to state 53
+    COMMA          shift, and go to state 79
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    RBR            shift, and go to state 105
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 62
+    sql_eq_expression       go to state 80
+
+
+State 77
+
+   14 sql_update_statement: UPDATE sql_table_part SET sql_eq_expressions_part WHERE . sql_expression_part SEMICOLON
+   15                     | UPDATE sql_table_part SET sql_eq_expressions_part WHERE . sql_expression_part
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    LBR            shift, and go to state 84
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 85
+    sql_eq_expression       go to state 86
+    sql_is_eq_expression    go to state 87
+    sql_ne_expression       go to state 88
+    sql_is_ne_expression    go to state 89
+    sql_lt_expression       go to state 90
+    sql_le_expression       go to state 91
+    sql_gt_expression       go to state 92
+    sql_ge_expression       go to state 93
+    sql_like_expression     go to state 94
+    sql_comp_expression     go to state 95
+    sql_and_expression      go to state 96
+    sql_or_expression       go to state 97
+    sql_expression_part     go to state 106
+    sql_expression          go to state 99
+
+
+State 78
+
+   16 sql_update_statement: UPDATE sql_table_part SET sql_eq_expressions_part SEMICOLON .
+
+    $default  reduce using rule 16 (sql_update_statement)
+
+
+State 79
+
+   63 sql_eq_expressions: sql_eq_expressions COMMA . sql_eq_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 62
+    sql_eq_expression       go to state 107
+
+
+State 80
+
+   62 sql_eq_expressions: sql_eq_expressions sql_eq_expression .
+
+    $default  reduce using rule 62 (sql_eq_expressions)
+
+
+State 81
+
+   66 sql_eq_expression: sql_primary_expression EQ . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 108
+
+
+State 82
+
+   20 sql_insert_statement: INSERT INTO sql_table_part VALUES LBR . sql_values_part RBR SEMICOLON
+   21                     | INSERT INTO sql_table_part VALUES LBR . sql_values_part RBR
+
+    TNULL          shift, and go to state 53
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_values_part  go to state 109
+    sql_values       go to state 110
+    sql_constant     go to state 111
+
+
+State 83
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part . RBR VALUES LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR sql_columns_part . RBR VALUES LBR sql_values_part RBR
+
+    RBR  shift, and go to state 112
+
+
+State 84
+
+   82 sql_comp_expression: LBR . sql_expression RBR
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    LBR            shift, and go to state 84
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 85
+    sql_eq_expression       go to state 86
+    sql_is_eq_expression    go to state 87
+    sql_ne_expression       go to state 88
+    sql_is_ne_expression    go to state 89
+    sql_lt_expression       go to state 90
+    sql_le_expression       go to state 91
+    sql_gt_expression       go to state 92
+    sql_ge_expression       go to state 93
+    sql_like_expression     go to state 94
+    sql_comp_expression     go to state 95
+    sql_and_expression      go to state 96
+    sql_or_expression       go to state 97
+    sql_expression          go to state 113
+
+
+State 85
+
+   66 sql_eq_expression: sql_primary_expression . EQ sql_primary_expression
+   67 sql_is_eq_expression: sql_primary_expression . IS sql_primary_expression
+   68 sql_ne_expression: sql_primary_expression . NE sql_primary_expression
+   69 sql_is_ne_expression: sql_primary_expression . IS NOT sql_primary_expression
+   70 sql_lt_expression: sql_primary_expression . LT sql_primary_expression
+   71 sql_le_expression: sql_primary_expression . LE sql_primary_expression
+   72 sql_gt_expression: sql_primary_expression . GT sql_primary_expression
+   73 sql_ge_expression: sql_primary_expression . GE sql_primary_expression
+   74 sql_like_expression: sql_primary_expression . LIKE sql_primary_expression
+
+    EQ    shift, and go to state 81
+    IS    shift, and go to state 114
+    NE    shift, and go to state 115
+    LT    shift, and go to state 116
+    LE    shift, and go to state 117
+    GT    shift, and go to state 118
+    GE    shift, and go to state 119
+    LIKE  shift, and go to state 120
+
+
+State 86
+
+   75 sql_comp_expression: sql_eq_expression .
+
+    $default  reduce using rule 75 (sql_comp_expression)
+
+
+State 87
+
+   83 sql_comp_expression: sql_is_eq_expression .
+
+    $default  reduce using rule 83 (sql_comp_expression)
+
+
+State 88
+
+   76 sql_comp_expression: sql_ne_expression .
+
+    $default  reduce using rule 76 (sql_comp_expression)
+
+
+State 89
+
+   84 sql_comp_expression: sql_is_ne_expression .
+
+    $default  reduce using rule 84 (sql_comp_expression)
+
+
+State 90
+
+   77 sql_comp_expression: sql_lt_expression .
+
+    $default  reduce using rule 77 (sql_comp_expression)
+
+
+State 91
+
+   78 sql_comp_expression: sql_le_expression .
+
+    $default  reduce using rule 78 (sql_comp_expression)
+
+
+State 92
+
+   79 sql_comp_expression: sql_gt_expression .
+
+    $default  reduce using rule 79 (sql_comp_expression)
+
+
+State 93
+
+   80 sql_comp_expression: sql_ge_expression .
+
+    $default  reduce using rule 80 (sql_comp_expression)
+
+
+State 94
+
+   81 sql_comp_expression: sql_like_expression .
+
+    $default  reduce using rule 81 (sql_comp_expression)
+
+
+State 95
+
+   85 sql_and_expression: sql_comp_expression .
+
+    $default  reduce using rule 85 (sql_and_expression)
+
+
+State 96
+
+   86 sql_and_expression: sql_and_expression . AND sql_comp_expression
+   87 sql_or_expression: sql_and_expression .
+
+    AND  shift, and go to state 121
+
+    $default  reduce using rule 87 (sql_or_expression)
+
+
+State 97
+
+   88 sql_or_expression: sql_or_expression . OR sql_and_expression
+   90 sql_expression: sql_or_expression .
+
+    OR  shift, and go to state 122
+
+    $default  reduce using rule 90 (sql_expression)
+
+
+State 98
+
+   22 sql_delete_statement: DELETE FROM sql_table_part WHERE sql_expression_part . SEMICOLON
+   23                     | DELETE FROM sql_table_part WHERE sql_expression_part .
+
+    SEMICOLON  shift, and go to state 123
+
+    $default  reduce using rule 23 (sql_delete_statement)
+
+
+State 99
+
+   89 sql_expression_part: sql_expression .
+
+    $default  reduce using rule 89 (sql_expression_part)
+
+
+State 100
+
+    6 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part . sql_order_by SEMICOLON
+    7                     | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part . SEMICOLON
+    8                     | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part . sql_order_by
+    9                     | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part .
+
+    ORDER      shift, and go to state 69
+    SEMICOLON  shift, and go to state 124
+
+    $default  reduce using rule 9 (sql_select_statement)
+
+    sql_order_by  go to state 125
+
+
+State 101
+
+   91 sql_order_by: ORDER BY . sql_columns
+
+    NAME      shift, and go to state 12
+    ASTERISK  shift, and go to state 13
+
+    sql_columns        go to state 126
+    sql_column         go to state 16
+    sql_column_name    go to state 17
+    sql_function_name  go to state 18
+    sql_table          go to state 19
+
+
+State 102
+
+   10 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part sql_order_by SEMICOLON .
+
+    $default  reduce using rule 10 (sql_select_statement)
+
+
+State 103
+
+   48 sql_tables: sql_tables COMMA sql_table .
+
+    $default  reduce using rule 48 (sql_tables)
+
+
+State 104
+
+   35 sql_column: sql_function_name LBR sql_table DOT sql_column_name . RBR
+
+    RBR  shift, and go to state 127
+
+
+State 105
+
+   60 sql_eq_expressions_part: LBR sql_eq_expressions RBR .
+
+    $default  reduce using rule 60 (sql_eq_expressions_part)
+
+
+State 106
+
+   14 sql_update_statement: UPDATE sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part . SEMICOLON
+   15                     | UPDATE sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part .
+
+    SEMICOLON  shift, and go to state 128
+
+    $default  reduce using rule 15 (sql_update_statement)
+
+
+State 107
+
+   63 sql_eq_expressions: sql_eq_expressions COMMA sql_eq_expression .
+
+    $default  reduce using rule 63 (sql_eq_expressions)
+
+
+State 108
+
+   66 sql_eq_expression: sql_primary_expression EQ sql_primary_expression .
+
+    $default  reduce using rule 66 (sql_eq_expression)
+
+
+State 109
+
+   20 sql_insert_statement: INSERT INTO sql_table_part VALUES LBR sql_values_part . RBR SEMICOLON
+   21                     | INSERT INTO sql_table_part VALUES LBR sql_values_part . RBR
+
+    RBR  shift, and go to state 129
+
+
+State 110
+
+   51 sql_values_part: sql_values .
+   53 sql_values: sql_values . COMMA sql_constant
+
+    COMMA  shift, and go to state 130
+
+    $default  reduce using rule 51 (sql_values_part)
+
+
+State 111
+
+   52 sql_values: sql_constant .
+
+    $default  reduce using rule 52 (sql_values)
+
+
+State 112
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR . VALUES LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR sql_columns_part RBR . VALUES LBR sql_values_part RBR
+
+    VALUES  shift, and go to state 131
+
+
+State 113
+
+   82 sql_comp_expression: LBR sql_expression . RBR
+
+    RBR  shift, and go to state 132
+
+
+State 114
+
+   67 sql_is_eq_expression: sql_primary_expression IS . sql_primary_expression
+   69 sql_is_ne_expression: sql_primary_expression IS . NOT sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    NOT            shift, and go to state 133
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 134
+
+
+State 115
+
+   68 sql_ne_expression: sql_primary_expression NE . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 135
+
+
+State 116
+
+   70 sql_lt_expression: sql_primary_expression LT . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 136
+
+
+State 117
+
+   71 sql_le_expression: sql_primary_expression LE . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 137
+
+
+State 118
+
+   72 sql_gt_expression: sql_primary_expression GT . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 138
+
+
+State 119
+
+   73 sql_ge_expression: sql_primary_expression GE . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 139
+
+
+State 120
+
+   74 sql_like_expression: sql_primary_expression LIKE . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 140
+
+
+State 121
+
+   86 sql_and_expression: sql_and_expression AND . sql_comp_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    LBR            shift, and go to state 84
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 85
+    sql_eq_expression       go to state 86
+    sql_is_eq_expression    go to state 87
+    sql_ne_expression       go to state 88
+    sql_is_ne_expression    go to state 89
+    sql_lt_expression       go to state 90
+    sql_le_expression       go to state 91
+    sql_gt_expression       go to state 92
+    sql_ge_expression       go to state 93
+    sql_like_expression     go to state 94
+    sql_comp_expression     go to state 141
+
+
+State 122
+
+   88 sql_or_expression: sql_or_expression OR . sql_and_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+    LBR            shift, and go to state 84
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 85
+    sql_eq_expression       go to state 86
+    sql_is_eq_expression    go to state 87
+    sql_ne_expression       go to state 88
+    sql_is_ne_expression    go to state 89
+    sql_lt_expression       go to state 90
+    sql_le_expression       go to state 91
+    sql_gt_expression       go to state 92
+    sql_ge_expression       go to state 93
+    sql_like_expression     go to state 94
+    sql_comp_expression     go to state 95
+    sql_and_expression      go to state 142
+
+
+State 123
+
+   22 sql_delete_statement: DELETE FROM sql_table_part WHERE sql_expression_part SEMICOLON .
+
+    $default  reduce using rule 22 (sql_delete_statement)
+
+
+State 124
+
+    7 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part SEMICOLON .
+
+    $default  reduce using rule 7 (sql_select_statement)
+
+
+State 125
+
+    6 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by . SEMICOLON
+    8                     | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by .
+
+    SEMICOLON  shift, and go to state 143
+
+    $default  reduce using rule 8 (sql_select_statement)
+
+
+State 126
+
+   31 sql_columns: sql_columns . COMMA sql_column sql_as_part
+   91 sql_order_by: ORDER BY sql_columns .
+
+    COMMA  shift, and go to state 33
+
+    $default  reduce using rule 91 (sql_order_by)
+
+
+State 127
+
+   35 sql_column: sql_function_name LBR sql_table DOT sql_column_name RBR .
+
+    $default  reduce using rule 35 (sql_column)
+
+
+State 128
+
+   14 sql_update_statement: UPDATE sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part SEMICOLON .
+
+    $default  reduce using rule 14 (sql_update_statement)
+
+
+State 129
+
+   20 sql_insert_statement: INSERT INTO sql_table_part VALUES LBR sql_values_part RBR . SEMICOLON
+   21                     | INSERT INTO sql_table_part VALUES LBR sql_values_part RBR .
+
+    SEMICOLON  shift, and go to state 144
+
+    $default  reduce using rule 21 (sql_insert_statement)
+
+
+State 130
+
+   53 sql_values: sql_values COMMA . sql_constant
+
+    TNULL          shift, and go to state 53
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_constant  go to state 145
+
+
+State 131
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES . LBR sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES . LBR sql_values_part RBR
+
+    LBR  shift, and go to state 146
+
+
+State 132
+
+   82 sql_comp_expression: LBR sql_expression RBR .
+
+    $default  reduce using rule 82 (sql_comp_expression)
+
+
+State 133
+
+   69 sql_is_ne_expression: sql_primary_expression IS NOT . sql_primary_expression
+
+    TNULL          shift, and go to state 53
+    NAME           shift, and go to state 12
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    ASTERISK       shift, and go to state 13
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_column              go to state 58
+    sql_column_name         go to state 17
+    sql_function_name       go to state 18
+    sql_table               go to state 19
+    sql_constant            go to state 59
+    sql_primary_expression  go to state 147
+
+
+State 134
+
+   67 sql_is_eq_expression: sql_primary_expression IS sql_primary_expression .
+
+    $default  reduce using rule 67 (sql_is_eq_expression)
+
+
+State 135
+
+   68 sql_ne_expression: sql_primary_expression NE sql_primary_expression .
+
+    $default  reduce using rule 68 (sql_ne_expression)
+
+
+State 136
+
+   70 sql_lt_expression: sql_primary_expression LT sql_primary_expression .
+
+    $default  reduce using rule 70 (sql_lt_expression)
+
+
+State 137
+
+   71 sql_le_expression: sql_primary_expression LE sql_primary_expression .
+
+    $default  reduce using rule 71 (sql_le_expression)
+
+
+State 138
+
+   72 sql_gt_expression: sql_primary_expression GT sql_primary_expression .
+
+    $default  reduce using rule 72 (sql_gt_expression)
+
+
+State 139
+
+   73 sql_ge_expression: sql_primary_expression GE sql_primary_expression .
+
+    $default  reduce using rule 73 (sql_ge_expression)
+
+
+State 140
+
+   74 sql_like_expression: sql_primary_expression LIKE sql_primary_expression .
+
+    $default  reduce using rule 74 (sql_like_expression)
+
+
+State 141
+
+   86 sql_and_expression: sql_and_expression AND sql_comp_expression .
+
+    $default  reduce using rule 86 (sql_and_expression)
+
+
+State 142
+
+   86 sql_and_expression: sql_and_expression . AND sql_comp_expression
+   88 sql_or_expression: sql_or_expression OR sql_and_expression .
+
+    AND  shift, and go to state 121
+
+    $default  reduce using rule 88 (sql_or_expression)
+
+
+State 143
+
+    6 sql_select_statement: SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by SEMICOLON .
+
+    $default  reduce using rule 6 (sql_select_statement)
+
+
+State 144
+
+   20 sql_insert_statement: INSERT INTO sql_table_part VALUES LBR sql_values_part RBR SEMICOLON .
+
+    $default  reduce using rule 20 (sql_insert_statement)
+
+
+State 145
+
+   53 sql_values: sql_values COMMA sql_constant .
+
+    $default  reduce using rule 53 (sql_values)
+
+
+State 146
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR . sql_values_part RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR . sql_values_part RBR
+
+    TNULL          shift, and go to state 53
+    NUMBER         shift, and go to state 54
+    STRING         shift, and go to state 55
+    QUESTION_MARK  shift, and go to state 56
+
+    sql_values_part  go to state 148
+    sql_values       go to state 110
+    sql_constant     go to state 111
+
+
+State 147
+
+   69 sql_is_ne_expression: sql_primary_expression IS NOT sql_primary_expression .
+
+    $default  reduce using rule 69 (sql_is_ne_expression)
+
+
+State 148
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part . RBR SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part . RBR
+
+    RBR  shift, and go to state 149
+
+
+State 149
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR . SEMICOLON
+   19                     | INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR .
+
+    SEMICOLON  shift, and go to state 150
+
+    $default  reduce using rule 19 (sql_insert_statement)
+
+
+State 150
+
+   18 sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR SEMICOLON .
+
+    $default  reduce using rule 18 (sql_insert_statement)

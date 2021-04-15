@@ -1,0 +1,129 @@
+sql_statement: sql_select_statement
+             | sql_update_statement
+             | sql_insert_statement
+             | sql_delete_statement
+             | sql_set_statement
+
+sql_select_statement: SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by SEMICOLON
+                    | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part SEMICOLON
+                    | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part sql_order_by
+                    | SELECT sql_columns_part FROM sql_tables_part WHERE sql_expression_part
+                    | SELECT sql_columns_part FROM sql_tables_part sql_order_by SEMICOLON
+                    | SELECT sql_columns_part FROM sql_tables_part SEMICOLON
+                    | SELECT sql_columns_part FROM sql_tables_part sql_order_by
+                    | SELECT sql_columns_part FROM sql_tables_part
+
+sql_update_statement: UPDATE sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part SEMICOLON
+                    | UPDATE sql_table_part SET sql_eq_expressions_part WHERE sql_expression_part
+                    | UPDATE sql_table_part SET sql_eq_expressions_part SEMICOLON
+                    | UPDATE sql_table_part SET sql_eq_expressions_part
+
+sql_insert_statement: INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR SEMICOLON
+                    | INSERT INTO sql_table_part LBR sql_columns_part RBR VALUES LBR sql_values_part RBR
+                    | INSERT INTO sql_table_part VALUES LBR sql_values_part RBR SEMICOLON
+                    | INSERT INTO sql_table_part VALUES LBR sql_values_part RBR
+
+sql_delete_statement: DELETE FROM sql_table_part WHERE sql_expression_part SEMICOLON
+                    | DELETE FROM sql_table_part WHERE sql_expression_part
+                    | DELETE FROM sql_table_part SEMICOLON
+                    | DELETE FROM sql_table_part
+
+sql_set_statement: SET CATALOG sql_catalog
+
+sql_catalog: NAME
+
+sql_columns_part: 
+                | sql_columns
+
+sql_columns: sql_column sql_as_part
+           | sql_columns COMMA sql_column sql_as_part
+
+sql_column: sql_column_name
+          | sql_table DOT sql_column_name
+          | sql_function_name LBR sql_column_name RBR
+          | sql_function_name LBR sql_table DOT sql_column_name RBR
+
+sql_column_name: NAME
+               | ASTERISK
+               | NAME sql_ordering
+
+sql_function_name: NAME
+
+sql_ordering: ASC
+            | ASCENDING
+            | DESC
+            | DESCENDING
+
+sql_as_part: 
+           | AS NAME
+
+sql_tables_part: sql_tables
+
+sql_tables: sql_table
+          | sql_tables COMMA sql_table
+
+sql_table_part: sql_table
+
+sql_table: NAME
+
+sql_values_part: sql_values
+
+sql_values: sql_constant
+          | sql_values COMMA sql_constant
+
+sql_constant: NUMBER
+            | STRING
+            | TNULL
+            | QUESTION_MARK
+
+sql_eq_expressions_part: 
+                       | sql_eq_expressions
+                       | LBR sql_eq_expressions RBR
+
+sql_eq_expressions: sql_eq_expression
+                  | sql_eq_expressions sql_eq_expression
+                  | sql_eq_expressions COMMA sql_eq_expression
+
+sql_primary_expression: sql_column
+                      | sql_constant
+
+sql_eq_expression: sql_primary_expression EQ sql_primary_expression
+
+sql_is_eq_expression: sql_primary_expression IS sql_primary_expression
+
+sql_ne_expression: sql_primary_expression NE sql_primary_expression
+
+sql_is_ne_expression: sql_primary_expression IS NOT sql_primary_expression
+
+sql_lt_expression: sql_primary_expression LT sql_primary_expression
+
+sql_le_expression: sql_primary_expression LE sql_primary_expression
+
+sql_gt_expression: sql_primary_expression GT sql_primary_expression
+
+sql_ge_expression: sql_primary_expression GE sql_primary_expression
+
+sql_like_expression: sql_primary_expression LIKE sql_primary_expression
+
+sql_comp_expression: sql_eq_expression
+                   | sql_ne_expression
+                   | sql_lt_expression
+                   | sql_le_expression
+                   | sql_gt_expression
+                   | sql_ge_expression
+                   | sql_like_expression
+                   | LBR sql_expression RBR
+                   | sql_is_eq_expression
+                   | sql_is_ne_expression
+
+sql_and_expression: sql_comp_expression
+                  | sql_and_expression AND sql_comp_expression
+
+sql_or_expression: sql_and_expression
+                 | sql_or_expression OR sql_and_expression
+
+sql_expression_part: sql_expression
+
+sql_expression: sql_or_expression
+
+sql_order_by: ORDER BY sql_columns

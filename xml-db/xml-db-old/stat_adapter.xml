@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stat_adapter_root
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+ 	xsi:noNamespaceSchemaLocation="stat_adapter.xsd">
+	<stat_adapter>
+		<nodeid>2000</nodeid>
+		<adapter_id>1</adapter_id>
+		<stat_dir_name>/var/volatile/log/performance/history/</stat_dir_name>
+		<dest_dir_name>/opt/si2000/neroot/files/performance/xml</dest_dir_name>
+		<owner_name>performance</owner_name>
+		<group_name>users</group_name>
+		<dir_permissions>755</dir_permissions>
+		<file_permissions>644</file_permissions>
+	</stat_adapter>
+	<stat_adapter>
+		<nodeid>2000</nodeid>
+		<adapter_id>2</adapter_id>
+		<stat_dir_name>/var/volatile/log/performance/history/</stat_dir_name>
+		<dest_dir_name>/opt/si2000/neroot/files/performance/xml-1</dest_dir_name>
+		<owner_name>performance</owner_name>
+		<group_name>users</group_name>
+		<dir_permissions>755</dir_permissions>
+		<file_permissions>644</file_permissions>
+	</stat_adapter>
+	<stat_adapter_arg>
+		<nodeid>2000</nodeid>
+		<arg_id>1</arg_id>
+		<adapter_id>1</adapter_id>
+		<arg_name>PreserveStatHistory</arg_name>
+		<arg_value>false</arg_value>
+	</stat_adapter_arg>
+	<stat_adapter_arg>
+		<nodeid>2000</nodeid>
+		<arg_id>2</arg_id>
+		<adapter_id>1</adapter_id>
+		<arg_name>GenerateStatXML</arg_name>
+		<arg_value>true</arg_value>
+	</stat_adapter_arg>
+	<stat_adapter_arg>
+		<nodeid>2000</nodeid>
+		<arg_id>3</arg_id>
+		<adapter_id>2</adapter_id>
+		<arg_name>PreserveStatHistory</arg_name>
+		<arg_value>false</arg_value>
+	</stat_adapter_arg>
+	<stat_adapter_arg>
+		<nodeid>2000</nodeid>
+		<arg_id>4</arg_id>
+		<adapter_id>2</adapter_id>
+		<arg_name>GenerateStatXML</arg_name>
+		<arg_value>true</arg_value>
+	</stat_adapter_arg>
+</stat_adapter_root>
+
+

@@ -1,0 +1,1232 @@
+GROUP - 0: Subscriber statistics
+	COUNTER 1: Originating call attempt, SC.AttSessions.orig, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.AttSessions po standardu TS 22.409
+
+	COUNTER 2: Originating call incomplete dialling, IT.SUBS.OrigIncmpl, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.FailSessions.sum po standardu TS 22.409
+
+	COUNTER 3:    Originating call wrong number, SC.FailSession.404, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.FailSessions.sum po standardu TS 22.409  - 404 Not Found: The server has definitive information that the user does not exist at the domain specified in the Request-URI. This status is also returned if the domain in the Request-URI does not match any of the domains handled by the recipient of the request
+
+	COUNTER 4: Originating unsuccessful call, other reason, IT.SUBS.OrgUnsuccOther, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.FailSessions.sum po standardu TS 22.409
+
+	COUNTER 6: Originating call, called user busy, SC.FailSession.486.orig, S-CSCF, 486 Busy Here:  Callee is busy
+
+	COUNTER 7: Originating call, called user free, no answer, SC.RelAfterRing.orig, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.RelAfterRing po standardu TS 22.409
+
+	COUNTER 8: Originating call, called user answer, SC.AnsSession.orig, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.AnsSessions po standardu TS 22.409
+
+	COUNTER 10: Originating traffic, IT.SUBS.OrgTraffic, S-CSCF, 
+
+	COUNTER 11: Terminating call attempt, SC.AttSessions.term, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.AttSessionTerm po standardu TS 22.409, ki se meri na P-CSCF in I-CSCF
+
+	COUNTER 13: Terminating call, called user busy, SC.FailSession.486.term, S-CSCF, 
+
+	COUNTER 14: Terminating call, called user free, no answer, SC.RelAfterRing.term, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.RelAfterRing po standardu TS 22.409
+
+	COUNTER 15: Terminating call, called user answer, SC.AnsSession.term, S-CSCF, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.SuccSessionTerm.sum po standardu TS 22.409, ki se meri na P-CSCF in I-CSCF
+
+	COUNTER 16: Terminating unsuccessful call, other reason, IT.SUBS.TermUnsuccOther, S-CSCF, 
+
+	COUNTER 17: Terminating traffic, IT.SUBS.TermTraffic, S-CSCF, 
+
+GROUP - 1: Trunk Groups Statistics
+	COUNTER 1: Incoming call attempt, IT.TG.IncCallAtt, BGCF, MGCF, RGCF, 
+
+	COUNTER 3: Incoming call incomplete dialling, IT.TG.IncIncmpl, BGCF, MGCF, RGCF, 
+
+	COUNTER 4: Incoming call wrong number, IT.TG.IncWrongDN, BGCF, MGCF, RGCF, 
+
+	COUNTER 5: Incoming unsuccessful call, other reason, IT.TG.IncUnsuccOther, BGCF, MGCF, RGCF, 
+
+	COUNTER 6: Incomming call, called user busy, IT.TG.IncTermBusy, BGCF, MGCF, RGCF, 
+
+	COUNTER 7: Incomming call, called user free, no answer, IT.TG.IncTermNoAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 8: Incomming call, called user answer, IT.TG.IncAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 9: Incomming call, no free trunk to destination, IT.TG.IncNoTrunk, BGCF, MGCF, RGCF, 
+
+	COUNTER 10: Incomming traffic, IT.TG.IncTraffic, BGCF, MGCF, RGCF, 
+
+	COUNTER 11: Outgoing call attempt, IT.TG.OutCallAtt, BGCF, MGCF, RGCF, 
+
+	COUNTER 13: Outgoing call, called user busy, IT.TG.OutTermBusy, BGCF, MGCF, RGCF, 
+
+	COUNTER 14: Outgoing call, called user free, no answer, IT.TG.OutTermNoAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 15: Outgoing call, called user answer, IT.TG.OutAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 16: Outgoing unsuccessful call, other reason, IT.TG.OutUnsuccOther, BGCF, MGCF, RGCF, 
+
+	COUNTER 17: Outgoing call, no free trunk to destination, IT.TG.OutNoTrunk, BGCF, MGCF, RGCF, 
+
+	COUNTER 18: Outgoing traffic, IT.TG.OutTraffic, BGCF, MGCF, RGCF, 
+
+GROUP - 16: Trunk Statistics
+	COUNTER 1: Incoming call attempt, IT.T.IncCallAtt, BGCF, MGCF, RGCF, 
+
+	COUNTER 3: Incoming call incomplete dialling, IT.T.IncIncmpl, BGCF, MGCF, RGCF, 
+
+	COUNTER 4: Incoming call wrong number, IT.T.IncWrongDN, BGCF, MGCF, RGCF, 
+
+	COUNTER 5: Incoming unsuccessful call, other reason, IT.T.IncUnsuccOther, BGCF, MGCF, RGCF, 
+
+	COUNTER 6: Incoming call, called user busy, IT.T.IncTermBusy, BGCF, MGCF, RGCF, 
+
+	COUNTER 7: Incoming call, called user free, no answer, IT.T.IncTermNoAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 8: Incoming call, called user answer, IT.T.IncAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 9: Incoming call, no free trunk to destination, IT.T.IncNoTrunk, BGCF, MGCF, RGCF, 
+
+	COUNTER 10: Incoming traffic, IT.T.IncTraffic, BGCF, MGCF, RGCF, 
+
+	COUNTER 11: Outgoing call attempt, IT.T.OutCallAtt, BGCF, MGCF, RGCF, 
+
+	COUNTER 13: Outgoing call, called user busy, IT.T.OutTermBusy, BGCF, MGCF, RGCF, 
+
+	COUNTER 14: Outgoing call, called user free, no answer, IT.T.OutTermNoAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 15: Outgoing call, called user answer, IT.T.OutAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 16: Outgoing unsuccessful call, other reason, IT.T.OutUnsuccOther, BGCF, MGCF, RGCF, 
+
+	COUNTER 17: Outgoing call, no free trunk to destination, IT.T.OutNoTrunk, BGCF, MGCF, RGCF, 
+
+	COUNTER 18: Outgoing traffic, IT.T.OutTraffic, BGCF, MGCF, RGCF, 
+
+GROUP - 201: Route Statistics
+	COUNTER 1: Outgoing call attempt, IT.RouteCallAtt, BGCF, MGCF, RGCF, 
+
+	COUNTER 3: Outgoing unsuccessful call, other reason, IT.RouteUnsuccOther, BGCF, MGCF, RGCF, 
+
+	COUNTER 5: Outgoing call, called user busy, IT.RouteTermBusy, BGCF, MGCF, RGCF, 
+
+	COUNTER 7: Outgoing call, called user free, no answer, IT.RouteTermNoAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 9: Outgoing call, called user answer, IT.RouteAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 11: Outgoing call, no free trunk to destination, IT.RouteNoTrunk, BGCF, MGCF, RGCF, 
+
+GROUP - 2: DTMF signaling units Statistics
+	COUNTER 1: Signalling unit, receiver request, IT.DTMF.SuRecReq, MGCF, RGCF, 
+
+	COUNTER 2: Signalling unit, receiver request, successful, IT.DTMF.SuRecReqSucc, MGCF, RGCF, 
+
+	COUNTER 3: Signalling unit, receiver traffic, IT.DTMF.SuRecTraffic, MGCF, RGCF, 
+
+	COUNTER 4: Signalling unit, generator request, IT.DTMF.SuGenReq, MGCF, RGCF, 
+
+	COUNTER 5: Signaling unit, generator request, successful, IT.DTMF.SuGenReqSucc, MGCF, RGCF, 
+
+	COUNTER 6: Signalling unit, generator traffic, IT.DTMF.SuGenTraffic, MGCF, RGCF, 
+
+GROUP - 3: R2 signaling units Statistics
+	COUNTER 1: Signalling unit, receiver request, IT.R2.SuRecReq, MGCF, RGCF, 
+
+	COUNTER 2: Signalling unit, receiver request, successful, IT.R2.SuRecReqSucc, MGCF, RGCF, 
+
+	COUNTER 3: Signalling unit, receiver traffic, IT.R2.SuRecTraffic, MGCF, RGCF, 
+
+	COUNTER 4: Signalling unit, generator request, IT.R2.SuGenReq, MGCF, RGCF, 
+
+	COUNTER 5: Signaling unit, generator request, successful, IT.R2.SuGenReqSucc, MGCF, RGCF, 
+
+	COUNTER 6: Signalling unit, generator traffic, IT.R2.SuGenTraffic, MGCF, RGCF, 
+
+GROUP - 4: PT signaling units Statistics
+	COUNTER 1: Signalling unit, receiver request, IT.PT.SuRecReq, MGCF, RGCF, 
+
+	COUNTER 2: Signalling unit, receiver request, successful, IT.PT.SuRecReqSucc, MGCF, RGCF, 
+
+	COUNTER 3: Signalling unit, receiver traffic, IT.PT.SuRecTraffic, MGCF, RGCF, 
+
+	COUNTER 4: Signalling unit, generator request, IT.PT.SuGenReq, MGCF, RGCF, 
+
+	COUNTER 5: Signaling unit, generator request, successful, IT.PT.SuGenReqSucc, MGCF, RGCF, 
+
+	COUNTER 6: Signalling unit, generator traffic, IT.PT.SuGenTraffic, MGCF, RGCF, 
+
+GROUP - 5: SND_MF signaling units Statistics
+	COUNTER 1: Signalling unit, receiver request, IT.SND.SuRecReq, MGCF, RGCF, 
+
+	COUNTER 2: Signalling unit, receiver request, successful, IT.SND.SuRecReqSucc, MGCF, RGCF, 
+
+	COUNTER 3: Signalling unit, receiver traffic, IT.SND.SuRecTraffic, MGCF, RGCF, 
+
+	COUNTER 4: Signalling unit, generator request, IT.SND.SuGenReq, MGCF, RGCF, 
+
+	COUNTER 5: Signaling unit, generator request, successful, IT.SND.SuGenReqSucc, MGCF, RGCF, 
+
+	COUNTER 6: Signalling unit, generator traffic, IT.SND.SuGenTraffic, MGCF, RGCF, 
+
+GROUP - 6: AON signaling units Statistics
+	COUNTER 1: Signalling unit, receiver request, IT.AON.SuRecReq, MGCF, RGCF, 
+
+	COUNTER 2: Signalling unit, receiver request, successful, IT.AON.SuRecReqSucc, MGCF, RGCF, 
+
+	COUNTER 3: Signalling unit, receiver traffic, IT.AON.SuRecTraffic, MGCF, RGCF, 
+
+	COUNTER 4: Signalling unit, generator request, IT.AON.SuGenReq, MGCF, RGCF, 
+
+	COUNTER 5: Signaling unit, generator request, successful, IT.AON.SuGenReqSucc, MGCF, RGCF, 
+
+	COUNTER 6: Signalling unit, generator traffic, IT.AON.SuGenTraffic, MGCF, RGCF, 
+
+GROUP - 7: R1 signaling units Statistics
+	COUNTER 1: Signalling unit, receiver request, IT.R1.SuRecReq, MGCF, RGCF, 
+
+	COUNTER 2: Signalling unit, receiver request, successful, IT.R1.SuRecReqSucc, MGCF, RGCF, 
+
+	COUNTER 3: Signalling unit, receiver traffic, IT.R1.SuRecTraffic, MGCF, RGCF, 
+
+	COUNTER 4: Signalling unit, generator request, IT.R1.SuGenReq, MGCF, RGCF, 
+
+	COUNTER 5: Signaling unit, generator request, successful, IT.R1.SuGenReqSucc, MGCF, RGCF, 
+
+	COUNTER 6: Signalling unit, generator traffic, IT.R1.SuGenTraffic, MGCF, RGCF, 
+
+GROUP - 18: Centrex group Statistics
+	COUNTER 1: CTX originating call attempt, IT.CTXOrgCallAtt, TAS, 
+
+	COUNTER 2: CTX originating external call, IT.CTXOrgExt, TAS, 
+
+	COUNTER 3: CTX originating remote internal call, IT.CTXOrgRemIntCall, TAS, 
+
+	COUNTER 4: CTX originating call incomplete dialling, IT.CTXOrgIncmpl, TAS, 
+
+	COUNTER 5: CTX originating external call incomplete dialling, IT .CTXOrgExtIncmpl, TAS, 
+
+	COUNTER 6: CTX originating call wrong number, IT.CTXOrgWrongDN, TAS, 
+
+	COUNTER 7: CTX originating external call wrong number , IT.CTXOrgExtWrongDN, TAS, 
+
+	COUNTER 8: CTX originating unsuccessful call, barring and centrex restrictions, IT. CTXOrgRstrUnsucc, TAS, 
+
+	COUNTER 9: CTX originating unsuccessful call, other reason, IT.CTXOrgUnsuccOther, TAS, 
+
+	COUNTER 10: CTX originating external unsuccessful call, other reason, IT.CTXOrgExtUnsucc Other, TAS, 
+
+	COUNTER 11: CTX originating call, called user busy, IT.CTXOrgTermBusy, TAS, 
+
+	COUNTER 12: CTX originating external call, called user busy, IT.CTXOrgExtTermBusy, TAS, 
+
+	COUNTER 13: CTX originating call, called user free, no answer, IT.CTXOrgTermNoAnswer, TAS, 
+
+	COUNTER 14: CTX originating external call, called user free, no answer, IT.CTXOrgExtTermNoAnswer, TAS, 
+
+	COUNTER 15: CTX originating call, called user answer, IT.CTXOrgAnswer, TAS, 
+
+	COUNTER 16: CTX originating external call, called user answer, IT. CTXOrgExtAnswer, TAS, 
+
+	COUNTER 17: CTX terminating call attempt, IT.CTXTermCallAtt, TAS, 
+
+	COUNTER 18: CTX terminating external call attempt, IT.CTXTermExt , TAS, 
+
+	COUNTER 21: CTX terminating remote internal call attempt, IT.CTXTermRemIntCall, TAS, 
+
+	COUNTER 22: CTX terminating unsuccessful call, barring and centrex restrictions, IT.CTXTermRstrUnsucc, TAS, 
+
+	COUNTER 23: CTX terminating unsuccessful call, other reason, IT.CTXTermUnsuccOther, TAS, 
+
+	COUNTER 24: CTX terminating external unsuccessful call, other reason, IT.CTXTermExtUnsuccOther, TAS, 
+
+	COUNTER 25: CTX terminating call, called user busy, IT.CTXTermTermBusy, TAS, 
+
+	COUNTER 26: CTX terminating external call, called user busy, IT.CTXTermExtTermBusy, TAS, 
+
+	COUNTER 27: CTX terminating call, called user free, no answer, IT.CTXTermTermNoAnswer, TAS, 
+
+	COUNTER 28: CTX terminating external call, called user free, no answer, IT.CTXTermExtTermNoAnswer, TAS, 
+
+	COUNTER 29: CTX terminating call, called user answer, IT.CTXTermAnswer, TAS, 
+
+	COUNTER 30: CTX terminating external call, called user answer, IT.CTXTermExtAnswer , TAS, 
+
+GROUP - 19: Prefix Statistics
+	COUNTER 1: Dialled prefix, IT.PfxCallAtt, BGCF, MGCF, RGCF, 
+
+	COUNTER 9: Dialled prefix, subscriber busy, IT.PfxTermBusy, BGCF, MGCF, RGCF, 
+
+	COUNTER 11: Dialled prefix, no answer, IT.PfxTermNoAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 7: Dialled prefix, unsuccessful, other reason, IT.PfxUnsuccOther, BGCF, MGCF, RGCF, 
+
+	COUNTER 13: Dialled prefix, answer, IT.PfxAnswer, BGCF, MGCF, RGCF, 
+
+	COUNTER 3: Dialled prefix, incomplete dialling, IT.PfxIncmpl, BGCF, MGCF, RGCF, 
+
+	COUNTER 5: Dialled prefix, wrong number, IT.PfxWrongDN, BGCF, MGCF, RGCF, 
+
+	COUNTER 15: Dialled prefix, no free trunk to destination, IT.PfxNoTrunk , BGCF, MGCF, RGCF, 
+
+GROUP - 200: CAC prefix Statistics
+	COUNTER 1: Dialled CAC prefix, IT.CACCallAtt, TAS, 
+
+	COUNTER 9: Dialled CAC prefix, subscriber busy, IT.CACTermBusy, TAS, 
+
+	COUNTER 11: Dialled CAC prefix, no answer, IT.CACTermNoAnswer, TAS, 
+
+	COUNTER 7: Dialled CAC prefix, unsuccessful, other reason, IT.CACUnsuccOther, TAS, 
+
+	COUNTER 13: Dialled CAC prefix, answer, IT.CACAnswer, TAS, 
+
+	COUNTER 3: Dialled CAC prefix, incomplete dialling, IT.CACIncmpl, TAS, 
+
+	COUNTER 5: Dialled CAC prefix, wrong number, IT.CACWrongDN, TAS, 
+
+	COUNTER 15: Dialled CAC prefix, no free trunk to destination, IT.CACNoTrunk , TAS, 
+
+	COUNTER 17: CAC analysed but information not used for outgoing routing, IT.CACNotUsed, TAS, 
+
+GROUP - 10: SSNo7 signal links Statistics
+	COUNTER 1: Duration of SSNo7 signalling link in service, IT.SS7_SL_InService, MGCF, RGCF, BGCF, 
+
+	COUNTER 2: SSNo7 signalling link failure, all reason, IT.SS7_SL_Failure, MGCF, RGCF, BGCF, 
+
+	COUNTER 3: Number of signalling units received in error, IT.SS7_SL_SUINError, MGCF, RGCF, BGCF, 
+
+	COUNTER 4: Duration of SSNo7 signalling link unavailability, IT.SS7_SL_Unavailable , MGCF, RGCF, BGCF, 
+
+	COUNTER 5: Number of SIF and SIO octets transmitted, IT.SS7_SL_SIFSIOTrans, MGCF, RGCF, BGCF, 
+
+	COUNTER 6: Number of SIF and SIO octets received, IT.SS7_SL_SIFSIORec, MGCF, RGCF, BGCF, 
+
+	COUNTER 7: MSU discarded due to signalling link congestion, IT.SS7_SL_MSUDiscard, MGCF, RGCF, BGCF, 
+
+GROUP - 11: SSNo7 signal points Statistics
+	COUNTER 1: Adjacent signalling point inaccessible, IT.SS7_SP_Inaccessible, MGCF, RGCF, BGCF, 
+
+	COUNTER 2: Duration of adjacent signalling point inaccessible, IT.SS7_SP_InaccDurat, MGCF, RGCF, BGCF, 
+
+	COUNTER 3: MSU discarded due to a routing data error, IT.SS7_SP_MSUDiscard, MGCF, RGCF, BGCF, 
+
+GROUP - 12: SSNo7 exchange Statistics
+	COUNTER 1: Total ISDN-UP messages sent, IT.SS7_ISUP_MsgSent, MGCF, RGCF, 
+
+	COUNTER 2: Total ISDN-UP messages received, IT.SS7_ISUP_MsgRec, MGCF, RGCF, 
+
+GROUP - 13: SSNo7 SCCP Statistics
+	COUNTER 1: Routing failure - no translation for address of such nature, IT.SS7_SCCP_NoNtrTransl, MGCF, RGCF, BGCF, 
+
+	COUNTER 2: Routing failure - no translation for this specific address, IT.SS7_SCCP_NoAdrTransl, MGCF, RGCF, BGCF, 
+
+	COUNTER 3: Routing failure - network failure (point code not available), IT.SS7_SCCP_NWFail, MGCF, RGCF, BGCF, 
+
+	COUNTER 4: Routing failure - network congestion, IT.SS7_SCCP_NWCongest, MGCF, RGCF, BGCF, 
+
+	COUNTER 5: Routing failure - subsystem failure, IT.SS7_SCCP_SubSistFail, MGCF, RGCF, BGCF, 
+
+	COUNTER 6: Routing failure - unequipped user (Subsystem), IT.SS7_SCCP_Unequipped, MGCF, RGCF, BGCF, 
+
+	COUNTER 7: Syntax error detected, IT.SS7_SCCP_SyntaxError, MGCF, RGCF, BGCF, 
+
+	COUNTER 8: Routing failure - reason failure, IT.SS7_SCCP_Unknown, MGCF, RGCF, BGCF, 
+
+	COUNTER 9: Total messages originating in SSNs, IT.SS7_SCCP_MsgOrigin, MGCF, RGCF, BGCF, 
+
+	COUNTER 10: Total messages received in SSNs, IT.SS7_SCCP_MsgReceived , MGCF, RGCF, BGCF, 
+
+	COUNTER 11: Messages sent to a backup subsystem, IT.SS7_SCCP_MsgBkpSS, MGCF, RGCF, BGCF, 
+
+GROUP - 14: SSNo7 TCAP Statistics
+	COUNTER 1: Total number of TC messages sent by the node, IT.SS7_TCAP_MsgSent, MGCF, RGCF, BGCF, 
+
+	COUNTER 2: Total number of TC messages received by the node, IT.SS7_TCAP_MsgReceived, MGCF, RGCF, BGCF, 
+
+	COUNTER 3: P-abort received - unrecognized message type, IT.SS7_TCAP_UnrecogMsg, MGCF, RGCF, BGCF, 
+
+	COUNTER 4: P-abort received - incorrect TP, IT.SS7_TCAP_IncorrectTP, MGCF, RGCF, BGCF, 
+
+	COUNTER 5: P-abort received - badly formatted TP, IT.SS7_TCAP_BadlyFormat, MGCF, RGCF, BGCF, 
+
+	COUNTER 6: P-abort received - unrecognized TID, IT.SS7_TCAP_UnrecogTID, MGCF, RGCF, BGCF, 
+
+	COUNTER 7: Reject received - unrecognized component, IT.SS7_TCAP_UnrecogComp, MGCF, RGCF, BGCF, 
+
+	COUNTER 8: Reject received - mistyped component, IT.SS7_TCAP_MistypeComp, MGCF, RGCF, BGCF, 
+
+	COUNTER 9: Reject received - badly structured component, IT.SS7_TCAP_BadlyComp, MGCF, RGCF, BGCF, 
+
+GROUP - 205: VoIP calls Statistics
+	COUNTER 1: IP voice traffic counter, IT.AudioTraffic, MGCF, RGCF, 
+
+	COUNTER 2: IP fax traffic counter, IT.FaxTraffic, MGCF, RGCF, 
+
+	COUNTER 3: IP modem traffic counter, IT.DataTraffic, MGCF, RGCF, 
+
+	COUNTER 4: Traffic using G.711 codec, IT.CodTypeG711Traffic, MGCF, RGCF, 
+
+	COUNTER 5: Traffic using G.723 codec, IT.CodTypeG723Traffic , MGCF, RGCF, 
+
+	COUNTER 6: Traffic using G.729 codec, IT.CodTypeG729Traffic, MGCF, RGCF, 
+
+	COUNTER 7: Traffic using T.38 codec, IT.CodTypeFaxT38Traffic, MGCF, RGCF, 
+
+GROUP - 206: VoIP Packets Statistics
+	COUNTER 1: No of received voice packets sent for playout, IT.RxPacketCount, MGCF, RGCF, 
+
+	COUNTER 2: Number of voice packets that are written into the voice data buffer to be transmitted, IT.TxPacketCount, MGCF, RGCF, 
+
+	COUNTER 3: Number of octets received by DSP, IT.RxOctets, MGCF, RGCF, 
+
+	COUNTER 4: Number of octets transmitted by DSP, IT.TxOctets, MGCF, RGCF, 
+
+	COUNTER 5: Number of voice packets on the transmit side that were classified as silence, IT.SilencePacketCount, MGCF, RGCF, 
+
+	COUNTER 6: Number of idle (noise) packets being played out due to either lost packets or voice playout FIFO buffer underrun, IT.IdlePacketCount, MGCF, RGCF, 
+
+	COUNTER 7: Number of received DTMF packets, IT.DTMFRxPackets, MGCF, RGCF, 
+
+	COUNTER 8: Number of transmitted DTMF packets, IT.DTMFTxPackets, MGCF, RGCF, 
+
+	COUNTER 9: Number of lost packets (based on missing sequence number), IT.LostPacketsCount, MGCF, RGCF, 
+
+	COUNTER 10: Number of packets lost by the network, IT.PktLostByNetwork, MGCF, RGCF, 
+
+	COUNTER 11: Number of voice packets dropped due to the voice playout FIFO buffer overrun, IT.DroppedPacketCount, MGCF, RGCF, 
+
+	COUNTER 12: Number of packets replayed due to lost packets. Jitter indicator., IT.ReplayPacketCount, MGCF, RGCF, 
+
+	COUNTER 13: Average delay of the voice playout FIFO (in msec), IT.AvgPlayoutDelay, MGCF, RGCF, 
+
+	COUNTER 14: Average frame jitter (in msec), IT.AvgFrameJitter, MGCF, RGCF, 
+
+	COUNTER 15: No of calls involved in the measurement, IT.NoOfMeasuredCalls, MGCF, RGCF, 
+
+GROUP - 57: M3UA Statistics - general
+	COUNTER 1: Total number of failures of M3UA routing operations, IT.M3UAGen_RoutFailures , MGCF, RGCF, BGCF, 
+
+	COUNTER 2: Total number of events when M3UA application is unreachable, IT.M3UAGen_AppUnreachable, MGCF, RGCF, BGCF, 
+
+GROUP - 58: M3UA Statistics - association
+	COUNTER 1: Number of ASPUP messages sent and received  through the M3UA association, IT.M3UAAssoc_Aspup, MGCF, RGCF, BGCF, 
+
+	COUNTER 2: Number of ASPAC messages sent and received through the M3UA association, IT.M3UAAssoc_Aspac, MGCF, RGCF, BGCF, 
+
+	COUNTER 3: Number of ASPDN messages sent and received through the M3UA association, IT.M3UAAssoc_Aspdn, MGCF, RGCF, BGCF, 
+
+	COUNTER 4: Number of ASPIA messages sent and received through the M3UA association, IT.M3UAAssoc_Aspia, MGCF, RGCF, BGCF, 
+
+	COUNTER 5: Number of ASPUP ACK messages sent and received through the M3UA association, IT.M3UAAssoc_AspupAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 6:  Number of ASPAC ACK messages sent and received through the M3UA association, IT.M3UAAssoc_AspacAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 7: Number of ASPDN ACK messages sent and received through the M3UA association, IT.M3UAAssoc_AspdnAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 8: Number of ASPIA ACK messages sent and received through the M3UA association, IT.M3UAAssoc_AspiaAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 9: Number of NOTIFY messages sent or received through the M3UA association, IT.M3UAAssoc_Notify , MGCF, RGCF, BGCF, 
+
+	COUNTER 10: Number of DAUD messages sent or received through the M3UA association, IT.M3UAAssoc_Daud, MGCF, RGCF, BGCF, 
+
+	COUNTER 11: Number of DUNA messages sent or received through the M3UA association, IT.M3UAAssoc_Duna, MGCF, RGCF, BGCF, 
+
+	COUNTER 12: Number of DAVA messages sent or received through the M3UA association, IT.M3UAAssoc_Dava, MGCF, RGCF, BGCF, 
+
+	COUNTER 13: Number of DUPU messages sent or received through the M3UA association, IT.M3UAAssoc_Dupu, MGCF, RGCF, BGCF, 
+
+	COUNTER 17: Number of DATA messages sent through the M3UA association, IT.M3UAAssoc_DataOut , MGCF, RGCF, BGCF, 
+
+	COUNTER 18: Number of DATA messages received through the M3UA association, IT.M3UAAssoc_DataIn, MGCF, RGCF, BGCF, 
+
+	COUNTER 19: Number of ERROR messages sent through the M3UA association, IT.M3UAAssoc_ErrorOut, MGCF, RGCF, BGCF, 
+
+	COUNTER 20: Number of ERROR messages received through the M3UA association, IT.M3UAAssoc_ErrorIn, MGCF, RGCF, BGCF, 
+
+	COUNTER 21: Number of SCON messages sent through the M3UA association, IT.M3UAAssoc_SconOut , MGCF, RGCF, BGCF, 
+
+	COUNTER 22: Number of SCON messages received through the M3UA association, IT.M3UAAssoc_SconIn, MGCF, RGCF, BGCF, 
+
+GROUP - 61: M2UA Statistics - general
+	COUNTER 1: Total number of failures of M2UA routing operations, IT.M2UAGen_RoutFailures, MGCF, RGCF, BGCF, 
+
+	COUNTER 2: Total number of events when M2UA application is unreachable, IT.M2UAGen_AppUnreachable, MGCF, RGCF, BGCF, 
+
+GROUP - 62: M2UA Statistics - association
+	COUNTER 1: Number of ASPUP messages sent and received  through the M2UA association, IT.M2UAAssoc_Aspup, MGCF, RGCF, BGCF, 
+
+	COUNTER 2: Number of ASPAC messages sent and received through the M2UA association, IT.M2UAAssoc_Aspac , MGCF, RGCF, BGCF, 
+
+	COUNTER 3: Number of ASPDN messages sent and received through the M2UA association , IT.M2UAAssoc_Aspdn, MGCF, RGCF, BGCF, 
+
+	COUNTER 4: Number of ASPIA messages sent and received through the M2UA association, IT.M2UAAssoc_Aspia, MGCF, RGCF, BGCF, 
+
+	COUNTER 5: Number of ASPUP ACK messages sent and received through the M2UA association, IT.M2UAAssoc_AspupAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 6: Number of ASPAC ACK messages sent and received through the M2UA association, IT.M2UAAssoc_AspacAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 7: Number of ASPDN ACK messages sent and received through the M2UA association, IT.M2UAAssoc_AspdnAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 8: Number of ASPIA ACK messages sent and received through the M2UA association, IT.M2UAAssoc_AspiaAck, MGCF, RGCF, BGCF, 
+
+	COUNTER 9: Number of NOTIFY messages sent or received through the M2UA association, IT.M2UAAssoc_Notify, MGCF, RGCF, BGCF, 
+
+	COUNTER 10: Number of DATA messages received through the M2UA association, IT.M2UAAssoc_DataIn, MGCF, RGCF, BGCF, 
+
+	COUNTER 11: Number of DATA messages sent through the M2UA association, IT.M2UAAssoc_DataOut, MGCF, RGCF, BGCF, 
+
+	COUNTER 12: Number of ERROR messages sent through the M2UA association, IT.M2UAAssoc_ErrorOut, MGCF, RGCF, BGCF, 
+
+	COUNTER 13: Number of ERROR messages received through the M2UA association, IT.M2UAAssoc_ErrorIn, MGCF, RGCF, BGCF, 
+
+GROUP - 59: SCTP Statistics - general
+	COUNTER 1: Total number current established associations, IT.SCTPGen_CurrEstab, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 2: Total number of COOKIE-ECHOED->EST. Transitions, IT.SCTPGen_ActiveEstabs, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 3: Total number of CLOSED->EST. Transitions, IT.SCTPGen_PasiveEstabs, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 4: Total number of AnyState --(ABORT)->CLOSED transitions, IT.SCTPGen_Aborteds, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 5: Total number of [SHUTDOWN-SENT,SHUTDOWN-ACK_SENT]->CLOSED transitions, IT.SCTPGen_ShutDowns, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 6: Total number of Out-Of-Blue packets received, IT.SCTPGen_OutOfBlue, MGCF, RGCF, BGCF, AGCF, 
+
+GROUP - 60: SCTP Statistics - association
+	COUNTER 1: Number of packets rcvd with CRC error, per SCTP association, IT.SCTPAssoc_ChecksumErr, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 2: Number of Ctrl chunks sent, per SCTP association, IT.SCTPAssoc_CtrlChunksOUT, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 3: Number of Order chunks sent, per SCTP association, IT.SCTPAssoc_OrderChunksOUT, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 4: Number of Unorder chunks sent, per SCTP association, IT.SCTPAssoc_UnorderChunksOUT, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 5: Number of Ctrl chunks received, per SCTP association, IT.SCTPAssoc_CtrlChunksIN, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 6: Number of Order chunks received, per SCTP association, IT.SCTPAssoc_OrderChunksIN, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 7: Number of Unorder chunks received, per SCTP association, IT.SCTPAssoc_UnorderChunksIN, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 8: Number of fragmented messages, per SCTP association, IT.SCTPAssoc_FragUsrMsgs, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 9: Number of joined messages, per SCTP association, IT.SCTPAssoc_ReasmUsrMsgs, MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 10: Number of SCTP packets sent, per SCTP association, IT.SCTPAssoc_SCTPPacketsOUT , MGCF, RGCF, BGCF, AGCF, 
+
+	COUNTER 11: Number of SCTP packets received, per SCTP association, IT.SCTPAssoc_SCTPPacketsIN, MGCF, RGCF, BGCF, AGCF, 
+
+GROUP - 207: AON on trunk group statistics
+	COUNTER 1: AON on ZSL unsuccessful - no SU available, IT.ZSLUnsuccNoSU, MGCF, RGCF, 
+
+	COUNTER 2: AON on ZSL performed unsuccessfully, IT.ZSLUnsuccAON, MGCF, RGCF, 
+
+	COUNTER 3: AON on ZSL performed successfully on first request, IT.ZSLSuccFirstReq, MGCF, RGCF, 
+
+	COUNTER 4: AON on ZSL performed successfully on second request, IT.ZSLSuccSecondReq , MGCF, RGCF, 
+
+	COUNTER 5: AON on ZSL performed successfully on third request, IT.ZSLSuccThirdReq, MGCF, RGCF, 
+
+	COUNTER 6: AON on ZSL interrupted, IT ZSLInterrupted , MGCF, RGCF, 
+
+	COUNTER 7: AON on SL unsuccessful - no SU available, IT.SLUnsuccNoSU, MGCF, RGCF, 
+
+	COUNTER 8: AON on SL performed unsuccessfully, IT.SLUnsuccAON, MGCF, RGCF, 
+
+	COUNTER 9: AON on SL performed successfully on first request, IT.SLSuccFirstReq, MGCF, RGCF, 
+
+	COUNTER 10: AON on SL performed successfully on second request, IT.SLSuccSecondReq, MGCF, RGCF, 
+
+	COUNTER 11: AON on SL performed successfully on third request, IT.SLSuccThirdReq, MGCF, RGCF, 
+
+	COUNTER 12: AON on SL interrupted, IT.SLInterrupted, MGCF, RGCF, 
+
+GROUP - 63: IUA Statistics - general
+	COUNTER 1: Number of IUA interface failure caused by communication, IT.IUAGen_IntfFailure, MGCF, AGCF, 
+
+	COUNTER 2: Number of IUA interface failure caused by administration , IT.IUAGen_IntfADMUnoperational, MGCF, AGCF, 
+
+	COUNTER 3: Number of SCTP streams shortage, IT.IUAGen_StreamUnavailable, MGCF, AGCF, 
+
+GROUP - 64: IUA Statistics - interface
+	COUNTER 1: Number of ASPUP messages sent and received  through the IUA association, IT.IUAAssoc_Aspup, MGCF, AGCF, 
+
+	COUNTER 2: Number of ASPAC messages sent and received through the IUA association, IT.IUAAssoc_Aspac, MGCF, AGCF, 
+
+	COUNTER 3: Number of ASPDN messages sent and received through the IUA association, IT.IUAAssoc_Aspdn, MGCF, AGCF, 
+
+	COUNTER 4: Number of ASPIA messages sent and received through the IUA association, IT.IUAAssoc_Aspia , MGCF, AGCF, 
+
+	COUNTER 5: Number of ASPUP ACK messages sent and received through the IUA association, IT.IUAAssoc_AspupAck, MGCF, AGCF, 
+
+	COUNTER 6: Number of ASPAC ACK messages sent and received through the IUA association, IT.IUAAssoc_AspacAck, MGCF, AGCF, 
+
+	COUNTER 7: Number of ASPDN ACK messages sent and received through the IUA association, IT.IUAAssoc_AspdnAck, MGCF, AGCF, 
+
+	COUNTER 8: Number of ASPIA ACK messages sent and received through the IUA association, IT.IUAAssoc_AspiaAck, MGCF, AGCF, 
+
+	COUNTER 9: Number of NOTIFY messages sent or received through the IUA association, IT.IUAAssoc_Notify, MGCF, AGCF, 
+
+	COUNTER 10: Number of DATA messages sent through the IUA association, IT.IUAAssoc_DataOut, MGCF, AGCF, 
+
+	COUNTER 11: Number of DATA messages received through the IUA association, IT.IUAAssoc_DataIn, MGCF, AGCF, 
+
+	COUNTER 12: Number of ERROR messages sent through the IUA association, IT.IUAAssoc_ErrorOut , MGCF, AGCF, 
+
+	COUNTER 13: Number of ERROR messages received through the IUA association, IT.IUAAssoc_ErrorIn, MGCF, AGCF, 
+
+GROUP - 65: V5UA Statistics - general
+	COUNTER 1: Number of V5UA interface failure caused by communication, IT.V5UAGen_IntfFailure, MGCF, 
+
+	COUNTER 2: Number of V5UA interface failure caused by administration, IT.V5UAGen_IntfADMUnoperational , MGCF, 
+
+GROUP - 66: V5UA Statistics - interface
+	COUNTER 1: Number of ASPUP messages sent and received  through the V5UA association, IT.V5UAAssoc_Aspup, MGCF, 
+
+	COUNTER 2: Number of ASPAC messages sent and received through the V5UA association, IT.V5UAAssoc_Aspac, MGCF, 
+
+	COUNTER 3: Number of ASPDN messages sent and received through the V5UA association, IT.V5UAAssoc_Aspdn , MGCF, 
+
+	COUNTER 4: Number of ASPIA messages sent and received through the V5UA association, IT.V5UAAssoc_Aspia, MGCF, 
+
+	COUNTER 5: Number of ASPUP ACK messages sent and received through the V5UA association, IT.V5UAAssoc_AspupAck, MGCF, 
+
+	COUNTER 6: Number of ASPAC ACK messages sent and received through the V5UA association, IT.V5UAAssoc_AspacAck, MGCF, 
+
+	COUNTER 7: Number of ASPDN ACK messages sent and received through the V5UA association, IT.V5UAAssoc_AspdnAck, MGCF, 
+
+	COUNTER 8: Number of ASPIA ACK messages sent and received through the V5UA association, IT.V5UAAssoc_AspiaAck, MGCF, 
+
+	COUNTER 9: Number of NOTIFY messages sent or received through the V5UA association, IT.V5UAAssoc_Notify, MGCF, 
+
+	COUNTER 10: Number of DATA messages sent through the V5UA association, IT.V5UAAssoc_DataOut, MGCF, 
+
+	COUNTER 11: Number of DATA messages received through the V5UA association, IT.V5UAAssoc_DataIn, MGCF, 
+
+	COUNTER 12: Number of ERROR messages sent through the V5UA association, IT.V5UAAssoc_ErrorOut , MGCF, 
+
+	COUNTER 13: Number of ERROR messages received through the V5UA association, IT.V5UAAssoc_ErrorIn, MGCF, 
+
+	COUNTER 14: Number of LinkStatus messages received through the V5UA association , IT.V5UAAssoc_LinkStatus, MGCF, 
+
+	COUNTER 15: Number of SaBitStatus messages received through the V5UA association , IT.V5UAAssoc_SaBitStatus, MGCF, 
+
+	COUNTER 16: Number of ERROR messages received through the IUA association , IT.V5UAAssoc_ErrorInd, MGCF, 
+
+GROUP - 67: DIAMETER Statistics - general
+	COUNTER 1: Total number of failures of unsuccessfully sent DIAMETER messages, IT.DIAMETERGeneral_UnSentMsg, I-CSCF, S-CSCF, BGCF, MGCF, RGCF, 
+
+	COUNTER 2: Total number of failures for finding connections for DIAMETER messages, IT.DIAMETERGeneral_ConnNotFound, I-CSCF, S-CSCF, BGCF, MGCF, RGCF, 
+
+GROUP - -1: DIAMETER Statistics - connection
+GROUP - 20: Statistics of Supplementary Service - 3PTY (Three Party Call)
+	COUNTER 7: Supplementary service 3PTY successful invocation, IT.SS.3PTYInvSucc, TAS, 
+
+GROUP - 21: Statistics of Supplementary Service - ABDS (Abbreviated Dialling, Subscriber Selection)
+	COUNTER 1: Supplementary service ABDS activation, IT.SS.ABDSAct, TAS, 
+
+	COUNTER 2: Supplementary service ABDS successful activation, IT.SS.ABDSActSucc, TAS, 
+
+	COUNTER 3: Supplementary service ABDS deactivation, IT.SS.ABDSDeact, TAS, 
+
+	COUNTER 4: Supplementary service ABDS successful deactivation, IT.SS.ABDSDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service ABDS interogation, IT.SS.ABDSInt, TAS, 
+
+	COUNTER 6: Supplementary service ABDS successful interogation, IT.SS.ABDSIntSecc, TAS, 
+
+GROUP - 22: Statistics of Supplementary Service - CONF (Conference Call, Add On)
+	COUNTER 7: Supplementary service CONF successful invocation, CONF.AttCreation, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca CONF.AttCreation po standardu TS 22.409
+
+GROUP - 23: Statistics of Supplementary Services - ACSC, ACSR, ACSD (Alarm Call Service - Casual, Alarm Call Service - Regular, Alarm Call Service - Daily)
+	COUNTER 1: Supplementary service ACS activation, IT.SS.ACSAct, TAS, 
+
+	COUNTER 2: Supplementary service ACS successful activation, IT.SS.ACSActSucc, TAS, 
+
+	COUNTER 3: Supplementary service ACS deactivation, IT.SS.ACSDeact, TAS, 
+
+	COUNTER 4: Supplementary service ACS successful deactivation, IT.SS.ACSDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service ACS interogation, IT.SS.ACSInt, TAS, 
+
+	COUNTER 6: Supplementary service ACS successful interogation, IT.SS.ACSIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service ACS successful invocation, IT.SS.ACSInvSucc, TAS, 
+
+GROUP - 24: Statistics of Supplementary Service - MCE (Multi Carrier Environment)
+	COUNTER 1: Supplementary service MCE activation, IT.SS.MCEAct, TAS, 
+
+	COUNTER 2: Supplementary service successful MCE activation, IT.SS.MCEActSucc, TAS, 
+
+GROUP - 25: Statistics of Supplementary Service - CD (Call Deflection)
+	COUNTER 7: Supplementary service successful CD invocation, SC.CDUsed, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.CDUsed po standardu TS 22.409
+
+GROUP - 26: Statistics of Supplementary Service - CFNR (Call Forwarding No Reply)
+	COUNTER 1: Supplementary service CFNR activation, IT.SS.CFNRAct, TAS, 
+
+	COUNTER 2: Supplementary service CFNR successful activation, IT.SS.CFNRActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CFNR deactivation, IT.SS.CFNRDeact, TAS, 
+
+	COUNTER 4: Supplementary service CFNR successful deactivation, IT.SS.CFNRDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CFNR interogation, IT.SS.CFNRInt, TAS, 
+
+	COUNTER 6: Supplementary service CFNR successful interogation, IT.SS.CFNRIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service CFNR successful invocation, SC.CFNRUsed, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.CFNRUsed po standardu TS 22.409
+
+GROUP - 27: Statistics of Supplementary Service - CFB (Call Forwarding Busy)
+	COUNTER 1: Supplementary service CFB activation, IT.SS.CFBAct, TAS, 
+
+	COUNTER 2: Supplementary service CFB successful activation, IT.SS.CFBActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CFB deactivation, IT.SS.CFBDeact, TAS, 
+
+	COUNTER 4: Supplementary service CFB successful deactivation, IT.SS.CFBDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CFB interogation, IT.SS.CFBInt, TAS, 
+
+	COUNTER 6: Supplementary service CFB successful interogation, IT.SS.CFBIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service CFB successful invocation, SC.CFBUsed, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.CFBUsed po standardu TS 22.409
+
+GROUP - 28: Statistics of Supplementary Services - CFU, FLM (Call Forwarding Unconditional, Follow me)
+	COUNTER 1: Supplementary service CFU activation, IT.SS.CFUAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CFU activation, IT.SS.CFUActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CFU deactivation, IT.SS.CFUDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CFU deactivation, IT.SS.CFUDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CFU interogation, IT.SS.CFUInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CFU interogation, IT.SS.CFUIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service successful CFU invocation, SC.CFUUsed, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.CFUUsed po standardu TS 22.409
+
+GROUP - 29: Statistics of Supplementary Service - CFUT (Call Forwarding Unconditional, Time Depending)
+	COUNTER 1: Supplementary service CFUT activation, IT.SS.CFUTAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CFUT activation, IT.SS.CFUTActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CFUT deactivation, IT.SS.CFUTDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CFUT deactivation, IT.SS.CFUTDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CFUT interogation, IT.SS.CFUTInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CFUT interogation, IT.SS.CFUTIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service successful CFUT invocation, SC.CFUUsed, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.CFUUsed po standardu TS 22.409 
+
+GROUP - 30: Statistics of Supplementary Service - CINT (Call Intrusion)
+	COUNTER 7: Supplementary service successful CINT invocation, IT.SS.CINTInvSucc, TAS, 
+
+GROUP - 31: Statistics of Supplementary Services CPUg, CPUs (Call Pick Up Group, Call Pick Up Single)
+	COUNTER 7: Supplementary service successful CPU invocation, IT.SS.CPUInvSucc, TAS, 
+
+GROUP - 32: Statistics of Supplementary Service CPUP (Call Pick Up, Protection)
+	COUNTER 1: Supplementary service CPUP activation, IT.SS.CPUPAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CPUP activation, IT.SS.CPUPActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CPUP deactivation, IT.SS.CPUPDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CPUP deactivation, IT.SS.CPUPDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CPUP interogation, IT.SS.CPUPInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CPUP interogation, IT.SS.CPUPIntSucc, TAS, 
+
+GROUP - 33: Statistics of Supplementary Service CT (Call Transfer)
+	COUNTER 7: Supplementary service successful CT invocation, SC.ECTBlindUsed, TAS, ali kriterij za poveèanje števca lahko uporabimo tudi za poveèanje števca SC.ECTBlindUsed ali SC.ECTAskUsed ??
+
+GROUP - 34: Statistics of Supplementary Service CW (Call Waiting)
+	COUNTER 1: Supplementary service CW activation, IT.SS.CWAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CW activation, IT.SS.CWActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CW deactivation, IT.SS.CWDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CW deactivation, IT.SS.CWDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CW interogation, IT.SS.CWInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CW interogation, IT.SS.CWIntSucc, TAS, 
+
+GROUP - 35: Statistics of Supplementary Service CAMP (Camp on busy)
+	COUNTER 7: Supplementary service successful CAMP invocation, IT.SS.CAMPInvSucc, TAS, 
+
+GROUP - 36: Statistics of Supplementary Service CAMPP (Camp on busy Protection, Subscriber Controlled)
+	COUNTER 1: Supplementary service CAMPP activation, IT.SS.CAMPPAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CAMPP activation, IT.SS.CAMPPActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CAMPP deactivation, IT.SS.CAMPPDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CAMPP deactivation, IT.SS.CAMPPDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CAMPP interogation, IT.SS.CAMPPInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CAMPP interogation, IT.SS.CAMPPIntSucc, TAS, 
+
+GROUP - 37: Statistics of Supplementary Services CCBS, NCBS (Completion of Calls to Busy Subscriber, Notification Call To Busy Subscriber)
+	COUNTER 1: Supplementary service CCBS activation, IT.SS.CCBSAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CCBS activation, IT.SS.CCBSActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CCBS deactivation, IT.SS.CCBSDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CCBS deactivation, IT.SS.CCBSDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CCBS interogation, IT.SS.CCBSInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CCBS interogation, IT.SS.CCBSIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service successful CCBS invocation, SC.CCBSUsed, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.CCBSUsed po standardu TS 22.409 
+
+GROUP - 39: Statistics of Supplementary Services DND (Do Not Disturb)
+	COUNTER 1: Supplementary service DND activation, IT.SS.DNDAct, TAS, 
+
+	COUNTER 2: Supplementary service successful DND activation, IT.SS.DNDActSucc, TAS, 
+
+	COUNTER 3: Supplementary service DND deactivation, IT.SS.DNDDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful DND deactivation, IT.SS.DNDDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service DND interogation, IT.SS.DNDInt, TAS, 
+
+	COUNTER 6: Supplementary service successful DND interogation, IT.SS.DNDIntSucc, TAS, 
+
+GROUP - 40: Statistics of Supplementary Services DNDO (Do Not Disturb Override)
+	COUNTER 7: Supplementary service successful DNDO invocation, IT.SS.DNDOInvSucc, TAS, 
+
+GROUP - 41: Statistics of Supplementary Service HOTD (Fixed Destination Call, With Time Out)
+	COUNTER 1: Supplementary service HOTD activation, IT.SS.HOTDAct, TAS, 
+
+	COUNTER 2: Supplementary service successful  HOTD activation, IT.SS.HOTDActSucc, TAS, 
+
+	COUNTER 3: Supplementary service HOTD deactivation, IT.SS.HOTDDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful HOTD deactivation, IT.SS.HOTDDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service HOTD interogation, IT.SS.HOTDInt, TAS, 
+
+	COUNTER 6: Supplementary service successful HOTD interogation, IT.SS.HOTDIntSucc, TAS, 
+
+GROUP - 42: Statistics of Supplementary Service KEY (Keyword Subscriber Controlled)
+	COUNTER 1: Supplementary service KEY activation, IT.SS.KEYAct, TAS, 
+
+	COUNTER 2: Supplementary service successful KEY activation, IT.SS.KEYActSucc, TAS, 
+
+GROUP - 43: Statistics of Supplementary Service MCID (Malicious Call Identification)
+	COUNTER 7: Supplementary service successful MCID invocation, IT.SS.MCIDInvSucc, TAS, 
+
+GROUP - 44: Statistics of Supplementary Service CBSC (Originating Call Barring, Subscriber Controlled)
+	COUNTER 1: Supplementary service CBSC activation, IT.SS.CBSCAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CBSC activation, IT.SS.CBSCActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CBSC deactivation, IT.SS.CBSCDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CBSC deactivation, IT.SS.CBSCDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CBSC interogation, IT.SS.CBSCInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CBSC interogation, IT.SS.CBSCIntSucc, TAS, 
+
+GROUP - 45: Statistics of Supplementary Service CFXD (Call Forwarding to Default Nr)
+	COUNTER 1: Supplementary service CFXD activation, IT.SS.CFXDAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CFXD activation, IT.SS.CFXDActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CFXD deactivation, IT.SS.CFXDDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CFXD deactivation, IT.SS.CFXDDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CFXD interogation, IT.SS.CFXDInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CFXD interogation, IT.SS.CFXDIntSucc, TAS, 
+
+GROUP - 46: Statistics of Supplementary Service NC (Notification Call)
+	COUNTER 1: Supplementary service NC activation, IT.SS.NCAct, TAS, 
+
+	COUNTER 2: Supplementary service successful NC activation, IT.SS.NCActSucc, TAS, 
+
+	COUNTER 3: Supplementary service NC deactivation, IT.SS.NCDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful NC deactivation, IT.SS.NCDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service NC interogation, IT.SS.NCInt, TAS, 
+
+	COUNTER 6: Supplementary service successful NC interogation, IT.SS.NCIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service successful NC invocation, IT.SS.NCInvSucc, TAS, 
+
+GROUP - 48: Statistics of Supplementary Service CFNRc (Call Forwarding on Not Reachable)
+	COUNTER 1: Supplementary service CFNRc activation, IT.SS.CFNRcAct, TAS, 
+
+	COUNTER 2: Supplementary service successful CFNRc activation, IT.SS.CFNRcActSucc, TAS, 
+
+	COUNTER 3: Supplementary service CFNRc deactivation, IT.SS.CFNRcDeact, TAS, 
+
+	COUNTER 4: Supplementary service successful CFNRc deactivation, IT.SS.CFNRcDeactSucc, TAS, 
+
+	COUNTER 5: Supplementary service CFNRc interogation, IT.SS.CFNRcInt, TAS, 
+
+	COUNTER 6: Supplementary service successful CFNRc interogation, IT.SS.CFNRcIntSucc, TAS, 
+
+	COUNTER 7: Supplementary service successful CFNRc invocation, SC.CFNRcUsed, TAS, kriteriji za poveèanje števca so enaki kot kriteriji za poveèanje števca SC.CFNRcUsed po standardu TS 22.409
+
+GROUP - 68: IMS Statistics - registration, deregistration
+	COUNTER 1: Attempted Initial Registration, UR.AttInitReg, P-CSCF, S-CSCF, 
+
+	COUNTER 2: Successful initial registration, UR.SuccInitReg, P-CSCF, S-CSCF, 
+
+	COUNTER 3: Attempted re-registration, UR.AttReReg, S-CSCF, na P-CSCF se pri poskusu re-registracije poveèa števec UR.AttInitReg
+
+	COUNTER 4:    Successful re-registration, UR.SuccReReg, S-CSCF, na P-CSCF se pri uspešnem poskusu re-registracije poveèa števec UR.SuccInitReg
+
+	COUNTER 5: Attempted de-registration initiated by UE, UR.AttDeRegUe, P-CSCF, S-CSCF, 
+
+	COUNTER 6: Successful de-registration initated by UE, UR.SuccDeRegUe, P-CSCF, S-CSCF, 
+
+	COUNTER 7: Attempted de-registration initiated by UPSF, UR.AttDeRegHss, S-CSCF, 
+
+	COUNTER 8: Successful de-registration initiated by UPSF, UR.SuccDeRegHss, S-CSCF, 
+
+	COUNTER 9: Attempted third party registration , UR.Att3rdPartyReg, S-CSCF, 
+
+	COUNTER 10: Successful third party registration, UR.Succ3rdPartyReg, S-CSCF, 
+
+	COUNTER 11: Attempted user registration status query, UR.AttUAR, I-CSCF, 
+
+	COUNTER 12: Successful user registration status query - first registration, UR.SuccUAA.2001, I-CSCF, v prvi verziji je bil števec poimenovan UR.SuccUAA.FirstReg, v zadnji verziji je v imenu CauseNr - DIAMETER_FIRST_REGISTRATION (2001)
+
+	COUNTER 13: Successful user registration status query - subsequent registration, UR.SuccUAA.2002, I-CSCF, v prvi verziji je bil števec poimenovan UR.SuccUAA.SubsReg, v zadnji verziji je v imenu CauseNr - DIAMETER_SUBSEQUENT_REGISTRATION (2002)
+
+	COUNTER 16: Attempted S-CSCF registration/deregistration notification, UR.AttSAR, S-CSCF, 
+
+	COUNTER 17: Successful S-CSCF registration/deregistration notification, UR.SuccSAA, S-CSCF, 
+
+	COUNTER 18: Attempted de-registration initiated by Service Platform, UR.AttDeRegSrvPlatform, S-CSCF, 
+
+	COUNTER 19: Successful de-registration initiated by Service Platform, UR.SuccDeRegSrvPlatform, S-CSCF, 
+
+	COUNTER 20: Successful user registration status query - Sum, UR.SuccUAA.sum, I-CSCF, 
+
+	COUNTER 21: Failed user registration status query - Sum, UR.FailUAA.sum, I-CSCF, 
+
+	COUNTER 22: Failed user registration status query - Identities Dont Match, UR.FailUAA.5002, I-CSCF, 
+
+	COUNTER 23: Failed user registration status query - Roaming Not Allowed, UR.FailUAA.5004, I-CSCF, 
+
+	COUNTER 24: Failed S-CSCF registration/deregistration notification - Sum, UR.FailSAA.sum, S-CSCF, 
+
+GROUP - 73: IMS Statistics - Measurements related to Session Control
+	COUNTER 1: Attempted Session Establishements, SC.AttSession, P-CSCF, S-CSCF, 
+
+	COUNTER 2: Successful Session Establishements - 180_Ringing, SC.SucSession.180, P-CSCF, S-CSCF, First response message is 180_ringing
+
+	COUNTER 3: Successful Session Establishements - 200_OK, SC.SucSession.200, P-CSCF, S-CSCF, First response message is 200_OK, 180_Ringing has not been sent
+
+	COUNTER 4: Answered Session Establishements, SC.AnsSession, P-CSCF, S-CSCF, 
+
+	COUNTER 5: Failed Session Establishements - Sum, SC.FailSession.sum, P-CSCF, S-CSCF, 
+
+	COUNTER 6: Failed Session Establishements - Bad Request, SC.FailSession.400, P-CSCF, S-CSCF, 
+
+	COUNTER 7: Failed Session Establishements - Forbidden, SC.FailSession.403, P-CSCF, S-CSCF, 
+
+	COUNTER 8: Failed Session Establishements - Not Found, SC.FailSession.404, P-CSCF, S-CSCF, 
+
+	COUNTER 9: Failed Session Establishements - Request URI Too Long, SC.FailSession.414, P-CSCF, S-CSCF, 
+
+	COUNTER 10: Failed Session Establishements - Unsupported Media Type, SC.FailSession.415, P-CSCF, S-CSCF, 
+
+	COUNTER 11: Failed Session Establishements - Unsupported URI Scheme, SC.FailSession.416, P-CSCF, S-CSCF, 
+
+	COUNTER 12: Failed Session Establishements - Temporarily Unavailable, SC.FailSession.480, P-CSCF, S-CSCF, 
+
+	COUNTER 13: Failed Session Establishements - Call Transaction Does Not Exist, SC.FailSession.481, P-CSCF, S-CSCF, 
+
+	COUNTER 14: Failed Session Establishements - Address Incomplete, SC.FailSession.484, P-CSCF, S-CSCF, 
+
+	COUNTER 15: Failed Session Establishements - Busy Here, SC.FailSession.486, P-CSCF, S-CSCF, 
+
+	COUNTER 16: Failed Session Establishements - Not Acceptable Here, SC.FailSession.488, P-CSCF, S-CSCF, 
+
+	COUNTER 17: Failed Session Establishements - Request Pending, SC.FailSession.491, P-CSCF, S-CSCF, 
+
+	COUNTER 18: Failed Session Establishements - Server Internal Error, SC.FailSession.500, P-CSCF, S-CSCF, 
+
+	COUNTER 19: Failed Session Establishements - Bad Gateway, SC.FailSession.502, P-CSCF, S-CSCF, 
+
+	COUNTER 20: Failed Session Establishements - Service Unavailable, SC.FailSession.503, P-CSCF, S-CSCF, 
+
+	COUNTER 21: Failed Session Establishements - Busy Everywhere, SC.FailSession.600, P-CSCF, S-CSCF, 
+
+	COUNTER 22: Failed Session Establishements - Decline, SC.FailSession.603, P-CSCF, S-CSCF, 
+
+	COUNTER 23: Dropped Sessions, SC.DroppedSession, P-CSCF, I-CSCF, S-CSCF, števec še ni realiziran
+
+	COUNTER 24: Attempted Originating Session Establishements, SC.AttSessionOrig, P-CSCF, 
+
+	COUNTER 25: Successful Originating Session Establishements - 180_Ringing, SC.SuccSessionOrig.180, P-CSCF, First response message is 180_Ringing
+
+	COUNTER 26: Successful Originating Session Establishements - 200_OK, SC.SuccSessionOrig.200, P-CSCF, First response message is 200_OK, 180_Ringing has not been sent
+
+	COUNTER 27: Attempted Terminating Session Establishements, SC.AttSessionTerm, P-CSCF, I-CSCF, 
+
+	COUNTER 28: Successful Terminating Session Establishements - 180_Ringing, SC.SuccSessionTerm.180, P-CSCF, I-CSCF, First response message is 180_Ringing
+
+	COUNTER 29: Successful Terminating Session Establishements - 200_OK, SC.SuccSessionTerm.200, P-CSCF, I-CSCF, First response message is 200_OK, 180_Ringing has not been sent
+
+	COUNTER 30: The Number of Release before Ringing, SC.RelBeforeRing, P-CSCF, S-CSCF, 
+
+	COUNTER 31: The Number of Release while Ringing, SC.RelAfterRing, P-CSCF, S-CSCF, 
+
+GROUP - 74: IMS Statistics - Measurements related to User Location Query
+	COUNTER 1: Attempted User Location Query procedures, LIQ.AttLIR, I-CSCF, 
+
+	COUNTER 2: Successful User Location Query procedures, LIQ.SuccLIA, I-CSCF, 
+
+	COUNTER 3: Failed User Location Query procedures - Sum, LIQ.FailLIA.sum, I-CSCF, 
+
+	COUNTER 4: Failed User Location Query procedures - User Unknown, LIQ.FailLIA.5001, I-CSCF, 
+
+	COUNTER 5: Failed User Location Query procedures - Identity not Registered, LIQ.FailLIA.5003, I-CSCF, 
+
+GROUP - 75: IMS Statistics - Measurements related to Authentication
+	COUNTER 1: Attempted Authentication procedures, MA.AttMAR, S-CSCF, 
+
+	COUNTER 2: Successful Authentication procedures, MA.SuccMAA, S-CSCF, 
+
+	COUNTER 3: Failed Authentication procedures - Sum, MA.FailMAA.sum, S-CSCF, 
+
+	COUNTER 4: Failed Authentication procedures - User Unknown, MA.FailMAA.5001, S-CSCF, 
+
+	COUNTER 5: Failed Authentication procedures - Identities Dont Match, MA.FailMAA.5002, S-CSCF, 
+
+	COUNTER 5: Failed Authentication procedures - Authentication Scheme not Supported, MA.FailMAA.5006, S-CSCF, 
+
+GROUP - 76: IMS Statistics - Measurements related to HSS initiated update of User Profile
+	COUNTER 1: Attempted HSS initiated User Profile Update procedures, UP.AttPPR, S-CSCF, 
+
+	COUNTER 2: Successful HSS initiated User Profile Update procedures, UP.SuccPPA, S-CSCF, 
+
+	COUNTER 3: Failed HSS initiated User Profile Update procedures - Sum, UP.FailPPA.sum, S-CSCF, 
+
+	COUNTER 4: Failed HSS initiated User Profile Update procedures - User Unknown, UP.FailPPA.5001, S-CSCF, 
+
+	COUNTER 5: Failed HSS initiated User Profile Update procedures - Too Much Data, UP.FailPPA.5008, S-CSCF, 
+
+	COUNTER 6: Failed HSS initiated User Profile Update procedures - Not Supported User Data, UP.FailPPA.5009, S-CSCF, 
+
+	COUNTER 7: Failed HSS initated User Profile Update procedures - Unable To Comply, UP.FailPPA.5012, S-CSCF, 
+
+GROUP - 77: IMS Statistics - Measurements related to Subscription procedure
+	COUNTER 1: Number of attempted Subscription procedures, SUB.AttSubscribe, S-CSCF, 
+
+	COUNTER 2: Number of successful Subscription procedures, SUB.SuccSubscribe, S-CSCF, 
+
+	COUNTER 3: Number of failed Subscription procedures - Sum, SUB.FailedSubscribe.sum, S-CSCF, 
+
+	COUNTER 4: Number of failed Subscription procedures - BadRequest, SUB.FailedSubscribe.400, S-CSCF, 
+
+	COUNTER 5: Number of failed Subscription procedures - Forbidden, SUB.FailedSubscribe.403, S-CSCF, 
+
+	COUNTER 6: Number of failed Subscription procedures - Not Found, SUB.FailedSubscribe.404, S-CSCF, 
+
+	COUNTER 7: Number of failed Subscription procedures - Too Many Hops, SUB.FailedSubscribe.483, S-CSCF, 
+
+	COUNTER 8: Number of failed Subscription procedures - Bad Event, SUB.FailedSubscribe.489, S-CSCF, 
+
+	COUNTER 9: Number of failed Subscription procedures - Server Internal Error, SUB.FailedSubscribe.500, S-CSCF, 
+
+	COUNTER 10: Number of failed Subscription procedures - Service Unavailable, SUB.FailedSubscribe.503, S-CSCF, 
+
+GROUP - 78: IMS Statistics - Measurements related to Notify procedure
+	COUNTER 1: Number of emitted Notify procedures, NOTIF.EmittedNotify, S-CSCF, 
+
+	COUNTER 2: Number of successful Notify procedures, NOTIF.SuccNotify, S-CSCF, 
+
+	COUNTER 3: Number of failed Notify procedures - Sum, NOTIF.FailedNotify.sum, S-CSCF, 
+
+	COUNTER 4: Number of failed Notify procedures - Call Transaction Does Not Exist, NOTIF.FailedNotify.481, S-CSCF, 
+
+	COUNTER 5: Number of failed Notify procedures - Bad Event, NOTIF.FailedNotify.489, S-CSCF, 
+
+GROUP - 79: IMS Statistics - Measurements related to Immediate Messaging
+	COUNTER 1: Attempted Immediate Messaging procedures, SC.AttImMsg, S-CSCF, 
+
+	COUNTER 2: Successful Immediate Messaging procedures, SC.SuccImMsg, S-CSCF, 
+
+	COUNTER 3: Failed Immediate Messaging procedures - Sum, SC.FailImMsg.sum, S-CSCF, 
+
+	COUNTER 4: Failed Session Establishements - Bad Request, SC.FailImMsg.400, S-CSCF, 
+
+	COUNTER 5: Failed Session Establishements - Forbidden, SC.FailImMsg.403, S-CSCF, 
+
+	COUNTER 6: Failed Session Establishements - Not Found, SC.FailImMsg.404, S-CSCF, 
+
+	COUNTER 7: Failed Session Establishements - Request URI Too Long, SC.FailImMsg.414, S-CSCF, 
+
+	COUNTER 8: Failed Session Establishements - Unsupported Media Type, SC.FailImMsg.415, S-CSCF, 
+
+	COUNTER 9: Failed Session Establishements - Unsupported URI Scheme, SC.FailImMsg.416, S-CSCF, 
+
+	COUNTER 10: Failed Session Establishements - Temporarily Unavailable, SC.FailImMsg.480, S-CSCF, 
+
+	COUNTER 11: Failed Session Establishements - Call Transaction Does Not Exist, SC.FailImMsg.481, S-CSCF, 
+
+	COUNTER 12: Failed Session Establishements - Address Incomplete, SC.FailImMsg.484, S-CSCF, 
+
+	COUNTER 13: Failed Session Establishements - Busy Here, SC.FailImMsg.486, S-CSCF, 
+
+	COUNTER 14: Failed Session Establishements - Not Acceptable Here, SC.FailImMsg.488, S-CSCF, 
+
+	COUNTER 15: Failed Session Establishements - Request Pending, SC.FailImMsg.491, S-CSCF, 
+
+	COUNTER 16: Failed Session Establishements - Server Internal Error, SC.FailImMsg.500, S-CSCF, 
+
+	COUNTER 17: Failed Session Establishements - Bad Gateway, SC.FailImMsg.502, S-CSCF, 
+
+	COUNTER 18: Failed Session Establishements - Service Unavailable, SC.FailImMsg.503, S-CSCF, 
+
+	COUNTER 19: Failed Session Establishements - Busy Everywhere, SC.FailImMsg.600, S-CSCF, 
+
+	COUNTER 20: Failed Session Establishements - Decline, SC.FailImMsg.603, S-CSCF, 
+
+GROUP - 80: MS Statistics - Media channels statistics
+	COUNTER 1: Average number of media channels simultaneously used for tone generation or DTMF detection, IT.MSAvgChTone, MS, 
+
+	COUNTER 2: Average number of media channels simultaneously used for conference, IT.MSAvgChCnf, MS, 
+
+	COUNTER 3: Average number of media channels simultaneously used for transcoding, IT.MSAvgChTc, MS, 
+
+	COUNTER 4: Average number of media channels simultaneously used for RTP proxy, IT.MSAvgChVXML, MS, 
+
+	COUNTER 5: Average number of media channels simultaneously used for announcements or VoiceXML, IT.MSAvgChPx, MS, 
+
+	COUNTER 6: Average number of media channels simultaneously used for basic announcements, IT.MSAvgChBasicVxml, MS, 
+
+	COUNTER 7: Average number of media channels simultaneously used for advanced announcements, IT.MSAvgChAdvVxml, MS, 
+
+	COUNTER 8: Average number of media channels simultaneously used for VoiceXML, IT.MSAvgChVoXML, MS, 
+
+	COUNTER 9: Average total number of simultaneously used media channels, IT.MSAvgChTotal, MS, 
+
+	COUNTER 10: Average aggregate load of media channels, IT.MSAvgAgrgLoad, MS, 
+
+	COUNTER 11: Maximum number of media channels simultaneously used for tone generation or DTMF detection, IT.MSMaxChTone, MS, 
+
+	COUNTER 12: Maximum number of media channels simultaneously used for conference, IT.MSMaxChCnf, MS, 
+
+	COUNTER 13: Maximum number of media channels simultaneously used for transcoding, IT.MSMaxChTc, MS, 
+
+	COUNTER 14: Maximum number of media channels simultaneously used for RTP proxy, IT.MSMaxChBasicVxml, MS, 
+
+	COUNTER 15: Maximum number of media channels simultaneously used for announcements or VoiceXML, IT.MSMaxChVXML, MS, 
+
+	COUNTER 16: Maximum number of media channels simultaneously used for basic announcements, IT.MSMaxChBasicVxml, MS, 
+
+	COUNTER 17: Maximum number of media channels simultaneously used for advanced announcements, IT.MSMaxChAdvVxml, MS, 
+
+	COUNTER 18: Maximum number of media channels simultaneously used for VoiceXML, IT.MSMaxChVoXML, MS, 
+
+	COUNTER 19: Maximum total number of simultaneously used media channels, IT.MSMaxChTotal, MS, 
+
+	COUNTER 20: Maximum  aggregate load of media channels, IT.MSMaxAgrgLoad, MS, 
+
+GROUP - 81: MS Statistics - Media resources statistics
+	COUNTER 1: Average number of conferences established, IT.MSAvgCnfEst, MS, 
+
+	COUNTER 2: Average number of UDP ports used for RTP in RTP proxy, IT.MSAvgRtpProxyPorts, MS, 
+
+	COUNTER 3: Average number of UDP ports used for RTP in multimedia engine, IT.MSAvgMmePorts, MS, 
+
+	COUNTER 4: Maximum  number of conferences established, IT.MSMaxCnfEst, MS, 
+
+	COUNTER 5: Maximum  number of UDP ports used for RTP in RTP proxy, IT.MSMaxRtpProxyPorts, MS, 
+
+	COUNTER 6: Maximum  number of UDP ports used for RTP in multimedia engine, IT.MSMaxMmePorts, MS, 
+
+GROUP - 82: MS Statistics - RTP traffic statistics
+	COUNTER 1: Total number of RTP packets sent to the network, IT.MSTotalPackSent, MS, 
+
+	COUNTER 2: Total number of RTP octets sent to the network, IT.MSTotalOctSent, MS, 
+
+	COUNTER 3: Total number of RTP packets received from the network, IT.MSTotalPackRcvd, MS, 
+
+	COUNTER 4: Total number of RTP octets received from the network, IT.MSTotalOctRcvd, MS, 
+
+	COUNTER 5: Number of lost RTP packets sent to the network from multimedia engine, IT.MSTotalPackLostTx, MS, 
+
+	COUNTER 6: Number of lost RTP packets sent from the network to multimedia engine, IT.MSTotalPackLostRx, MS, 
+
+	COUNTER 7: Average jitter of RTP packets sent to the network from multimedia engine, IT.MSAvgJitterTx, MS, 
+
+	COUNTER 8: Average jitter of RTP packets sent from the network to multimedia engine, IT.MSAvgJitterRx, MS, 
+
+	COUNTER 9: Maximum jitter of RTP packets sent to the network from multimedia engine, IT.MSMaxJitterTx, MS, 
+
+	COUNTER 10: Maximum jitter of RTP packets sent from the network to multimedia engine, IT.MSMaxJitterRx, MS, 
+
+	COUNTER 11: Average latency of RTP packets in multimedia engine, IT.MSAvgLatency, MS, 
+
+	COUNTER 12: Maximum latency of RTP packets in multimedia engine, IT.MSMaxLatency, MS, 
+
+GROUP - 83: MS Statistics - Multimedia engine codec usage statistics
+	COUNTER 1: Average number of media channels using G.711 (A-law, u-law) - 10 ms, IT.MSAvgG711_10ms, MS, 
+
+	COUNTER 2: Average number of media channels using G.711 (A-law, u-law) - 20 ms, IT.MSAvgG711_20ms, MS, 
+
+	COUNTER 3: Average number of media channels using G.711 (A-law, u-law) - 30 ms, IT.MSAvgG711_30ms, MS, 
+
+	COUNTER 4: Average number of media channels using G.722 - 10 ms, IT.MSAvgG722_10ms, MS, 
+
+	COUNTER 5: Average number of media channels using G.722 - 20 ms, IT.MSAvgG722_20ms, MS, 
+
+	COUNTER 6: Average number of media channels using G.722 - 30 ms, IT.MSAvgG722_30ms, MS, 
+
+	COUNTER 7: Average number of media channels using G.729annexA - 10 ms, IT.MSAvgG729_10ms, MS, 
+
+	COUNTER 8: Average number of media channels using G.729annexA - 20 ms, IT.MSAvgG729_20ms, MS, 
+
+	COUNTER 9: Average number of media channels using G.729annexA - 30 ms, IT.MSAvgG729_30ms, MS, 
+
+	COUNTER 10: Average number of media channels using more than 30 ms packetization, IT.MSAvgOver30ms_Ppr, MS, 
+
+	COUNTER 11: Maximum number of media channels using G.711 (A-law, u-law) - 10 ms, IT.MSMaxG711_10ms, MS, 
+
+	COUNTER 12: Maximum number of media channels using G.711 (A-law, u-law) - 20 ms, IT.MSMaxG711_20ms, MS, 
+
+	COUNTER 13: Maximum number of media channels using G.711 (A-law, u-law) - 30 ms, IT.MSMaxG711_30ms, MS, 
+
+	COUNTER 14: Maximum number of media channels using G.722 - 10 ms, IT.MSMaxG722_10ms, MS, 
+
+	COUNTER 15: Maximum number of media channels using G.722 - 20 ms, IT.MSMaxG722_20ms, MS, 
+
+	COUNTER 16: Maximum number of media channels using G.722 - 30 ms, IT.MSMaxG722_30ms, MS, 
+
+	COUNTER 17: Maximum number of media channels using G.729annexA - 10 ms, IT.MSMaxG729_10ms, MS, 
+
+	COUNTER 18: Maximum number of media channels using G.729annexA - 20 ms, IT.MSMaxG729_20ms, MS, 
+
+	COUNTER 19: Maximum number of media channels using G.729annexA - 30 ms, IT.MSMaxG729_30ms, MS, 
+
+	COUNTER 20: Maximum number of media channels using more than 30 ms packetization, IT.MSMaxOver30ms_Ppr, MS, 
+
+GROUP - 84: MS Statistics - System resource statistics
+	COUNTER 1: Average CPU load, IT.MSAvgCPULoad, MS, 
+
+	COUNTER 2: Maximum CPU load, IT.MSMaxCPULoad, MS, 
+
+GROUP - 209: AGCF Statistics
+	COUNTER 1: No of all Originating call attempts of an AGCF user - INVITE sent, IT.AGCFOrgCallAtt, AGCF, 
+
+	COUNTER 2: No of all Established Originating calls - SIP 180 received, IT.AGCFOrgEstablCall, AGCF, 
+
+	COUNTER 3: No of Answered Originating calls - SIP 200 OK received, IT.AGCFOrgAnswer, AGCF, 
+
+	COUNTER 4: No of all Terminating call attempts to AGCF users - INVITE received, IT.AGCFTermCallAtt, AGCF, 
+
+	COUNTER 5: No of Terminating delivered calls - SIP 180 sent, IT.AGCFTermEstablCall, AGCF, 
+
+	COUNTER 6: No of Answered Terminating calls - SIP 200 OK sent, IT.AGCFTermAnswer, AGCF, 
+
+	COUNTER 7: Cummulative duration of all originating calls and attempts (AGCF users) (Time between INVITE and release), IT.AGCFCummDurOrgCalls , AGCF, 
+
+	COUNTER 8: Cummulative duration of all terminating calls and attempts (AGCF users) (Time between INVITE and release), IT.AGCFCummDurTermCalls , AGCF, 
+

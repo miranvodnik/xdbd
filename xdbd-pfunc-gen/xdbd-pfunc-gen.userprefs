@@ -1,0 +1,16 @@
+﻿<Properties StartupItem="xdbd-pfunc-gen/xdbd-pfunc-gen.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="grammar.txt">
+    <Files>
+      <File FileName="../xdbd-sql-parser/sql-select.output" Line="1" Column="1" />
+      <File FileName="grammar.txt" Line="23" Column="90" />
+      <File FileName="xdbd-pfunc-gen/Program.cs" Line="1" Column="1" />
+      <File FileName="../../../../bison/parse-gram.output" Line="1" Column="1" />
+      <File FileName="../../../../bison/parse-grammar.txt" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

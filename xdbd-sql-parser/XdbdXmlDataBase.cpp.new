@@ -1,0 +1,1215 @@
+/*
+ * XdbdXmlDataBase.cpp
+ *
+ *  Created on: 14. nov. 2015
+ *      Author: miran
+ */
+
+#include <sql.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <dirent.h>
+#include <string.h>
+#include <stdio.h>
+#include "XdbdCommon.h"
+#include "XdbdXmlDataBase.h"
+#include "XdbdSqlSelectFunction.h"
+#include "XdbdSqlUpdateFunction.h"
+#include "XdbdSqlInsertFunction.h"
+#include <iostream>
+using namespace std;
+
+namespace xml_db_daemon
+{
+
+string XdbdXmlDataBase::g_XdbdXsdDataBasePath = "/opt/si2000/neroot/xsddb";
+string XdbdXmlDataBase::g_XdbdXmlDataBasePath = "/opt/si2000/neroot/xmldb";
+string XdbdXmlDataBase::g_XdbdDatDataBasePath = "/opt/si2000/neroot/datdb";
+string XdbdXmlDataBase::g_XdbdNsPrefix = "xs";
+string XdbdXmlDataBase::g_XdbdNsUri = "http://www.w3.org/2001/XMLSchema";
+XdbdXmlDataBase* XdbdXmlDataBase::g_XdbdXmlDataBase = new XdbdXmlDataBase ();
+sem_t XdbdXmlDataBase::m_XdbdDbSem;
+
+XdbdXmlDataBase::XdbdXmlDataBase ()
+{
+	char* path;
+
+	path = getenv ("XSD_DATABASE_PATH");
+	if (path != 0)
+		g_XdbdXsdDataBasePath = path;
+
+	path = getenv ("XML_DATABASE_PATH");
+	if (path != 0)
+		g_XdbdXmlDataBasePath = path;
+
+	path = getenv ("DAT_DATABASE_PATH");
+	if (path != 0)
+		g_XdbdDatDataBasePath = path;
+
+	if (sem_init (&m_XdbdDbSem, 0, g_threadCount) < 0)
+		cout << "sem_open() failed, errno = " << errno << endl;
+	m_currentTableInfo = 0;
+	m_currentColumnInfo = 0;
+	m_ctx = 0;
+	m_notify = -1;
+	m_notifyHandler = 0;
+	m_inputBuffer = 0;
+	m_inputPtr = 0;
+	m_inputEnd = 0;
+}
+
+XdbdXmlDataBase::~XdbdXmlDataBase ()
+{
+	_UnloadXmlDataBase ();
+}
+
+int XdbdXmlDataBase::RegChgTracker (char *dir, chgcb f, void *data)
+{
+	int fd;
+
+	if ((fd = inotify_add_watch (m_notify, dir, IN_MODIFY | IN_CLOSE_WRITE)) > 0)
+	{
+		cout << "REGISTER CHANGES: " << dir << endl;
+		m_chgmap [fd] = chgtpr (f, data);
+	}
+
+	return fd;
+}
+
+void XdbdXmlDataBase::ReadNotifyChanges (CRunningContext *ctx, uint flags, ctx_fddes_t handler, int fd)
+{
+	if ((flags & EPOLLIN) == 0)
+		return;
+
+	int needSpace = 0;
+	int usedSpace = m_inputPtr - m_inputBuffer;
+	int freeSpace = m_inputEnd - m_inputPtr;
+
+	if (ioctl (fd, FIONREAD, &needSpace) < 0)
+		return;
+
+	if (needSpace == 0)
+		return;
+
+	if (freeSpace < needSpace)
+	{
+		needSpace += usedSpace;
+		needSpace >>= 10;
+		needSpace++;
+		needSpace <<= 10;
+		u_char* buffer = (u_char*) malloc (needSpace);
+		if (buffer == 0)
+			return;
+		if (m_inputBuffer != 0)
+		{
+			memcpy (buffer, m_inputBuffer, usedSpace);
+			free (m_inputBuffer);
+		}
+		m_inputBuffer = buffer;
+		m_inputPtr = buffer + usedSpace;
+		m_inputEnd = buffer + needSpace;
+		freeSpace = needSpace - usedSpace;
+	}
+
+	int recvSize;
+	if ((recvSize = read (fd, m_inputPtr, freeSpace)) <= 0)
+	{
+		if (errno == EWOULDBLOCK)
+		{
+			return;
+		}
+		return;
+	}
+
+	usedSpace += recvSize;
+
+	u_char* ptr = m_inputBuffer;
+	while (true)
+	{
+		if (usedSpace < (int) sizeof(struct inotify_event))
+			break;
+
+		struct inotify_event* nevent = (struct inotify_event*) ptr;
+		ptr += offsetof (struct inotify_event, name) + nevent->len;
+		usedSpace -= offsetof (struct inotify_event, name) + nevent->len;
+
+#if _DEBUG
+		cout << "wd     = " << nevent->wd << endl;
+		cout << "mask   = " << nevent->mask << endl;
+		cout << "cookie = " << nevent->cookie << endl;
+		cout << "len    = " << nevent->len << endl;
+		cout << "name   = " << nevent->name << endl;
+#endif
+
+		if ((nevent->mask & IN_CLOSE_WRITE) == 0)
+			continue;
+
+		chgtpr chg = XdbdXmlDataBase::GetChgInfo (nevent->wd);
+		chg.first (nevent->wd, chg.second, nevent);
+	}
+}
+
+XdbdXmlTableInfo* XdbdXmlDataBase::_GetTableInfo (string name)
+{
+	docmap::iterator it = m_docmap.find (name);
+	return (it != m_docmap.end ()) ? it->second : 0;
+}
+
+int XdbdXmlDataBase::_InitXmlDataBase ()
+{
+	if ((m_notify = inotify_init ()) < 0)
+		return -1;
+
+	int gflags;
+	gflags = fcntl (m_notify, F_GETFL, 0);
+	fcntl (m_notify, F_SETFL, gflags | O_NONBLOCK);
+	cout << "NOTIFY = " << m_notify << endl;
+	m_notifyHandler = m_ctx->RegisterDescriptor (EPOLLIN, m_notify, ReadNotifyChanges, this, ctx_info);
+}
+
+int XdbdXmlDataBase::_LoadXmlDataBase (CRunningContext* ctx)
+{
+	m_ctx = ctx;
+	xmlInitParser ();
+	_InitXmlDataBase ();
+	_LoadXsdFiles ();
+	_LoadXmlFiles ();
+	_LoadTriggers ();
+	return 0;
+}
+
+xmlAttrPtr XdbdXmlDataBase::findAttribute (xmlNodePtr node, char*path [], char*name, int index)
+{
+	if (*path == 0)
+	{
+		for (xmlAttrPtr prop = node->properties; prop != 0; prop = prop->next)
+		{
+			if (strcmp (name, (char*) prop->name) != 0)
+				continue;
+			return prop;
+		}
+		return 0;
+	}
+	int i = 0;
+	for (xmlNodePtr child = node->children; child != 0; child = child->next)
+	{
+		xmlAttrPtr attr;
+		if (strcmp (*path, (char*) child->name) != 0)
+			continue;
+		if ((attr = findAttribute (child, path + 1, name, index)) == 0)
+			continue;
+		if (++i < index)
+			continue;
+		return attr;
+	}
+	return 0;
+}
+
+int XdbdXmlDataBase::_LoadXsdFiles (char* xsdPath)
+{
+	if (xsdPath == 0)
+		xsdPath = (char*) g_XdbdXsdDataBasePath.c_str ();
+
+	DIR* dir = opendir (xsdPath);
+	if (dir == 0)
+		return -1;
+	struct dirent dir_entry;
+	struct dirent* dir_result = 0;
+
+	XdbdChkXsdDir::XdbdChkContext* ctx = new XdbdChkXsdDir::XdbdChkContext;
+	ctx->m_dirname = xsdPath;
+	RegChgTracker (xsdPath, HandleXsdDirChanges, ctx);
+
+	while (true)
+	{
+		memset (&dir_entry, 0, sizeof dir_entry);
+		dir_entry.d_reclen = sizeof dir_entry;
+		if (readdir_r (dir, &dir_entry, &dir_result) < 0)
+			break;
+		if (dir_result == 0)
+			break;
+		if ((dir_entry.d_type & DT_REG) == 0)
+			continue;
+		char* ptr = strrchr (dir_entry.d_name, '.');
+		if (ptr == 0)
+			continue;
+		if (strcmp (ptr, ".xsd") != 0)
+			continue;
+
+		_LoadXsdFile (dir_entry.d_name, xsdPath);
+	}
+	closedir (dir);
+
+	for (docmap::iterator it = m_docmap.begin (); it != m_docmap.end (); ++it)
+		it->second->AlignColPositions ();
+	return 0;
+}
+
+int XdbdXmlDataBase::_LoadXsdFile (char* xsdFname, char* xsdPath)
+{
+	if (xsdPath == 0)
+		xsdPath = (char*) g_XdbdXsdDataBasePath.c_str ();
+
+	string xsdfname = xsdPath;
+	xsdfname += '/';
+	xsdfname += xsdFname;
+
+	xmlDocPtr xsdDoc = 0;
+	xmlXPathContextPtr xsdCtx = 0;
+	xmlXPathObjectPtr obj = 0;
+
+	do
+	{
+		xsdDoc = xmlReadFile (xsdfname.c_str (), 0, 0);
+		if (xsdDoc == 0)
+		{
+			cout << "cannot parse '" << xsdfname << "'" << endl;
+			break;
+		}
+
+		xsdCtx = xmlXPathNewContext (xsdDoc);
+		if (xsdCtx == 0)
+		{
+			cout << "cannot create xml context for '" << xsdfname << "'" << endl;
+			break;
+		}
+
+		if (xmlXPathRegisterNs (xsdCtx, (const xmlChar*) g_XdbdNsPrefix.c_str (), (const xmlChar*) g_XdbdNsUri.c_str ())
+			!= 0)
+		{
+			cout << "cannot set namespace for '" << xsdfname << "'" << endl;
+			break;
+		}
+
+		obj = xmlXPathEvalExpression ((xmlChar*) "//xs:element", xsdCtx);
+		if (obj == 0)
+		{
+			cout << "cannot locate xs:element(s) '" << xsdfname << "'" << endl;
+			break;
+		}
+
+		xmlNodeSetPtr nodes = obj->nodesetval;
+		if (nodes == 0)
+		{
+			cout << "empty set of xs:element(s) '" << xsdfname << "'" << endl;
+			break;
+		}
+
+		int columnIndex = 0;
+		int currentDepth = 0;
+		int elementDepth = 0;
+		int columnPosition = 0;
+		for (int i = 0; i < nodes->nodeNr; ++i)
+		{
+			xmlAttrPtr nameAttr;
+			xmlAttrPtr minOccurs;
+			xmlAttrPtr maxOccurs;
+			xmlAttrPtr baseAttr;
+			xmlAttrPtr minValAttr;
+			xmlAttrPtr maxValAttr;
+
+			xmlNodePtr node = nodes->nodeTab [i];
+			if (node == 0)
+				continue;
+
+			int depth;
+			xmlNodePtr parent;
+			for (depth = 0, parent = node->parent; parent != 0; parent = parent->parent, ++depth)
+				;
+			if (depth > currentDepth)
+				++elementDepth, columnPosition = 0;
+			else if (depth < currentDepth)
+				--elementDepth;
+			currentDepth = depth;
+
+			switch (elementDepth)
+			{
+			case 1:
+				//	root name
+				break;
+			case 2:
+				//	table name
+				{
+					xmlXPathObjectPtr namePtr = 0;
+					do
+					{
+						m_currentTableInfo = 0;
+						{
+							char* path [] =
+								{ 0 };
+							nameAttr = findAttribute (node, path, "name", 1);
+						}
+						if (nameAttr == 0)
+							break;
+
+						docmap::iterator dit;
+						if ((dit = m_docmap.find ((char*) nameAttr->children->content)) != m_docmap.end ())
+						{
+							delete dit->second;
+							m_docmap.erase (dit);
+							cout << "redefinition of table '" << nameAttr->children->content << "' in file '"
+								<< xsdfname << "'" << endl;
+						}
+						else
+							m_tabmap.insert (make_pair (xsdFname, (char*) nameAttr->children->content));
+						m_docmap [(char*) nameAttr->children->content] = m_currentTableInfo = new XdbdXmlTableInfo (
+							(char*) nameAttr->children->content);
+#if	_DEBUG
+						cout << "TABLE: " << nameAttr->children->content << ", FILE: " << xsdfname << endl;
+#endif
+					}
+					while (false);
+					if (namePtr != 0)
+						xmlXPathFreeObject (namePtr);
+				}
+				break;
+			case 3:
+				//	column name
+				{
+					do
+					{
+						m_currentColumnInfo = 0;
+						//	@name attribute must be present
+						{
+							char* path [] =
+								{ 0 };
+							nameAttr = findAttribute (node, path, "name", 1);
+						}
+						if (nameAttr == 0)
+							break;
+
+						//	@minOccurs attribute need not be present
+						{
+							char* path [] =
+								{ 0 };
+							minOccurs = findAttribute (node, path, "minOccurs", 1);
+						}
+
+						//	@maxOccurs attribute need not be present
+						{
+							char* path [] =
+								{ 0 };
+							maxOccurs = findAttribute (node, path, "maxOccurs", 1);
+						}
+
+						//	@base attribute must be present
+						{
+							char* path [] =
+								{ "simpleType", "restriction", 0 };
+							baseAttr = findAttribute (node, path, "base", 1);
+						}
+						if (baseAttr == 0)
+							break;
+
+						char* minlValue = 0;
+						//	minLength need not be present
+						{
+							char* path [] =
+								{ "simpleType", "restriction", "minLength", 0 };
+							minValAttr = findAttribute (node, path, "value", 1);
+						}
+						if (minValAttr != 0)
+							minlValue = (char*) minValAttr->children->content;
+
+						char* maxlValue = 0;
+						//	maxLength need not be present
+						{
+							char* path [] =
+								{ "simpleType", "restriction", "maxLength", 0 };
+							maxValAttr = findAttribute (node, path, "value", 1);
+						}
+						if (maxValAttr != 0)
+							maxlValue = (char*) maxValAttr->children->content;
+
+#if	_DEBUG
+						cout << "COLUMN = " << nameVal->content << ", " << restVal->content << ", " << ((minlValue != 0) ? minlValue : "-1") << ", " << ((maxlValue != 0) ? maxlValue : "-1") << endl;
+#endif
+						m_currentColumnInfo = new XdbdXmlColumnInfo ((char*) nameAttr->children->content,
+							(char*) baseAttr->children->content,
+							(minOccurs != 0) ? atoi ((char*) minOccurs->children->content) : 1,
+							(maxOccurs != 0) ? atoi ((char*) maxOccurs->children->content) : 1, columnPosition,
+							(minlValue != 0) ? atoi (minlValue) : -1, (maxlValue != 0) ? atoi (maxlValue) : -1,
+							columnIndex++);
+						columnPosition += m_currentColumnInfo->realLength ();
+						if (m_currentTableInfo != 0)
+							m_currentTableInfo->add (m_currentColumnInfo);
+					}
+					while (false);
+				}
+				break;
+			}
+		}
+
+		obj = xmlXPathEvalExpression ((xmlChar*) "//xs:key", xsdCtx);
+		if (obj == 0)
+		{
+			cout << "cannot locate xs:key(s) '" << xsdfname << "'" << endl;
+			break;
+		}
+
+		nodes = obj->nodesetval;
+		if (nodes == 0)
+		{
+			cout << "empty set of xs:key(s) '" << xsdfname << "'" << endl;
+			break;
+		}
+
+		for (int i = 0; i < nodes->nodeNr; ++i)
+		{
+			xmlAttrPtr xpathAttr;
+
+			xmlNodePtr node = nodes->nodeTab [i];
+			if (node == 0)
+				continue;
+
+			{
+				char* path [] =
+					{ "selector", 0 };
+				xpathAttr = findAttribute (node, path, "xpath", 1);
+			}
+			if (xpathAttr == 0)
+			{
+				cout << node->name << ": missing selector" << endl;
+				continue;
+			}
+
+			char* ptr;
+			for (ptr = (char*) xpathAttr->children->content; (*ptr != 0) && (isalpha (*ptr) == 0); ++ptr)
+				;
+			docmap::iterator dit = m_docmap.find (ptr);
+			if (dit == m_docmap.end ())
+			{
+				cout << ptr << ": table not registered" << endl;
+				continue;
+			}
+
+			XdbdXmlTableInfo* tabinfo = dit->second;
+			for (int j = 0;; ++j)
+			{
+				{
+					char* path [] =
+						{ "field", 0 };
+					xpathAttr = findAttribute (node, path, "xpath", j + 1);
+				}
+				if (xpathAttr == 0)
+					break;
+
+				XdbdXmlColumnInfo* colinfo = tabinfo->find ((char*) xpathAttr->children->content);
+				if (colinfo == 0)
+				{
+					cout << xpathAttr->children->content << ": column not registered" << endl;
+					continue;
+				}
+
+				colinfo->primary (true);
+//					cout << tabinfo->name() << ":" << colinfo->name() << "is primary key" << endl;
+			}
+		}
+	}
+	while (false);	// only one iteration of do loop
+
+	if (xsdDoc != 0)
+		xmlFreeDoc (xsdDoc);
+	if (xsdCtx != 0)
+		xmlXPathFreeContext (xsdCtx);
+	if (obj != 0)
+		xmlXPathFreeObject (obj);
+	return 0;
+}
+
+int XdbdXmlDataBase::_LoadXmlFiles (char* xmlPath)
+{
+	if (xmlPath == 0)
+		xmlPath = (char*) g_XdbdXmlDataBasePath.c_str ();
+
+	DIR* dir = opendir (xmlPath);
+	if (dir == 0)
+		return -1;
+	struct dirent dir_entry;
+	struct dirent* dir_result = 0;
+
+	XdbdChkXmlDir::XdbdChkContext* ctx = new XdbdChkXmlDir::XdbdChkContext;
+	ctx->m_dirname = xmlPath;
+	RegChgTracker (xmlPath, HandleXmlDirChanges, ctx);
+
+	while (true)
+	{
+		memset (&dir_entry, 0, sizeof dir_entry);
+		dir_entry.d_reclen = sizeof dir_entry;
+		if (readdir_r (dir, &dir_entry, &dir_result) < 0)
+			break;
+		if (dir_result == 0)
+			break;
+		if ((dir_entry.d_type & DT_REG) == 0)
+			continue;
+		char* ptr = strrchr (dir_entry.d_name, '.');
+		if (ptr == 0)
+			continue;
+		if (strcmp (ptr, ".xml") != 0)
+			continue;
+
+		_LoadXmlFile (dir_entry.d_name, xmlPath);
+	}
+	closedir (dir);
+
+	return 0;
+}
+
+int XdbdXmlDataBase::_LoadXmlFile (char* xmlFname, char* xmlPath)
+{
+	if (xmlPath == 0)
+		xmlPath = (char*) g_XdbdXmlDataBasePath.c_str ();
+
+	string xmlfname = xmlPath;
+	xmlfname += '/';
+	xmlfname += xmlFname;
+
+	xmlDocPtr xmlDoc = 0;
+	xmlXPathContextPtr xmlCtx = 0;
+
+	xmlDoc = xmlReadFile (xmlfname.c_str (), 0, 0);
+	if (xmlDoc == 0)
+	{
+		cout << "cannot parse '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	xmlCtx = xmlXPathNewContext (xmlDoc);
+	if (xmlCtx == 0)
+	{
+		cout << "cannot create xml context for '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	if (xmlXPathRegisterNs (xmlCtx, (const xmlChar*) g_XdbdNsPrefix.c_str (), (const xmlChar*) g_XdbdNsUri.c_str ())
+		!= 0)
+	{
+		cout << "cannot set namespace for '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	if (xmlDoc->children == 0)
+	{
+		cout << "xml file without root element '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	xmlAttrPtr attrs;
+	for (attrs = xmlDoc->children->properties; attrs != 0; attrs = attrs->next)
+	{
+		if (strcmp ((char*) attrs->name, "noNamespaceSchemaLocation") == 0)
+		{
+			cout << "LOAD XML FILE: " << xmlPath << "/" << xmlFname << " - missing noNamespaceSchemaLocation" << endl;
+			return	-1;
+		}
+	}
+
+	if (attrs == 0)
+	{
+		cout << "xml file without root element attributes '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	xmlNodePtr value = attrs->children;
+	if (value == 0)
+	{
+		cout << "xml file without root element attributes '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	tabrng rng = m_tabmap.equal_range ((char*) value->content);
+	for (tabmap::iterator it = rng.first; it != rng.second; ++it)
+	{
+		docmap::iterator dit = m_docmap.find (it->second);
+		if (dit == m_docmap.end ())
+		{
+			cout << "undeclared table name'" << it->second << "' in file '" << it->first << "'" << endl;
+			continue;
+		}
+		if (dit->second == 0)
+		{
+			cout << "undeclared table '" << it->second << "' in file '" << it->first << "'" << endl;
+			continue;
+		}
+
+		dit->second->IndexXmlTable (xmlCtx, it->second);
+	}
+
+	if (xmlDoc != 0)
+		xmlFreeDoc (xmlDoc);
+	if (xmlCtx != 0)
+		xmlXPathFreeContext (xmlCtx);
+	return 0;
+}
+
+int XdbdXmlDataBase::_ReloadXmlFile (char* xmlFname, char* xmlPath)
+{
+	char* ptr = strrchr (xmlFname, '.');
+	if (ptr == 0)
+		return -1;
+	if (strcmp (ptr, ".xml") != 0)
+		return -1;
+
+	*ptr = 0;
+	docmap::iterator dit = m_docmap.find (xmlFname);
+	*ptr = '.';
+	if (dit != m_docmap.end ())
+	{
+		delete	dit->second;
+		m_docmap.erase(dit);
+	}
+
+	if (xmlPath == 0)
+		xmlPath = (char*) g_XdbdXmlDataBasePath.c_str ();
+
+	string xmlfname = xmlPath;
+	xmlfname += '/';
+	xmlfname += xmlFname;
+
+	xmlDocPtr xmlDoc = 0;
+	xmlXPathContextPtr xmlCtx = 0;
+
+	xmlDoc = xmlReadFile (xmlfname.c_str (), 0, 0);
+	if (xmlDoc == 0)
+	{
+		cout << "cannot parse '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	xmlCtx = xmlXPathNewContext (xmlDoc);
+	if (xmlCtx == 0)
+	{
+		cout << "cannot create xml context for '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	if (xmlXPathRegisterNs (xmlCtx, (const xmlChar*) g_XdbdNsPrefix.c_str (), (const xmlChar*) g_XdbdNsUri.c_str ())
+		!= 0)
+	{
+		cout << "cannot set namespace for '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	if (xmlDoc->children == 0)
+	{
+		cout << "xml file without root element '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	xmlAttrPtr attrs;
+	for (attrs = xmlDoc->children->properties; attrs != 0; attrs = attrs->next)
+	{
+		if (strcmp ((char*) attrs->name, "noNamespaceSchemaLocation") == 0)
+			return	-1;
+	}
+
+	if (attrs == 0)
+	{
+		cout << "xml file without root element attributes '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	xmlNodePtr value = attrs->children;
+	if (value == 0)
+	{
+		cout << "xml file without root element attributes '" << xmlfname << "'" << endl;
+		return	-1;
+	}
+
+	tabrng rng = m_tabmap.equal_range ((char*) value->content);
+	for (tabmap::iterator it = rng.first; it != rng.second; ++it)
+	{
+		docmap::iterator dit = m_docmap.find (it->second);
+		if (dit == m_docmap.end ())
+		{
+			cout << "undeclared table name'" << it->second << "' in file '" << it->first << "'" << endl;
+			continue;
+		}
+		if (dit->second == 0)
+		{
+			cout << "undeclared table '" << it->second << "' in file '" << it->first << "'" << endl;
+			continue;
+		}
+
+		dit->second->IndexXmlTable (xmlCtx, it->second);
+	}
+
+	if (xmlDoc != 0)
+		xmlFreeDoc (xmlDoc);
+	if (xmlCtx != 0)
+		xmlXPathFreeContext (xmlCtx);
+	return 0;
+}
+
+int XdbdXmlDataBase::_LoadTriggers ()
+{
+	docmap::iterator dit = m_docmap.find ("xdbd_trigger_par");
+	if (dit == m_docmap.end ())
+	{
+		cout << "NO TRIGGER PARAMETERS REGISTERED" << endl;
+		return 0;
+	}
+
+	XdbdXmlTableInfo* parameters = dit->second;
+	if (parameters == 0)
+	{
+		cout << "NO TRIGGER PARAMETERS REGISTERED" << endl;
+		return 0;
+	}
+
+	int recsize = parameters->resSize ();
+	for (XdbdXmlTableInfo::shm_iterator sit = parameters->shm_begin (); sit != parameters->shm_end (); ++sit)
+	{
+		XdbdXmlTableInfo::shmdescr shm = *sit;
+		unsigned char* rowaddr = (unsigned char*) shm.addr;
+		for (; shm.size > 0; shm.size -= recsize, rowaddr += recsize)
+		{
+#if	_DEBUG
+			cout << "PARAMETER:" << endl;
+#endif
+			XdbdXmlColumnInfo* idinfo = parameters->find ("id");
+			if (idinfo == 0)
+			{
+				cout << "TRIGGER PARAMETER WITHOUT ID" << endl;
+				continue;
+			}
+			short id = *((short*) idinfo->recordToColumn (rowaddr));
+
+			XdbdXmlColumnInfo* trigidinfo = parameters->find ("trigger_id");
+			if (trigidinfo == 0)
+			{
+				cout << "TRIGGER PARAMETER WITHOUT TRIGGER ID" << endl;
+				continue;
+			}
+			short trigid = *((short*) trigidinfo->recordToColumn (rowaddr));
+
+			XdbdXmlColumnInfo* nameinfo = parameters->find ("name");
+			if (nameinfo == 0)
+			{
+				cout << "TRIGGER PARAMETER WITHOUT NAME" << endl;
+				continue;
+			}
+			unsigned char* name = nameinfo->recordToColumn (rowaddr);
+
+			XdbdXmlColumnInfo* valueinfo = parameters->find ("value");
+			if (valueinfo == 0)
+			{
+				cout << "TRIGGER PARAMETER WITHOUT VALUE" << endl;
+				continue;
+			}
+			unsigned char* value = valueinfo->recordToColumn (rowaddr);
+
+			XdbdTriggerParameter* par = new XdbdTriggerParameter (id, trigid, name, value);
+			parset::iterator pit = m_parset.find (id);
+			if (pit != m_parset.end ())
+			{
+				delete par;
+				cout << "DUPLICATED TRIGGER PARAMETER" << endl;
+				continue;
+			}
+
+			m_parset [id] = par;
+		}
+	}
+
+	dit = m_docmap.find ("xdbd_trigger");
+	if (dit == m_docmap.end ())
+	{
+		cout << "NO TRIGGERS REGISTERED" << endl;
+		return 0;
+	}
+
+	XdbdXmlTableInfo* triggers = dit->second;
+	if (triggers == 0)
+	{
+		cout << "NO TRIGGERS REGISTERED" << endl;
+		return 0;
+	}
+
+	recsize = triggers->resSize ();
+	for (XdbdXmlTableInfo::shm_iterator sit = triggers->shm_begin (); sit != triggers->shm_end (); ++sit)
+	{
+		XdbdXmlTableInfo::shmdescr shm = *sit;
+		unsigned char* rowaddr = (unsigned char*) shm.addr;
+		for (; shm.size > 0; shm.size -= recsize, rowaddr += recsize)
+		{
+			XdbdXmlColumnInfo* idinfo = triggers->find ("id");
+			if (idinfo == 0)
+			{
+				cout << "TRIGGER WITHOUT ID" << endl;
+				continue;
+			}
+			short id = *((short*) idinfo->recordToColumn (rowaddr));
+
+			XdbdXmlColumnInfo* nameinfo = triggers->find ("name");
+			if (nameinfo == 0)
+			{
+				cout << "TRIGGER WITHOUT NAME" << endl;
+				continue;
+			}
+			unsigned char* name = nameinfo->recordToColumn (rowaddr);
+
+			XdbdXmlColumnInfo* libinfo = triggers->find ("library");
+			if (libinfo == 0)
+			{
+				cout << "TRIGGER WITHOUT LIBRARY" << endl;
+				continue;
+			}
+			unsigned char* library = libinfo->recordToColumn (rowaddr);
+
+			XdbdXmlColumnInfo* loadinfo = triggers->find ("load");
+			unsigned char* load = (unsigned char*) "Load";
+			if (loadinfo != 0)
+				load = loadinfo->recordToColumn (rowaddr);
+
+			XdbdXmlColumnInfo* fireinfo = triggers->find ("fire");
+			unsigned char* fire = (unsigned char*) "Fire";
+			if (fireinfo != 0)
+				fire = fireinfo->recordToColumn (rowaddr);
+
+			XdbdXmlColumnInfo* unloadinfo = triggers->find ("unload");
+			unsigned char* unload = (unsigned char*) "Unload";
+			if (unloadinfo != 0)
+				unload = unloadinfo->recordToColumn (rowaddr);
+
+			XdbdXmlColumnInfo* tableinfo = triggers->find ("table");
+			if (tableinfo == 0)
+			{
+				cout << "TRIGGER WITHOUT TABLE" << endl;
+				continue;
+			}
+			unsigned char* table = tableinfo->recordToColumn (rowaddr);
+
+			XdbdXmlColumnInfo* funcinfo = triggers->find ("function");
+			if (funcinfo == 0)
+			{
+				cout << "TRIGGER WITHOUT FUNCTION" << endl;
+				continue;
+			}
+			short function = *((short*) funcinfo->recordToColumn (rowaddr));
+
+			if ((dit = m_docmap.find ((char*) table)) == m_docmap.end ())
+			{
+				cout << "TRIGGER TABLE DOES NOT EXIST" << endl;
+				continue;
+			}
+
+			XdbdTrigger* trigger = new XdbdTrigger (id, name, library, load, fire, unload, table, function);
+
+			for (parset::iterator pit = m_parset.begin (); pit != m_parset.end (); ++pit)
+			{
+				XdbdTriggerParameter* par = pit->second;
+				if (par->trigid () != id)
+					continue;
+				trigger->add (par);
+			}
+
+			if (!trigger->activate ())
+			{
+				cout << "cannot activate trigger '" << name << "'" << endl;
+				delete trigger;
+				continue;
+			}
+
+			m_trigset [id] = trigger;
+			dit->second->add_trigger (trigger);
+#if	_DEBUG
+			cout << "TRIGGER (" << name << ", " << library << ", " << load << ", " << fire << ", " << unload << ", " << table << ", " << function << ")" << endl;
+#endif
+		}
+	}
+
+	return 0;
+}
+
+int XdbdXmlDataBase::_UnloadXmlDataBase ()
+{
+	for (docmap::iterator it = m_docmap.begin (); it != m_docmap.end (); ++it)
+		delete it->second;
+	m_docmap.clear ();
+	for (trigset::iterator it = m_trigset.begin (); it != m_trigset.end (); ++it)
+		delete it->second;
+	m_trigset.clear ();
+	for (parset::iterator it = m_parset.begin (); it != m_parset.end (); ++it)
+		delete it->second;
+	m_parset.clear ();
+	if (m_notifyHandler != 0)
+		m_ctx->RemoveDescriptor (m_notifyHandler);
+	m_notifyHandler = 0;
+}
+
+XdbdXmlColumnInfo::colrng XdbdXmlDataBase::_PrepareComparison (tablist& tables,
+	sql_comp_expression* p_sql_comp_expression, XdbdXmlTableInfo* &tabinfo, XdbdXmlColumnInfo* &colinfo,
+	unsigned char* &data, ssize_t &size, SqlSyntaxContext &sqlSyntaxContext)
+{
+	sql_primary_expression* p_sql_primary_expression_1 = 0;
+	sql_primary_expression* p_sql_primary_expression_2 = 0;
+
+	tabinfo = 0;
+	colinfo = 0;
+	data = 0;
+	size = 0;
+	sqlSyntaxContext = SqlFirstSyntaxContext;
+
+	switch (p_sql_comp_expression->kind ())
+	{
+	case sql_comp_expression::g_sql_comp_expression_1:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_eq_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_eq_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_eq_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_2:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_ne_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_ne_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_ne_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_3:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_lt_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_lt_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_lt_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_4:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_le_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_le_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_le_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_5:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_gt_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_gt_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_gt_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_6:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_ge_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_ge_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_ge_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_7:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_like_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_like_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_like_expression ()->context ();
+		break;
+	}
+
+	if (p_sql_primary_expression_1->kind () != sql_primary_expression::g_sql_primary_expression_1)
+		return XdbdXmlColumnInfo::colrng ();
+	if (p_sql_primary_expression_2->kind () != sql_primary_expression::g_sql_primary_expression_2)
+		return XdbdXmlColumnInfo::colrng ();
+
+	sql_column* p_sql_column = p_sql_primary_expression_1->get_sql_column ();
+	sql_column_name* p_sql_column_name = p_sql_column->get_sql_column_name ();
+	string colname = p_sql_column_name->get_char ();
+	sql_table* p_sql_table = p_sql_column->get_sql_table ();
+	docmap::iterator dit = m_docmap.end ();
+
+	if (p_sql_table != 0)
+	{
+		dit = m_docmap.find (p_sql_table->get_char ());
+		if (dit != m_docmap.end ())
+		{
+			tabinfo = dit->second;
+			colinfo = tabinfo->find (colname);
+		}
+	}
+	else
+	{
+		for (tablist::iterator it = tables.begin (); it != tables.end (); ++it)
+		{
+			tabinfo = *it;
+			colinfo = tabinfo->find (colname);
+			if (colinfo != 0)
+				break;
+		}
+	}
+	if (colinfo == 0)
+		return XdbdXmlColumnInfo::colrng ();
+
+	size = colinfo->maxLength ();
+
+	sql_constant* p_sql_constant = p_sql_primary_expression_2->get_sql_constant ();
+	if (p_sql_constant->kind () > sql_constant::g_sql_constant_2)
+	{
+		size = -((ssize_t) p_sql_constant->kind ());
+		return XdbdXmlColumnInfo::colrng ();
+	}
+
+	return _ExecComparison (colinfo, data, (unsigned char*) p_sql_constant->get_char ().c_str (), size,
+		sqlSyntaxContext, false);
+}
+
+XdbdXmlColumnInfo::colrng XdbdXmlDataBase::_ExecComparison (XdbdXmlColumnInfo* colinfo, unsigned char* &data,
+	unsigned char* srcData, ssize_t size, SqlSyntaxContext sqlSyntaxContext, bool binary)
+{
+	data = new unsigned char [size];
+
+	switch (colinfo->colType ())
+	{
+	case SQL_SMALLINT:
+		*((SQLSMALLINT*) data) = binary ? *((SQLSMALLINT*) srcData) : (SQLSMALLINT) atoi ((char*) srcData);
+		break;
+	case SQL_INTEGER:
+		if (sizeof(int) != sizeof(long))
+		{
+			switch (size)
+			{
+			case sizeof(int):
+				*((SQLINTEGER*) data) = binary ? *((SQLINTEGER*) srcData) : (SQLINTEGER) atoi ((char*) srcData);
+				break;
+			case sizeof(long):
+				*((SQLLEN*) data) = binary ? *((SQLLEN*) srcData) : (SQLLEN) atoi ((char*) srcData);
+				break;
+			default:
+				break;
+			}
+		}
+		else
+			*((SQLINTEGER*) data) = binary ? *((SQLINTEGER*) srcData) : (SQLINTEGER) atoi ((char*) srcData);
+		break;
+	case SQL_VARCHAR:
+		{
+			memcpy (data, srcData, size);
+		}
+		break;
+	default:
+		return XdbdXmlColumnInfo::colrng ();
+	}
+
+	XdbdXmlColumnInfo::colrng rng;
+	switch (sqlSyntaxContext)
+	{
+	case sql_eq_expressionContext:
+		{
+			rng = colinfo->eq_range (data);
+		}
+		break;
+	case sql_ne_expressionContext:
+		{
+			rng = colinfo->ne_range (data);
+		}
+		break;
+	case sql_lt_expressionContext:
+		{
+			rng = colinfo->lt_range (data);
+		}
+		break;
+	case sql_le_expressionContext:
+		{
+			rng = colinfo->le_range (data);
+		}
+		break;
+	case sql_gt_expressionContext:
+		{
+			rng = colinfo->gt_range (data);
+		}
+		break;
+	case sql_ge_expressionContext:
+		{
+			rng = colinfo->ge_range (data);
+		}
+		break;
+	case sql_like_expressionContext:
+		{
+			rng = colinfo->like_range (data);
+		}
+		break;
+	default:
+		{
+			rng = colinfo->no_range (data);
+		}
+		break;
+	}
+	return rng;
+}
+
+XdbdXmlColumnInfo::colrng XdbdXmlDataBase::_PrepareComparison (XdbdXmlTableInfo* tabinfo,
+	sql_comp_expression* p_sql_comp_expression, XdbdXmlColumnInfo* &colinfo, unsigned char* &data, ssize_t &size,
+	SqlSyntaxContext &sqlSyntaxContext)
+{
+	sql_primary_expression* p_sql_primary_expression_1 = 0;
+	sql_primary_expression* p_sql_primary_expression_2 = 0;
+	SqlSyntaxContext context = SqlFirstSyntaxContext;
+
+	colinfo = 0;
+	data = 0;
+	size = 0;
+
+	switch (p_sql_comp_expression->kind ())
+	{
+	case sql_comp_expression::g_sql_comp_expression_1:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_eq_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_eq_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_eq_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_2:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_ne_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_ne_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_ne_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_3:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_lt_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_lt_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_lt_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_4:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_le_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_le_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_le_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_5:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_gt_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_gt_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_gt_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_6:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_ge_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_ge_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_ge_expression ()->context ();
+		break;
+	case sql_comp_expression::g_sql_comp_expression_7:
+		p_sql_primary_expression_1 = p_sql_comp_expression->get_sql_like_expression ()->get_sql_primary_expression_1 ();
+		p_sql_primary_expression_2 = p_sql_comp_expression->get_sql_like_expression ()->get_sql_primary_expression_2 ();
+		sqlSyntaxContext = p_sql_comp_expression->get_sql_like_expression ()->context ();
+		break;
+	}
+
+	if (p_sql_primary_expression_1->kind () != sql_primary_expression::g_sql_primary_expression_1)
+		return XdbdXmlColumnInfo::colrng ();
+	if (p_sql_primary_expression_2->kind () != sql_primary_expression::g_sql_primary_expression_2)
+		return XdbdXmlColumnInfo::colrng ();
+
+	sql_column* p_sql_column = p_sql_primary_expression_1->get_sql_column ();
+	sql_column_name* p_sql_column_name = p_sql_column->get_sql_column_name ();
+	string colname = p_sql_column_name->get_char ();
+	sql_table* p_sql_table = p_sql_column->get_sql_table ();
+	docmap::iterator dit = m_docmap.end ();
+
+	if (p_sql_table != 0)
+	{
+		dit = m_docmap.find (p_sql_table->get_char ());
+		if (dit != m_docmap.end ())
+		{
+			if (dit->second->name () != tabinfo->name ())
+				return XdbdXmlColumnInfo::colrng ();
+		}
+	}
+	colinfo = tabinfo->find (colname);
+	if (colinfo == 0)
+		return XdbdXmlColumnInfo::colrng ();
+
+	size = colinfo->maxLength ();
+
+	sql_constant* p_sql_constant = p_sql_primary_expression_2->get_sql_constant ();
+	if (p_sql_constant->kind () > sql_constant::g_sql_constant_2)
+	{
+		size = -((ssize_t) p_sql_constant->kind ());
+		return XdbdXmlColumnInfo::colrng ();
+	}
+
+	return _ExecComparison (colinfo, data, (unsigned char*) p_sql_constant->get_char ().c_str (), size,
+		sqlSyntaxContext, false);
+}
+
+} /* namespace xml_db_daemon */

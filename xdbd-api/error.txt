@@ -1,0 +1,47 @@
+In file included from XdbdConnection.h:14:0,
+                 from XdbdApi.cpp:9:
+XdbdStatement.h:19:0: warning: "align" redefined [enabled by default]
+ #define align(A,T) (T)(((long)(A)+(sizeof(T)-1))&~(sizeof(T)-1))
+ ^
+In file included from XdbdConnection.h:12:0,
+                 from XdbdApi.cpp:9:
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-include/XdbdCommon.h:19:0: note: this is the location of the previous definition
+ #define align(A,T) (T) ((((long) (A)) + (sizeof (T) - 1)) & ~(sizeof (T) - 1))
+ ^
+In file included from XdbdConnection.h:14:0,
+                 from XdbdConnection.cpp:26:
+XdbdStatement.h:19:0: warning: "align" redefined [enabled by default]
+ #define align(A,T) (T)(((long)(A)+(sizeof(T)-1))&~(sizeof(T)-1))
+ ^
+In file included from XdbdConnection.h:12:0,
+                 from XdbdConnection.cpp:26:
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-include/XdbdCommon.h:19:0: note: this is the location of the previous definition
+ #define align(A,T) (T) ((((long) (A)) + (sizeof (T) - 1)) & ~(sizeof (T) - 1))
+ ^
+In file included from ./XdbdConnection.h:14:0,
+                 from XdbdStatement.cpp:16:
+./XdbdStatement.h:19:0: warning: "align" redefined [enabled by default]
+ #define align(A,T) (T)(((long)(A)+(sizeof(T)-1))&~(sizeof(T)-1))
+ ^
+In file included from ./XdbdConnection.h:12:0,
+                 from XdbdStatement.cpp:16:
+/home/miran/Eclipse/workspace/xdbd-xml.stable/xdbd-include/XdbdCommon.h:19:0: note: this is the location of the previous definition
+ #define align(A,T) (T) ((((long) (A)) + (sizeof (T) - 1)) & ~(sizeof (T) - 1))
+ ^
+XdbdStatement.cpp: In member function ‘int xml_db_daemon::XdbdStatement::StmtMap(u_long)’:
+XdbdStatement.cpp:78:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (shmSize > m_shmSize)
+                 ^
+XdbdStatement.cpp:109:33: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (m_shmSize < 6 * sizeof (int))
+                                 ^
+XdbdStatement.cpp:122:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (m_hdrSize > shmSize)
+                  ^
+XdbdStatement.cpp: In member function ‘int xml_db_daemon::XdbdStatement::StmtSelect(u_long)’:
+XdbdStatement.cpp:140:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (shmSize > m_shmSize)
+                 ^
+XdbdStatement.cpp:171:33: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (m_shmSize < 6 * sizeof (int))
+                                 ^

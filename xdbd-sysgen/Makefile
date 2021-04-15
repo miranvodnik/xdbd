@@ -1,0 +1,29 @@
+
+-include ../makefile.defs
+
+CPPOPTS = -g -fPIC -c -Wall $(UNIX_FLAGS)
+IDIR = -I. \
+	-I$(PRODUCT_DIR)/xdbd-nmgen-lib \
+	-I$(PRODUCT_DIR)/xdbd-include \
+	-I$(PRODUCT_DIR)/xdbd-sql-parser \
+	-I/usr/include/libxml2 \
+
+CPPFLAGS = $(DEF_FLAGS) $(CPPOPTS) $(IDIR)
+LOPTS = -shared
+LIBS := -lxdbdnmgen -lrt -ldl -luuid -lpthread `xml2-config --libs`
+LDIR = -L$(PRODUCT_DIR)/lib
+
+OBJS += \
+	./XdbdNMGenSysTables.o \
+	
+all: xdbd-sysgen
+
+xdbd-sysgen: $(OBJS)
+	$(CXX) ./XdbdNMGenSysTables.o $(LDIR) $(LIBS) -o $@
+	cp $@ ../bin
+
+$(OBJS):
+
+clean:
+	-@rm -f xdbd-sysgen $(OBJS)
+	

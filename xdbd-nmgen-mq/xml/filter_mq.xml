@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="filter">
+	<MQ_notification>
+		<events>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="nodeid"/>
+					</conditions>
+				</change_mask>
+			</update>
+		</events>
+	</MQ_notification>
+</notification>

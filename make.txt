@@ -1,0 +1,30 @@
+cd xdbd-errinfo/; make TEST=true CONFIGURATION=Debug 
+make[1]: Entering directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-errinfo'
+make[1]: Nothing to be done for 'library'.
+make[1]: Leaving directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-errinfo'
+cd xdbd-msg/; make TEST=true CONFIGURATION=Debug 
+make[1]: Entering directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-msg'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-msg'
+cd xdbd-mpx/; make TEST=true CONFIGURATION=Debug 
+make[1]: Entering directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-mpx'
+make[1]: Nothing to be done for 'library'.
+make[1]: Leaving directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-mpx'
+cd xdbd-api/; make TEST=true CONFIGURATION=Debug 
+make[1]: Entering directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-api'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-api'
+cd xdbd-odbc/; make TEST=true CONFIGURATION=Debug 
+make[1]: Entering directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-odbc'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-odbc'
+cd xdbd-core/; make TEST=true CONFIGURATION=Debug 
+make[1]: Entering directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-core'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-core'
+cd xdbd-sql-parser/; make TEST=true CONFIGURATION=Debug 
+make[1]: Entering directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-sql-parser'
+g++   -g -Wall -c -fmessage-length=0 -fPIC -DUNIX_64BIT -I. -I/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd -I/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-include -I/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-errinfo -I/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-msg -I/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-job -I/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-mpx -I/usr/include/libxml2  -c -o XdbdSqlDeleteFunction.o XdbdSqlDeleteFunction.cpp
+<builtin>: recipe for target 'XdbdSqlDeleteFunction.o' failed
+make[1]: Leaving directory '/home/miran/eclipse-workspace/xdbd-xml.stable/xdbd-sql-parser'
+Makefile:12: recipe for target 'xdbd-sql-parser' failed

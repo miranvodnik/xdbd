@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="ext_dsp_options">
+	<SDL_notification>
+		<includes>
+			<unit name="nmStructureDefinition.h"/>
+			<unit name="r_mgm.h"/>
+		</includes>
+		<struct_variables>
+			<struct name="Ext_DSP_Options" type="GU_T_EXTDSPOPTIONS"/>
+  		</struct_variables>
+		<events>
+			<update>
+				<change_mask>
+					<conditions>
+						<all_fields/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>nmGetExt_DSP_Options (Ext_DSP_Options, $fax_rate_maneg.new, $fax_max_bit_rate.new,</code_text>
+					<code_text>$fax_udp_ec.new, $fax_fill_bit_rem.new, $fax_trans_jbig.new, $fax_trans_mmr.new, $fax_version.new,</code_text>
+					<code_text>$fax_max_buffer.new, $fax_max_datagram.new, $dtmf_fr_spread.new, $dtmf_dtct_time.new, $rx_alc.new, $silence_supp_tresh.new);</code_text>
+					<code_text>SDL_OUTPUT_trg_extdspoptions (G2P_FINDPID(mgm), (GU_T_EXTDSPOPTIONS *) Ext_DSP_Options);</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+			</update>
+		</events>
+	</SDL_notification>
+</notification>

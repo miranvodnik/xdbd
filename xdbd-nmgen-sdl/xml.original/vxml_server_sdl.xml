@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="vxml_server">
+	<SDL_notification>
+		<includes>
+			<unit name="r_vxmlmm.h"/>
+		</includes>
+		<events>
+			<insert>
+				<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+				<code_text>SDL_OUTPUT_trg_vxml_serverdata (G2P_FINDPID(vxmlmm));</code_text>
+				<code_text>}</code_text>
+			</insert>
+			<update>
+				<change_mask>
+					<conditions>
+						<all_fields/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_vxml_serverdata (G2P_FINDPID(vxmlmm));</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+			</update>
+			<delete>
+				<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+				<code_text>SDL_OUTPUT_trg_vxml_serverdata (G2P_FINDPID(vxmlmm));</code_text>
+				<code_text>}</code_text>
+			</delete>
+		</events>
+	</SDL_notification>
+</notification>

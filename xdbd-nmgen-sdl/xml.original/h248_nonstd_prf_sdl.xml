@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="h248_nonstd_prf">
+	<SDL_notification>
+		<includes>
+			<unit name="r_h248mng.h"/>
+		</includes>
+		<events>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="h248_prf_data"/>
+					</conditions>
+					<code_text>SDL_OUTPUT_trg_h248_ns_data_changed (G2P_FINDPID(h248mng), $h248_ns_prf_id.new);</code_text>
+				</change_mask>
+			</update>
+		</events>
+	</SDL_notification>
+</notification>

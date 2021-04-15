@@ -1,0 +1,106 @@
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="xdbd_trigger_root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="xdbd_trigger" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="trigger_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_library"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_load"  minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_fire"  minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_unload"  minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_table"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_function"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="xdbd_trigger_par" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="trigger_par_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_id"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:short"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_par_name"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trigger_par_value"  minOccurs="1" maxOccurs="1">
+								<xs:simpleType>
+										<xs:restriction base = "xs:string">
+											<xs:minLength value="0"/>
+											<xs:maxLength value="64"/>
+										</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
+

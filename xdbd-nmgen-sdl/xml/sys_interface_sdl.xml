@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="sys_interface">
+	<SDL_notification>
+		<includes>
+			<unit name="r_mgcc_mux.h"/>
+		</includes>
+		<events>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="sys_intf_type"/>
+					</conditions>
+					<code_text>NMNG_ENABLE_OR_DISABLE</code_text>
+					<code_text>SDL_OUTPUT_trg_h248_systeminterfacetypechanged (G2P_FINDPID(mgcc_mux), (GU_T_SYSINTERFACEID) $sys_intf_id.new);</code_text>
+					<code_text>}</code_text>
+				</change_mask>
+			</update>
+		</events>
+	</SDL_notification>
+</notification>

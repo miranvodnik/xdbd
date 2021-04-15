@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="statistics_group">
+	<SDL_notification>
+		<includes>
+			<unit name="r_vxmlmm.h"/>
+		</includes>
+		<events>
+			<insert>
+				<code_text>SDL_OUTPUT_trg_vxml_ststdata (G2P_FINDPID(vxmlmm));</code_text>
+			</insert>
+			<update>
+				<change_mask>
+					<conditions>
+						<field name="stat_group_type"/>
+					</conditions>
+					<code_text>SDL_OUTPUT_trg_vxml_ststdata (G2P_FINDPID(vxmlmm));</code_text>
+				</change_mask>
+			</update>
+			<delete>
+				<code_text>SDL_OUTPUT_trg_vxml_ststdata (G2P_FINDPID(vxmlmm));</code_text>
+			</delete>
+		</events>
+	</SDL_notification>
+</notification>

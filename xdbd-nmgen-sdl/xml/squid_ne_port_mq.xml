@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification table="squid_ne_port">
+	<MQ_notification>
+		<includes>
+			<unit name="nmStructureDefinition.h"/>
+		</includes>
+		<struct_variables>
+			<struct name="SquidNePort" type="lnxadm_msg_data" subtype="lnxadmMsgData"/>
+		</struct_variables>
+		<events>
+			<insert>
+				<code_text>nmGetSquid_ne_port_data (SquidNePort, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, 0, $squid_ne_port_nr.new);</code_text>
+				<msgsnd ipc_id="SHMKEY_NMNG_LNXADM" data="SquidNePort"/>
+			</insert>
+			<update>
+				<change_mask>
+					<conditions>
+						<all_fields/>
+					</conditions>
+					<code_text>nmGetSquid_ne_port_data (SquidNePort, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, $squid_ne_port_nr.old, $squid_ne_port_nr.new);</code_text>
+					<msgsnd ipc_id="SHMKEY_NMNG_LNXADM" data="SquidNePort"/>
+				</change_mask>
+			</update>
+			<delete>
+				<code_text>nmGetSquid_ne_port_data (SquidNePort, NMNG_MESSAGE_TYPE, TableName, Data_Op_Type, $squid_ne_port_nr.old, 0);</code_text>
+				<msgsnd ipc_id="SHMKEY_NMNG_LNXADM" data="SquidNePort"/>
+			</delete>
+		</events>
+	</MQ_notification>
+</notification>
