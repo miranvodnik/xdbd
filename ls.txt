@@ -1,7 +1,0 @@
-./xdbd-sql-parser/XdbdSqlCatalogFunction.cpp
-./xdbd-sql-parser/XdbdSqlDeleteFunction.cpp
-./xdbd-sql-parser/XdbdSqlInsertFunction.cpp
-./xdbd-sql-parser/XdbdSqlSelectFunction.cpp
-./xdbd-sql-parser/XdbdSqlUpdateFunction.cpp
-./xdbd-sql-parser/XdbdXmlColumnInfo.cpp
-./xdbd-sql-parser/XdbdXmlTableInfo.cpp

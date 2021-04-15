@@ -1,2 +1,0 @@
-"UPDATE tsf_dyn_library SET nodeid = ?, dll_desc = ?, dll_name = ?, dll_arg1 = ?, dll_arg2 = ?, dll_arg3 = ?, dll_arg4 = ?, dll_arg5 = ?, dll_arg6 = ?, dll_arg7 = ?, dll_arg8 = ?, dll_arg9 = ?, dll_arg10 = ?, dll_arg11 = ?, dll_arg12 = ?, dll_arg13 = ?, dll_arg14 = ?, dll_arg15 = ? where tsf_dyn_lib_id = ?" 2000 "AMA adapter" "libcharge.so" "AMA" "group = amauser" "owner = neadmin" "dperm = 222" "fperm = 765" NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL 1
-

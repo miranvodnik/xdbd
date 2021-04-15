@@ -1,9 +1,0 @@
-xdbd-stat/StatisticalAdapter.cpp:	if ((env = getenv ("XDBD_PRESERVE_STAT_HISTORY")) != 0)
-xdbd-stat/StatisticalAdapter.cpp:	if ((env = getenv ("XDBD_GENERATE_STAT_XML")) != 0)
-xdbd-stat/StatisticalAdapter.cpp:		char*	dbName = getenv ("XDBD_SOLID_CONNECTION_STRING");
-xdbd-stat/StatisticalAdapter.cpp:		char*	dbUser = getenv ("XDBD_SOLID_DB_USERNAME");
-xdbd-stat/StatisticalAdapter.cpp:		char*	dbPassword = getenv ("XDBD_SOLID_DB_PASSWORD");
-xdbd-stat/StatisticalAdapter.cpp:		char*	dbCatalog = getenv ("XDBD_SOLID_DB_CATALOG");
-xdbd-stat/StatisticalAdapter.cpp:	char*	nodeid = getenv ("NODEID");
-xdbd-stat/StatisticalAdapterThread.cpp:		const char* nodeidStr = getenv ("NODEID");
-xdbd-stat/StatisticalAdapterThread.cpp:	char*	cntrFname = getenv ("XDBD_STAT_CNTR_INFO");
